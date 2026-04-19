@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Services — Raza Academy</title>
-  <meta name="description" content="Raza Academy offers expert private tuition in Maths, Science, Languages, and Islamic Studies for students of all ages. Personalised learning plans, experienced tutors, and flexible home schooling support." />
+  <title>Services — Website Creator</title>
+  <meta name="description" content="Website Creator offers static websites, dynamic CMS sites, e-commerce stores, landing pages, redesigns, and maintenance plans — all with transparent fixed pricing." />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
@@ -12,18 +12,18 @@
 </head>
 <body>
 
-  <nav class="navbar" id="navbar">
+  <nav class="navbar scrolled" id="navbar">
     <div class="nav-container">
-      <a href="index.html" class="nav-logo">Raza Academy</a>
+      <a href="index.html" class="nav-logo">Website Creator</a>
       <button class="nav-toggle" id="navToggle" aria-label="Toggle navigation menu">
         <span></span><span></span><span></span>
       </button>
       <ul class="nav-menu" id="navMenu">
         <li><a href="index.html"    class="nav-link">Home</a></li>
-        <li><a href="services.html" class="nav-link">Services</a></li>
-        <li><a href="contact.html"  class="nav-link">Contact</a></li>
-                <li><a href="register.html" class="nav-link">Register</a></li>
-        <li><a href="#cta"          class="nav-link nav-cta">Register Now</a></li>
+        <li><a href="services.html"  class="nav-link">Services</a></li>
+        <li><a href="portfolio.html" class="nav-link">Portfolio</a></li>
+        <li><a href="contact.html"   class="nav-link">Contact</a></li>
+        <li><a href="register.html" class="nav-link nav-cta">Get a Quote</a></li>
       </ul>
     </div>
   </nav>
@@ -34,113 +34,146 @@
       <div class="section-header">
         <p class="section-label">What We Offer</p>
         <h2 class="section-title">Our Services</h2>
-        <p class="section-desc">All sessions are available in-person or online. Contact us to discuss the right option for your child.</p>
+        <p class="section-desc">Every project comes with a fixed price, clear timeline, and a website built to last. Get in touch and we will find the right solution for you.</p>
       </div>
       <div class="menu-tabs">
-                <button class="tab-btn active" data-tab="all">All</button>
-        <button class="tab-btn" data-tab="core">Core Subjects</button>
-        <button class="tab-btn" data-tab="languages">Languages</button>
-        <button class="tab-btn" data-tab="islamic">Islamic Studies</button>
-        <button class="tab-btn" data-tab="homeschool">Home Schooling</button>
+        <button class="tab-btn active" data-tab="all">All</button>
+        <button class="tab-btn" data-tab="static">Static Sites</button>
+        <button class="tab-btn" data-tab="dynamic">Dynamic / CMS</button>
       </div>
       <div class="menu-grid" id="menuGrid">
-                <div class="pizza-card" data-category="core">
-          <div class="pizza-card-img core"><span>📐</span></div>
+        <!-- Static: Single -->
+        <div class="pizza-card" data-category="static">
+          <div class="pizza-card-img static"><span>💻</span></div>
           <div class="pizza-card-body">
             <div class="pizza-card-header">
-              <h3>Mathematics</h3>
-              <span class="price">From £25/hr</span>
+              <h3>Static Website</h3>
+              <span class="price">From £499</span>
             </div>
-            <p>Primary through A-Level Maths. Covers number, algebra, geometry, statistics, and exam technique for all major UK awarding bodies.</p>
+            <p>We build your website and hand it over. You own it outright and host it wherever you like — no ongoing costs from us.</p>
+            <ul class="card-features">
+              <li>✔ One-off payment</li>
+              <li>✔ Full ownership</li>
+              <li>✔ Host anywhere</li>
+            </ul>
+            <span class="tag">One-off</span>
+            <div class="card-actions">
+              <button class="read-more-btn" data-modal="static-single">Read More</button>
+              <a href="register.html" class="btn btn-primary btn-sm">Get a Quote</a>
+            </div>
+          </div>
+        </div>
+        <!-- Static: Bundle -->
+        <div class="pizza-card pizza-card-bundle" data-category="static">
+          <div class="pizza-card-bundle-badge">⭐ Bundle</div>
+          <div class="pizza-card-img static"><span>📦</span></div>
+          <div class="pizza-card-body">
+            <div class="pizza-card-header">
+              <h3>Static Website + Hosting</h3>
+              <span class="price">From £49/mo</span>
+            </div>
+            <p>Everything in the single plan, plus we host your site and you can request as many changes as you need — anytime.</p>
+            <ul class="card-features">
+              <li>✔ Website build included</li>
+              <li>✔ + Hosting</li>
+              <li>✔ + Unlimited Changes</li>
+            </ul>
             <span class="tag tag-hot">Most Popular</span>
+            <div class="card-actions">
+              <button class="read-more-btn" data-modal="static-bundle">Read More</button>
+              <a href="register.html" class="btn btn-primary btn-sm">Get a Quote</a>
+            </div>
           </div>
         </div>
-        <div class="pizza-card" data-category="core">
-          <div class="pizza-card-img core"><span>🔬</span></div>
+        <!-- Dynamic: Single -->
+        <div class="pizza-card" data-category="dynamic">
+          <div class="pizza-card-img dynamic"><span>⚙️</span></div>
           <div class="pizza-card-body">
             <div class="pizza-card-header">
-              <h3>Science</h3>
-              <span class="price">From £25/hr</span>
+              <h3>Dynamic Website</h3>
+              <span class="price">From £999</span>
             </div>
-            <p>Biology, Chemistry, and Physics taught individually or as combined science. Practical understanding alongside strong exam preparation.</p>
-            <span class="tag">GCSE & A-Level</span>
+            <p>A CMS-powered website you can update yourself — add blog posts, change content, and manage pages without touching code.</p>
+            <ul class="card-features">
+              <li>✔ One-off payment</li>
+              <li>✔ Full ownership</li>
+              <li>✔ Self-managed CMS</li>
+            </ul>
+            <span class="tag">CMS-Powered</span>
+            <div class="card-actions">
+              <button class="read-more-btn" data-modal="dynamic-single">Read More</button>
+              <a href="register.html" class="btn btn-primary btn-sm">Get a Quote</a>
+            </div>
           </div>
         </div>
-        <div class="pizza-card" data-category="core">
-          <div class="pizza-card-img core"><span>✍️</span></div>
+        <!-- Dynamic: Bundle -->
+        <div class="pizza-card pizza-card-bundle" data-category="dynamic">
+          <div class="pizza-card-bundle-badge">⭐ Bundle</div>
+          <div class="pizza-card-img dynamic"><span>📦</span></div>
           <div class="pizza-card-body">
             <div class="pizza-card-header">
-              <h3>English</h3>
-              <span class="price">From £25/hr</span>
+              <h3>Dynamic Website + Hosting</h3>
+              <span class="price">From £89/mo</span>
             </div>
-            <p>Reading comprehension, creative writing, grammar, and literature analysis. Builds confidence for both spoken and written English.</p>
-            <span class="tag tag-veg">All Ages</span>
+            <p>Everything in the single plan, plus we host your site and you can request as many changes as you need — anytime.</p>
+            <ul class="card-features">
+              <li>✔ Website build included</li>
+              <li>✔ + Hosting</li>
+              <li>✔ + Unlimited Changes</li>
+            </ul>
+            <span class="tag tag-hot">Best Value</span>
+            <div class="card-actions">
+              <button class="read-more-btn" data-modal="dynamic-bundle">Read More</button>
+              <a href="register.html" class="btn btn-primary btn-sm">Get a Quote</a>
+            </div>
           </div>
         </div>
-        <div class="pizza-card" data-category="languages">
-          <div class="pizza-card-img languages"><span>🌙</span></div>
+        <div class="pizza-card pizza-card-locked" data-category="ecommerce">
+          <div class="pizza-card-lock-badge">🔒 Coming Soon</div>
+          <div class="pizza-card-img ecommerce"><span>🛒</span></div>
           <div class="pizza-card-body">
             <div class="pizza-card-header">
-              <h3>Urdu</h3>
-              <span class="price">From £22/hr</span>
+              <h3>E-commerce Store</h3>
+              <span class="price">From £1,499</span>
             </div>
-            <p>Reading, writing, and conversational Urdu for beginners through GCSE. Preserving heritage language in an engaging, structured format.</p>
-            <span class="tag">Heritage Language</span>
+            <p>A fully featured online store with product listings, cart, checkout, and payment processing.</p>
+            <span class="tag">Not Available Yet</span>
           </div>
         </div>
-        <div class="pizza-card" data-category="languages">
-          <div class="pizza-card-img languages"><span>📖</span></div>
+        <div class="pizza-card pizza-card-locked" data-category="other">
+          <div class="pizza-card-lock-badge">🔒 Coming Soon</div>
+          <div class="pizza-card-img other"><span>🎯</span></div>
           <div class="pizza-card-body">
             <div class="pizza-card-header">
-              <h3>Arabic</h3>
-              <span class="price">From £22/hr</span>
+              <h3>Landing Page</h3>
+              <span class="price">From £299</span>
             </div>
-            <p>Classical and Modern Standard Arabic. Essential for Quranic understanding and a strong foundation for Islamic scholarship.</p>
-            <span class="tag tag-hot">Quranic Focus</span>
+            <p>A single, high-converting page for a campaign, product launch, or lead generation.</p>
+            <span class="tag">Not Available Yet</span>
           </div>
         </div>
-        <div class="pizza-card" data-category="islamic">
-          <div class="pizza-card-img islamic"><span>🕌</span></div>
+        <div class="pizza-card pizza-card-locked" data-category="other">
+          <div class="pizza-card-lock-badge">🔒 Coming Soon</div>
+          <div class="pizza-card-img other"><span>🔄</span></div>
           <div class="pizza-card-body">
             <div class="pizza-card-header">
-              <h3>Quran & Tajweed</h3>
-              <span class="price">From £20/hr</span>
+              <h3>Redesign &amp; Migration</h3>
+              <span class="price">From £599</span>
             </div>
-            <p>One-to-one Quran recitation with correct Tajweed rules. Suitable for complete beginners through to Hifz preparation.</p>
-            <span class="tag">Bestseller</span>
+            <p>Breathe new life into an outdated website or move your existing site to a better platform.</p>
+            <span class="tag">Not Available Yet</span>
           </div>
         </div>
-        <div class="pizza-card" data-category="islamic">
-          <div class="pizza-card-img islamic"><span>📿</span></div>
+        <div class="pizza-card pizza-card-locked" data-category="other">
+          <div class="pizza-card-lock-badge">🔒 Coming Soon</div>
+          <div class="pizza-card-img other"><span>🛡️</span></div>
           <div class="pizza-card-body">
             <div class="pizza-card-header">
-              <h3>Islamic Studies</h3>
-              <span class="price">From £20/hr</span>
+              <h3>Maintenance &amp; Support</h3>
+              <span class="price">From £49/mo</span>
             </div>
-            <p>Structured modules covering Aqeedah, Fiqh, Seerah, and Islamic Ethics. Delivered by qualified scholars in an age-appropriate manner.</p>
-            <span class="tag tag-veg">All Ages</span>
-          </div>
-        </div>
-        <div class="pizza-card" data-category="homeschool">
-          <div class="pizza-card-img homeschool"><span>🏠</span></div>
-          <div class="pizza-card-body">
-            <div class="pizza-card-header">
-              <h3>Full Home Schooling Package</h3>
-              <span class="price">From £150/wk</span>
-            </div>
-            <p>A complete home education solution — curriculum planning, weekly tuition sessions across core subjects, and regular parent progress reviews.</p>
-            <span class="tag tag-hot">Comprehensive</span>
-          </div>
-        </div>
-        <div class="pizza-card" data-category="homeschool">
-          <div class="pizza-card-img homeschool"><span>📋</span></div>
-          <div class="pizza-card-body">
-            <div class="pizza-card-header">
-              <h3>Home Schooling Support</h3>
-              <span class="price">From £60/wk</span>
-            </div>
-            <p>Supplement your home schooling with expert tutor sessions in specific subjects. Flexible scheduling to fit your family routine.</p>
-            <span class="tag">Flexible</span>
+            <p>Ongoing hosting, security updates, backups, and content changes handled for you each month.</p>
+            <span class="tag">Not Available Yet</span>
           </div>
         </div>
       </div>
@@ -151,28 +184,28 @@
   <section class="order-section" id="cta">
     <div class="container">
       <div class="section-header">
-        <p class="section-label">Enrol</p>
-        <h2 class="section-title" style="color:#fff">Start Your Child's Journey</h2>
+        <p class="section-label">Start a Project</p>
+        <h2 class="section-title" style="color:#fff">Ready to get online?</h2>
       </div>
       <div class="order-grid">
-                <div class="order-card order-card-featured">
-          <div class="order-popular">Most Popular</div>
+        <div class="order-card order-card-featured">
+          <div class="order-popular">Recommended</div>
+          <div class="order-icon">📝</div>
+          <h3>Get a Free Quote</h3>
+          <p>Fill in our short project brief and we will send you a detailed, fixed-price quote within 24 hours. No obligation, no pressure.</p>
+          <a href="register.html" class="btn btn-white">Start Your Brief</a>
+        </div>
+        <div class="order-card">
           <div class="order-icon">📞</div>
-          <h3>Book a Free Trial</h3>
-          <p>Call us to arrange a free trial session. We'll assess your child's level and discuss the best learning plan with no obligation.</p>
-          <a href="tel:+441234567890" class="btn btn-white">Call to Book</a>
+          <h3>Book a Call</h3>
+          <p>Prefer to talk it through? Book a free 20-minute discovery call and we will help you figure out exactly what you need.</p>
+          <a href="tel:+440000000000" class="btn btn-outline-light">Book a Call</a>
         </div>
         <div class="order-card">
           <div class="order-icon">✉️</div>
           <h3>Send an Enquiry</h3>
-          <p>Email us with your child's age, subject needs, and availability. We'll get back to you within 24 hours with availability and pricing.</p>
-          <a href="mailto:info@razaacademy.co.uk" class="btn btn-outline-light">Email Us</a>
-        </div>
-        <div class="order-card">
-          <div class="order-icon">📝</div>
-          <h3>Register Online</h3>
-          <p>Fill in our short registration form to secure your child's place. Spaces are limited so we recommend booking early.</p>
-          <a href="#find-us" class="btn btn-outline-light">Register Now</a>
+          <p>Email us your requirements and we will respond within 24 hours with a detailed proposal and timeline.</p>
+          <a href="mailto:hello@websitecreator.co.uk" class="btn btn-outline-light">Email Us</a>
         </div>
       </div>
     </div>
@@ -182,12 +215,12 @@
     <div class="container">
       <div class="footer-grid">
         <div class="footer-brand">
-          <span class="footer-logo">Raza Academy</span>
-          <p>Nurturing minds through academic excellence and Islamic values.</p>
+          <span class="footer-logo">Website Creator</span>
+          <p>Building fast, beautiful websites for small businesses.</p>
           <div class="social-links">
             <a href="#" aria-label="Instagram">📸</a>
             <a href="#" aria-label="Facebook">👥</a>
-            <a href="#" aria-label="TikTok">🎵</a>
+            <a href="#" aria-label="LinkedIn">💼</a>
           </div>
         </div>
         <div class="footer-col">
@@ -195,35 +228,54 @@
           <ul>
             <li><a href="index.html">Home</a></li>
             <li><a href="services.html">Services</a></li>
+            <li><a href="portfolio.html">Portfolio</a></li>
             <li><a href="contact.html">Contact</a></li>
+            <li><a href="register.html">Get a Quote</a></li>
           </ul>
         </div>
         <div class="footer-col">
           <h4>Contact</h4>
           <ul>
-            <li><a href="tel:+44 1234 567 890">+44 1234 567 890</a></li>
-            <li><a href="mailto:info@razaacademy.co.uk">info@razaacademy.co.uk</a></li>
-            <li>Manchester</li>
+            <li><a href="tel:+440000000000">+44 0000 000 000</a></li>
+            <li><a href="mailto:hello@websitecreator.co.uk">hello@websitecreator.co.uk</a></li>
+            <li>United Kingdom</li>
           </ul>
         </div>
         <div class="footer-col">
-          <h4>Subjects</h4>
+          <h4>Services</h4>
           <ul>
-            <li>Maths & Science</li>
-            <li>English Language</li>
-            <li>Arabic & Urdu</li>
-            <li>Quran & Tajweed</li>
-            <li>Islamic Studies</li>
-            <li>Home Schooling</li>
+            <li>Static Websites</li>
+            <li>Dynamic Websites</li>
+            <li>E-commerce Stores</li>
+            <li>Landing Pages</li>
+            <li>Redesigns &amp; Migrations</li>
+            <li>Maintenance Plans</li>
           </ul>
         </div>
       </div>
       <div class="footer-bottom">
-        <p>&copy; 2026 Raza Academy, Manchester. All rights reserved.</p>
-        <p>Made with ❤️ with care in Manchester</p>
+        <p>&copy; 2026 Website Creator. All rights reserved.</p>
+        <p>Built with ❤️ in the UK</p>
       </div>
     </div>
   </footer>
+
+  <!-- SERVICE MODAL -->
+  <div class="service-modal" id="serviceModal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+    <div class="service-modal-overlay" id="modalOverlay"></div>
+    <div class="service-modal-box">
+      <button class="service-modal-close" id="modalClose" aria-label="Close">&#x2715;</button>
+      <div class="service-modal-icon" id="modalIcon"></div>
+      <span class="service-modal-tag" id="modalTag"></span>
+      <h2 class="service-modal-title" id="modalTitle"></h2>
+      <p class="service-modal-price" id="modalPrice"></p>
+      <p class="service-modal-desc" id="modalDesc"></p>
+      <ul class="service-modal-features" id="modalFeatures"></ul>
+      <div class="service-modal-actions">
+        <a href="register.html" class="btn btn-primary">Get a Quote &rarr;</a>
+      </div>
+    </div>
+  </div>
 
   <script src="script.js"></script>
 </body>

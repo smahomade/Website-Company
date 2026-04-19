@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Book a Free Trial Lesson — Raza Academy</title>
+  <title>Get a Free Quote — Website Creator</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
@@ -88,18 +88,18 @@
 </head>
 <body>
 
-<nav class="navbar" id="navbar">
+<nav class="navbar scrolled" id="navbar">
     <div class="nav-container">
-      <a href="index.html" class="nav-logo">Raza Academy</a>
+      <a href="index.html" class="nav-logo">Website Creator</a>
       <button class="nav-toggle" id="navToggle" aria-label="Toggle navigation menu">
         <span></span><span></span><span></span>
       </button>
       <ul class="nav-menu" id="navMenu">
         <li><a href="index.html"    class="nav-link">Home</a></li>
-        <li><a href="services.html" class="nav-link">Services</a></li>
-        <li><a href="contact.html"  class="nav-link">Contact</a></li>
-                <li><a href="register.html" class="nav-link">Register</a></li>
-        <li><a href="services.html" class="nav-link nav-cta">Register Now</a></li>
+        <li><a href="services.html"  class="nav-link">Services</a></li>
+        <li><a href="portfolio.html" class="nav-link">Portfolio</a></li>
+        <li><a href="contact.html"   class="nav-link">Contact</a></li>
+        <li><a href="register.html" class="nav-link nav-cta">Get a Quote</a></li>
       </ul>
     </div>
   </nav>
@@ -107,95 +107,89 @@
   <!-- PAGE HEADER -->
   <header class="page-header">
     <div class="container">
-      <h1>Book a Free Trial Lesson</h1>
-      <p class="page-header-sub">Fill in the form below and we'll be in touch within 24 hours to confirm your session.</p>
+      <h1>Get a Free Quote</h1>
+      <p class="page-header-sub">Tell us about your project and we'll send you a detailed, fixed-price quote within 24 hours. No obligation, no pressure.</p>
     </div>
   </header>
 
-  <!-- REGISTER FORM -->
+  <!-- QUOTE FORM -->
   <section class="register-section">
     <div class="container">
       <div class="register-wrap">
         <form class="register-form" id="registerForm" action="#" method="POST" novalidate>
           <div class="form-grid">
           <div class="form-field form-field-half">
-            <label for="child_name">Child's Full Name <span class="field-req">*</span></label>
-            <input type="text" name="child_name" id="child_name" placeholder="e.g. Ahmed Ali" required>
+            <label for="full_name">Your Full Name <span class="field-req">*</span></label>
+            <input type="text" name="full_name" id="full_name" placeholder="e.g. Jane Smith" required>
           </div>
           <div class="form-field form-field-half">
-            <label for="dob">Date of Birth <span class="field-req">*</span></label>
-            <input type="date" name="dob" id="dob" placeholder="" required>
+            <label for="business_name">Business / Company Name</label>
+            <input type="text" name="business_name" id="business_name" placeholder="e.g. Acme Ltd">
           </div>
           <div class="form-field form-field-half">
-            <label for="parent_name">Parent / Guardian Name <span class="field-req">*</span></label>
-            <input type="text" name="parent_name" id="parent_name" placeholder="e.g. Mohammed Ali" required>
-          </div>
-          <div class="form-field form-field-half">
-            <label for="phone">Phone Number <span class="field-req">*</span></label>
-            <input type="tel" name="phone" id="phone" placeholder="+44 7700 000 000" required>
-          </div>
-          <div class="form-field form-field-full">
             <label for="email">Email Address <span class="field-req">*</span></label>
-            <input type="email" name="email" id="email" placeholder="your@email.com" required>
+            <input type="email" name="email" id="email" placeholder="you@example.com" required>
           </div>
           <div class="form-field form-field-half">
-            <label for="subject">Subject of Interest <span class="field-req">*</span></label>
-            <select name="subject" id="subject" required>
+            <label for="phone">Phone Number</label>
+            <input type="tel" name="phone" id="phone" placeholder="+44 7700 000 000">
+          </div>
+          <div class="form-field form-field-half">
+            <label for="website_type">Type of Website <span class="field-req">*</span></label>
+            <select name="website_type" id="website_type" required>
               <option value="" disabled selected>Select…</option>
-              <option value="Maths">Maths</option>
-              <option value="Science">Science</option>
-              <option value="English">English</option>
-              <option value="Arabic">Arabic</option>
-              <option value="Urdu">Urdu</option>
-              <option value="Quran & Tajweed">Quran & Tajweed</option>
-              <option value="Islamic Studies">Islamic Studies</option>
-              <option value="Home Schooling Package">Home Schooling Package</option>
+              <option value="Static Website">Static Website</option>
+              <option value="Dynamic / CMS Website">Dynamic / CMS Website</option>
+              <option value="E-commerce Store">E-commerce Store</option>
+              <option value="Landing Page">Landing Page</option>
+              <option value="Redesign / Migration">Redesign / Migration</option>
+              <option value="Maintenance Plan">Maintenance Plan</option>
+              <option value="Not Sure">Not Sure — advise me</option>
             </select>
           </div>
           <div class="form-field form-field-half">
-            <label for="age_group">Child's Age Group <span class="field-req">*</span></label>
-            <select name="age_group" id="age_group" required>
+            <label for="budget">Approximate Budget <span class="field-req">*</span></label>
+            <select name="budget" id="budget" required>
               <option value="" disabled selected>Select…</option>
-              <option value="5–7 years">5–7 years</option>
-              <option value="8–10 years">8–10 years</option>
-              <option value="11–13 years">11–13 years</option>
-              <option value="14–16 years">14–16 years</option>
-              <option value="16+ years">16+ years</option>
+              <option value="Under £500">Under £500</option>
+              <option value="£500 – £1,000">£500 – £1,000</option>
+              <option value="£1,000 – £2,500">£1,000 – £2,500</option>
+              <option value="£2,500 – £5,000">£2,500 – £5,000</option>
+              <option value="£5,000+">£5,000+</option>
+              <option value="Not Sure">Not Sure</option>
             </select>
           </div>
           <div class="form-field form-field-half">
-            <label for="current_level">Current Level <span class="field-req">*</span></label>
-            <select name="current_level" id="current_level" required>
+            <label for="timeline">Desired Timeline</label>
+            <select name="timeline" id="timeline">
               <option value="" disabled selected>Select…</option>
-              <option value="Beginner">Beginner</option>
-              <option value="Intermediate">Intermediate</option>
-              <option value="Advanced">Advanced</option>
-              <option value="GCSE Exam Prep">GCSE Exam Prep</option>
-              <option value="A-Level Exam Prep">A-Level Exam Prep</option>
+              <option value="ASAP (1–2 weeks)">ASAP (1–2 weeks)</option>
+              <option value="Within 1 month">Within 1 month</option>
+              <option value="2–3 months">2–3 months</option>
+              <option value="Flexible">Flexible</option>
             </select>
           </div>
           <div class="form-field form-field-half">
-            <label for="session_pref">Preferred Session Days</label>
-            <select name="session_pref" id="session_pref">
+            <label for="existing_site">Do you have an existing website?</label>
+            <select name="existing_site" id="existing_site">
               <option value="" disabled selected>Select…</option>
-              <option value="Weekdays (Mon–Fri)">Weekdays (Mon–Fri)</option>
-              <option value="Saturday">Saturday</option>
-              <option value="Sunday">Sunday</option>
-              <option value="Any Day">Any Day</option>
+              <option value="No">No</option>
+              <option value="Yes – I want a redesign">Yes – I want a redesign</option>
+              <option value="Yes – I want to keep it">Yes – I want to keep it</option>
             </select>
           </div>
           <div class="form-field form-field-full">
-            <label for="notes">Additional Notes</label>
-            <textarea name="notes" id="notes" placeholder="Current school, specific goals, any learning needs…" rows="4"></textarea>
+            <label for="description">Project Description <span class="field-req">*</span></label>
+            <textarea name="description" id="description" placeholder="Briefly describe your business, what you need, and any specific features or pages required…" rows="5" required></textarea>
           </div>
           </div>
           <div class="form-submit">
-            <button type="submit" class="btn btn-primary btn-submit">Submit Registration</button>
+            <button type="submit" class="btn btn-primary btn-submit">Send My Brief</button>
           </div>
         </form>
         <div class="register-success" id="registerSuccess" hidden>
           <div class="success-icon">✓</div>
-          <p>Thank you for registering! We'll be in touch within 24 hours.</p>
+          <p>Thanks! We'll review your brief and send you a quote within 24 hours.</p>
         </div>
       </div>
     </div>
@@ -205,12 +199,12 @@
     <div class="container">
       <div class="footer-grid">
         <div class="footer-brand">
-          <span class="footer-logo">Raza Academy</span>
-          <p>Nurturing minds through academic excellence and Islamic values.</p>
+          <span class="footer-logo">Website Creator</span>
+          <p>Building fast, beautiful websites for small businesses.</p>
           <div class="social-links">
             <a href="#" aria-label="Instagram">📸</a>
             <a href="#" aria-label="Facebook">👥</a>
-            <a href="#" aria-label="TikTok">🎵</a>
+            <a href="#" aria-label="LinkedIn">💼</a>
           </div>
         </div>
         <div class="footer-col">
@@ -218,32 +212,34 @@
           <ul>
             <li><a href="index.html">Home</a></li>
             <li><a href="services.html">Services</a></li>
+            <li><a href="portfolio.html">Portfolio</a></li>
             <li><a href="contact.html">Contact</a></li>
+            <li><a href="register.html">Get a Quote</a></li>
           </ul>
         </div>
         <div class="footer-col">
           <h4>Contact</h4>
           <ul>
-            <li><a href="tel:+44 1234 567 890">+44 1234 567 890</a></li>
-            <li><a href="mailto:info@razaacademy.co.uk">info@razaacademy.co.uk</a></li>
-            <li>Manchester</li>
+            <li><a href="tel:+440000000000">+44 0000 000 000</a></li>
+            <li><a href="mailto:hello@websitecreator.co.uk">hello@websitecreator.co.uk</a></li>
+            <li>United Kingdom</li>
           </ul>
         </div>
         <div class="footer-col">
-          <h4>Subjects</h4>
+          <h4>Services</h4>
           <ul>
-            <li>Maths & Science</li>
-            <li>English Language</li>
-            <li>Arabic & Urdu</li>
-            <li>Quran & Tajweed</li>
-            <li>Islamic Studies</li>
-            <li>Home Schooling</li>
+            <li>Static Websites</li>
+            <li>Dynamic Websites</li>
+            <li>E-commerce Stores</li>
+            <li>Landing Pages</li>
+            <li>Redesigns &amp; Migrations</li>
+            <li>Maintenance Plans</li>
           </ul>
         </div>
       </div>
       <div class="footer-bottom">
-        <p>&copy; 2026 Raza Academy, Manchester. All rights reserved.</p>
-        <p>Made with ❤️ with care in Manchester</p>
+        <p>&copy; 2026 Website Creator. All rights reserved.</p>
+        <p>Built with ❤️ in the UK</p>
       </div>
     </div>
   </footer>

@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Portfolio — Website Creator</title>
+  <meta name="description" content="Browse websites we've built for real businesses. See our work across static sites, dynamic CMS sites, and more." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+  <nav class="navbar scrolled" id="navbar">
+    <div class="nav-container">
+      <a href="index.html" class="nav-logo">Website Creator</a>
+      <button class="nav-toggle" id="navToggle" aria-label="Toggle navigation menu">
+        <span></span><span></span><span></span>
+      </button>
+      <ul class="nav-menu" id="navMenu">
+        <li><a href="index.html"     class="nav-link">Home</a></li>
+        <li><a href="services.html"  class="nav-link">Services</a></li>
+        <li><a href="portfolio.html" class="nav-link">Portfolio</a></li>
+        <li><a href="contact.html"   class="nav-link">Contact</a></li>
+        <li><a href="register.html"  class="nav-link nav-cta">Get a Quote</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- PAGE HEADER -->
+  <header class="page-header">
+    <div class="container">
+      <h1>Our Work</h1>
+      <p class="page-header-sub">A selection of websites we've designed and built for real businesses. Every project is built from scratch — no templates, no shortcuts.</p>
+    </div>
+  </header>
+
+  <!-- PORTFOLIO GRID -->
+  <section class="portfolio-section">
+    <div class="container">
+
+      <div class="portfolio-filters">
+        <button class="portfolio-filter-btn active" data-filter="all">All</button>
+        <button class="portfolio-filter-btn" data-filter="static">Static</button>
+        <button class="portfolio-filter-btn" data-filter="dynamic">Dynamic</button>
+      </div>
+
+      <div class="portfolio-grid" id="portfolioGrid">
+
+        <!-- PLACEHOLDER CARD 1 -->
+        <div class="portfolio-card" data-type="static">
+          <div class="portfolio-card-preview portfolio-preview-placeholder">
+            <span class="portfolio-preview-icon">🖼️</span>
+            <span class="portfolio-preview-label">Screenshot coming soon</span>
+          </div>
+          <div class="portfolio-card-body">
+            <div class="portfolio-card-meta">
+              <span class="portfolio-type-tag">Static</span>
+              <span class="portfolio-industry">Business</span>
+            </div>
+            <h3>Project Name</h3>
+            <p>A brief description of this project will go here — what the client needed and what we delivered.</p>
+            <div class="portfolio-card-footer">
+              <span class="portfolio-coming-soon">Coming Soon</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- PLACEHOLDER CARD 2 -->
+        <div class="portfolio-card" data-type="dynamic">
+          <div class="portfolio-card-preview portfolio-preview-placeholder">
+            <span class="portfolio-preview-icon">🖼️</span>
+            <span class="portfolio-preview-label">Screenshot coming soon</span>
+          </div>
+          <div class="portfolio-card-body">
+            <div class="portfolio-card-meta">
+              <span class="portfolio-type-tag portfolio-type-dynamic">Dynamic</span>
+              <span class="portfolio-industry">Retail</span>
+            </div>
+            <h3>Project Name</h3>
+            <p>A brief description of this project will go here — what the client needed and what we delivered.</p>
+            <div class="portfolio-card-footer">
+              <span class="portfolio-coming-soon">Coming Soon</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- PLACEHOLDER CARD 3 -->
+        <div class="portfolio-card" data-type="static">
+          <div class="portfolio-card-preview portfolio-preview-placeholder">
+            <span class="portfolio-preview-icon">🖼️</span>
+            <span class="portfolio-preview-label">Screenshot coming soon</span>
+          </div>
+          <div class="portfolio-card-body">
+            <div class="portfolio-card-meta">
+              <span class="portfolio-type-tag">Static</span>
+              <span class="portfolio-industry">Services</span>
+            </div>
+            <h3>Project Name</h3>
+            <p>A brief description of this project will go here — what the client needed and what we delivered.</p>
+            <div class="portfolio-card-footer">
+              <span class="portfolio-coming-soon">Coming Soon</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- EMPTY STATE (shown when no real projects yet) -->
+      <div class="portfolio-empty">
+        <div class="portfolio-empty-icon">🚀</div>
+        <h2>Projects on the way</h2>
+        <p>We're currently building websites for our first clients. Check back soon to see our work — or be one of the first!</p>
+        <a href="register.html" class="btn btn-primary">Get a Free Quote</a>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- CTA STRIP -->
+  <section class="portfolio-cta">
+    <div class="container">
+      <div class="portfolio-cta-inner">
+        <div>
+          <h2>Want a website like these?</h2>
+          <p>Tell us about your project and we'll send you a fixed-price quote within 24 hours.</p>
+        </div>
+        <a href="register.html" class="btn btn-white">Get a Free Quote &rarr;</a>
+      </div>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <span class="footer-logo">Website Creator</span>
+          <p>Building fast, beautiful websites for small businesses.</p>
+          <div class="social-links">
+            <a href="#" aria-label="Instagram">📸</a>
+            <a href="#" aria-label="Facebook">👥</a>
+            <a href="#" aria-label="LinkedIn">💼</a>
+          </div>
+        </div>
+        <div class="footer-col">
+          <h4>Navigate</h4>
+          <ul>
+            <li><a href="index.html">Home</a></li>
+            <li><a href="services.html">Services</a></li>
+            <li><a href="portfolio.html">Portfolio</a></li>
+            <li><a href="contact.html">Contact</a></li>
+            <li><a href="register.html">Get a Quote</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Contact</h4>
+          <ul>
+            <li><a href="tel:+440000000000">+44 0000 000 000</a></li>
+            <li><a href="mailto:hello@websitecreator.co.uk">hello@websitecreator.co.uk</a></li>
+            <li>United Kingdom</li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Services</h4>
+          <ul>
+            <li>Static Websites</li>
+            <li>Dynamic Websites</li>
+            <li>E-commerce Stores</li>
+            <li>Landing Pages</li>
+            <li>Redesigns &amp; Migrations</li>
+            <li>Maintenance Plans</li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>&copy; 2026 Website Creator. All rights reserved.</p>
+        <p>Built with ❤️ in the UK</p>
+      </div>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
