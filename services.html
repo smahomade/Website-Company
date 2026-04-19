@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Services — Raza Academy</title>
+  <meta name="description" content="Raza Academy offers expert private tuition in Maths, Science, Languages, and Islamic Studies for students of all ages. Personalised learning plans, experienced tutors, and flexible home schooling support." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+  <nav class="navbar" id="navbar">
+    <div class="nav-container">
+      <a href="index.html" class="nav-logo">Raza Academy</a>
+      <button class="nav-toggle" id="navToggle" aria-label="Toggle navigation menu">
+        <span></span><span></span><span></span>
+      </button>
+      <ul class="nav-menu" id="navMenu">
+        <li><a href="index.html"    class="nav-link">Home</a></li>
+        <li><a href="services.html" class="nav-link">Services</a></li>
+        <li><a href="contact.html"  class="nav-link">Contact</a></li>
+                <li><a href="register.html" class="nav-link">Register</a></li>
+        <li><a href="#cta"          class="nav-link nav-cta">Register Now</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- SERVICES -->
+  <section class="menu-section" id="services">
+    <div class="container">
+      <div class="section-header">
+        <p class="section-label">What We Offer</p>
+        <h2 class="section-title">Our Services</h2>
+        <p class="section-desc">All sessions are available in-person or online. Contact us to discuss the right option for your child.</p>
+      </div>
+      <div class="menu-tabs">
+                <button class="tab-btn active" data-tab="all">All</button>
+        <button class="tab-btn" data-tab="core">Core Subjects</button>
+        <button class="tab-btn" data-tab="languages">Languages</button>
+        <button class="tab-btn" data-tab="islamic">Islamic Studies</button>
+        <button class="tab-btn" data-tab="homeschool">Home Schooling</button>
+      </div>
+      <div class="menu-grid" id="menuGrid">
+                <div class="pizza-card" data-category="core">
+          <div class="pizza-card-img core"><span>📐</span></div>
+          <div class="pizza-card-body">
+            <div class="pizza-card-header">
+              <h3>Mathematics</h3>
+              <span class="price">From £25/hr</span>
+            </div>
+            <p>Primary through A-Level Maths. Covers number, algebra, geometry, statistics, and exam technique for all major UK awarding bodies.</p>
+            <span class="tag tag-hot">Most Popular</span>
+          </div>
+        </div>
+        <div class="pizza-card" data-category="core">
+          <div class="pizza-card-img core"><span>🔬</span></div>
+          <div class="pizza-card-body">
+            <div class="pizza-card-header">
+              <h3>Science</h3>
+              <span class="price">From £25/hr</span>
+            </div>
+            <p>Biology, Chemistry, and Physics taught individually or as combined science. Practical understanding alongside strong exam preparation.</p>
+            <span class="tag">GCSE & A-Level</span>
+          </div>
+        </div>
+        <div class="pizza-card" data-category="core">
+          <div class="pizza-card-img core"><span>✍️</span></div>
+          <div class="pizza-card-body">
+            <div class="pizza-card-header">
+              <h3>English</h3>
+              <span class="price">From £25/hr</span>
+            </div>
+            <p>Reading comprehension, creative writing, grammar, and literature analysis. Builds confidence for both spoken and written English.</p>
+            <span class="tag tag-veg">All Ages</span>
+          </div>
+        </div>
+        <div class="pizza-card" data-category="languages">
+          <div class="pizza-card-img languages"><span>🌙</span></div>
+          <div class="pizza-card-body">
+            <div class="pizza-card-header">
+              <h3>Urdu</h3>
+              <span class="price">From £22/hr</span>
+            </div>
+            <p>Reading, writing, and conversational Urdu for beginners through GCSE. Preserving heritage language in an engaging, structured format.</p>
+            <span class="tag">Heritage Language</span>
+          </div>
+        </div>
+        <div class="pizza-card" data-category="languages">
+          <div class="pizza-card-img languages"><span>📖</span></div>
+          <div class="pizza-card-body">
+            <div class="pizza-card-header">
+              <h3>Arabic</h3>
+              <span class="price">From £22/hr</span>
+            </div>
+            <p>Classical and Modern Standard Arabic. Essential for Quranic understanding and a strong foundation for Islamic scholarship.</p>
+            <span class="tag tag-hot">Quranic Focus</span>
+          </div>
+        </div>
+        <div class="pizza-card" data-category="islamic">
+          <div class="pizza-card-img islamic"><span>🕌</span></div>
+          <div class="pizza-card-body">
+            <div class="pizza-card-header">
+              <h3>Quran & Tajweed</h3>
+              <span class="price">From £20/hr</span>
+            </div>
+            <p>One-to-one Quran recitation with correct Tajweed rules. Suitable for complete beginners through to Hifz preparation.</p>
+            <span class="tag">Bestseller</span>
+          </div>
+        </div>
+        <div class="pizza-card" data-category="islamic">
+          <div class="pizza-card-img islamic"><span>📿</span></div>
+          <div class="pizza-card-body">
+            <div class="pizza-card-header">
+              <h3>Islamic Studies</h3>
+              <span class="price">From £20/hr</span>
+            </div>
+            <p>Structured modules covering Aqeedah, Fiqh, Seerah, and Islamic Ethics. Delivered by qualified scholars in an age-appropriate manner.</p>
+            <span class="tag tag-veg">All Ages</span>
+          </div>
+        </div>
+        <div class="pizza-card" data-category="homeschool">
+          <div class="pizza-card-img homeschool"><span>🏠</span></div>
+          <div class="pizza-card-body">
+            <div class="pizza-card-header">
+              <h3>Full Home Schooling Package</h3>
+              <span class="price">From £150/wk</span>
+            </div>
+            <p>A complete home education solution — curriculum planning, weekly tuition sessions across core subjects, and regular parent progress reviews.</p>
+            <span class="tag tag-hot">Comprehensive</span>
+          </div>
+        </div>
+        <div class="pizza-card" data-category="homeschool">
+          <div class="pizza-card-img homeschool"><span>📋</span></div>
+          <div class="pizza-card-body">
+            <div class="pizza-card-header">
+              <h3>Home Schooling Support</h3>
+              <span class="price">From £60/wk</span>
+            </div>
+            <p>Supplement your home schooling with expert tutor sessions in specific subjects. Flexible scheduling to fit your family routine.</p>
+            <span class="tag">Flexible</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="order-section" id="cta">
+    <div class="container">
+      <div class="section-header">
+        <p class="section-label">Enrol</p>
+        <h2 class="section-title" style="color:#fff">Start Your Child's Journey</h2>
+      </div>
+      <div class="order-grid">
+                <div class="order-card order-card-featured">
+          <div class="order-popular">Most Popular</div>
+          <div class="order-icon">📞</div>
+          <h3>Book a Free Trial</h3>
+          <p>Call us to arrange a free trial session. We'll assess your child's level and discuss the best learning plan with no obligation.</p>
+          <a href="tel:+441234567890" class="btn btn-white">Call to Book</a>
+        </div>
+        <div class="order-card">
+          <div class="order-icon">✉️</div>
+          <h3>Send an Enquiry</h3>
+          <p>Email us with your child's age, subject needs, and availability. We'll get back to you within 24 hours with availability and pricing.</p>
+          <a href="mailto:info@razaacademy.co.uk" class="btn btn-outline-light">Email Us</a>
+        </div>
+        <div class="order-card">
+          <div class="order-icon">📝</div>
+          <h3>Register Online</h3>
+          <p>Fill in our short registration form to secure your child's place. Spaces are limited so we recommend booking early.</p>
+          <a href="#find-us" class="btn btn-outline-light">Register Now</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <span class="footer-logo">Raza Academy</span>
+          <p>Nurturing minds through academic excellence and Islamic values.</p>
+          <div class="social-links">
+            <a href="#" aria-label="Instagram">📸</a>
+            <a href="#" aria-label="Facebook">👥</a>
+            <a href="#" aria-label="TikTok">🎵</a>
+          </div>
+        </div>
+        <div class="footer-col">
+          <h4>Navigate</h4>
+          <ul>
+            <li><a href="index.html">Home</a></li>
+            <li><a href="services.html">Services</a></li>
+            <li><a href="contact.html">Contact</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Contact</h4>
+          <ul>
+            <li><a href="tel:+44 1234 567 890">+44 1234 567 890</a></li>
+            <li><a href="mailto:info@razaacademy.co.uk">info@razaacademy.co.uk</a></li>
+            <li>Manchester</li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Subjects</h4>
+          <ul>
+            <li>Maths & Science</li>
+            <li>English Language</li>
+            <li>Arabic & Urdu</li>
+            <li>Quran & Tajweed</li>
+            <li>Islamic Studies</li>
+            <li>Home Schooling</li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>&copy; 2026 Raza Academy, Manchester. All rights reserved.</p>
+        <p>Made with ❤️ with care in Manchester</p>
+      </div>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
