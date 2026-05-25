@@ -14,12 +14,14 @@
 
   <nav class="navbar" id="navbar">
     <div class="nav-container">
-      <a href="index.html" class="nav-logo">Website Creator</a>
+      <a href="index.html" class="nav-logo" aria-label="Website Creator home">
+        <img src="images/pixelboroughlogo-white.png" alt="Pixel Borough logo" />
+      </a>
       <button class="nav-toggle" id="navToggle" aria-label="Toggle navigation menu">
         <span></span><span></span><span></span>
       </button>
       <ul class="nav-menu" id="navMenu">
-        <li><a href="index.html"    class="nav-link">Home</a></li>
+        <li><a href="how-it-works.html" class="nav-link">How It Works</a></li>
         <li><a href="services.html"  class="nav-link">Services</a></li>
         <li><a href="portfolio.html" class="nav-link">Portfolio</a></li>
         <li><a href="contact.html"   class="nav-link">Contact</a></li>
@@ -31,100 +33,243 @@
   <!-- HERO -->
   <section class="hero" id="home">
     <div class="hero-bg"></div>
-    <div class="hero-decor">
-      <div class="hero-pizza-ring ring-1"></div>
-      <div class="hero-pizza-ring ring-2"></div>
-      <div class="hero-pizza-emoji">💻</div>
-    </div>
+    <div class="hero-img-bg" id="heroImgBg"></div>
+    <video class="hero-vid-bg" id="heroVidBg" autoplay muted loop playsinline></video>
+    <div class="hero-wash" id="heroWash"></div>
+    <div class="hero-grid-overlay"></div>
+    <div class="hero-orb hero-orb--1" id="orb1"></div>
+    <div class="hero-orb hero-orb--2" id="orb2"></div>
     <div class="hero-content">
-      <p class="hero-eyebrow">Web Design &amp; Development</p>
-      <h1 class="hero-title">Your website,<br><span>simplified.</span></h1>
-      <p class="hero-subtitle">We build fast, beautiful websites for small businesses — without the complexity or the hefty price tag.</p>
-      <div class="hero-actions">
-        <a href="services.html" class="btn btn-primary">See Our Services</a>
-        <a href="register.html" class="btn btn-outline">Get a Free Quote</a>
-      </div>
-      <div class="hero-badges">
-        <div class="hero-badge">
-          <span>⚡</span>
-          <div><strong>Fast</strong><small>Delivery</small></div>
-        </div>
-        <div class="hero-badge-divider"></div>
-        <div class="hero-badge">
-          <span>🎯</span>
-          <div><strong>Custom</strong><small>Built</small></div>
-        </div>
-        <div class="hero-badge-divider"></div>
-        <div class="hero-badge">
-          <span>📱</span>
-          <div><strong>Mobile</strong><small>-First</small></div>
-        </div>
-      </div>
     </div>
     <a href="#how-it-works" class="hero-scroll" aria-label="Scroll down">
       <span>Scroll</span>
       <div class="scroll-line"></div>
     </a>
+
+    <!-- REEL — lives inside the hero for banner-level integration -->
+    <div class="hero-reel">
+      <div class="hero-info">
+        <div class="hero-info-inner" id="heroInfo"><span id="infoText">Exploring our work</span></div>
+      </div>
+      <div class="reel-wrap" id="reelWrap">
+        <div class="reel-track" id="reelTrack">
+
+        <!-- ===== Set 1 ===== -->
+        <div class="hero-reel-card">
+          <div class="showcase-browser">
+            <div class="showcase-browser-bar">
+              <span class="showcase-browser-dots"><i></i><i></i><i></i></span>
+              <span class="showcase-browser-url">smithsplumbing.co.uk</span>
+            </div>
+            <div class="showcase-browser-body showcase-ph-1">
+              <img src="images/screenshots/smiths-plumbing.png" alt="Smith's Plumbing website screenshot" loading="lazy" />
+            </div>
+          </div>
+          <div class="showcase-card-info">
+            <span class="showcase-type-tag">Static</span>
+            <span class="showcase-industry">Trades</span>
+          </div>
+        </div>
+
+        <div class="hero-reel-card">
+          <div class="showcase-browser">
+            <div class="showcase-browser-bar">
+              <span class="showcase-browser-dots"><i></i><i></i><i></i></span>
+              <span class="showcase-browser-url">bloomflorist.co.uk</span>
+            </div>
+            <div class="showcase-browser-body showcase-ph-2">
+              <img src="images/screenshots/bloom-florist.png" alt="Bloom Florist website screenshot" loading="lazy" />
+            </div>
+          </div>
+          <div class="showcase-card-info">
+            <span class="showcase-type-tag showcase-type-dynamic">Dynamic</span>
+            <span class="showcase-industry">E-commerce</span>
+          </div>
+        </div>
+
+        <div class="hero-reel-card">
+          <div class="showcase-browser">
+            <div class="showcase-browser-bar">
+              <span class="showcase-browser-dots"><i></i><i></i><i></i></span>
+              <span class="showcase-browser-url">theoak-restaurant.co.uk</span>
+            </div>
+            <div class="showcase-browser-body showcase-ph-3">
+              <img src="images/screenshots/oak-restaurant.png" alt="The Oak Restaurant website screenshot" loading="lazy" />
+            </div>
+          </div>
+          <div class="showcase-card-info">
+            <span class="showcase-type-tag">Static</span>
+            <span class="showcase-industry">Hospitality</span>
+          </div>
+        </div>
+
+        <div class="hero-reel-card">
+          <div class="showcase-browser">
+            <div class="showcase-browser-bar">
+              <span class="showcase-browser-dots"><i></i><i></i><i></i></span>
+              <span class="showcase-browser-url">clarityclinic.co.uk</span>
+            </div>
+            <div class="showcase-browser-body showcase-ph-4">
+              <img src="images/screenshots/clarity-clinic.png" alt="Clarity Clinic website screenshot" loading="lazy" />
+            </div>
+          </div>
+          <div class="showcase-card-info">
+            <span class="showcase-type-tag showcase-type-dynamic">Dynamic</span>
+            <span class="showcase-industry">Healthcare</span>
+          </div>
+        </div>
+
+        <div class="hero-reel-card">
+          <div class="showcase-browser">
+            <div class="showcase-browser-bar">
+              <span class="showcase-browser-dots"><i></i><i></i><i></i></span>
+              <span class="showcase-browser-url">harrowdental.co.uk</span>
+            </div>
+            <div class="showcase-browser-body showcase-ph-5">
+              <img src="images/screenshots/harrow-dental.png" alt="Harrow Dental website screenshot" loading="lazy" />
+            </div>
+          </div>
+          <div class="showcase-card-info">
+            <span class="showcase-type-tag">Static</span>
+            <span class="showcase-industry">Dental</span>
+          </div>
+        </div>
+
+        <!-- ===== Set 2 — duplicates for seamless loop ===== -->
+        <div class="hero-reel-card" aria-hidden="true">
+          <div class="showcase-browser">
+            <div class="showcase-browser-bar">
+              <span class="showcase-browser-dots"><i></i><i></i><i></i></span>
+              <span class="showcase-browser-url">smithsplumbing.co.uk</span>
+            </div>
+            <div class="showcase-browser-body showcase-ph-1">
+              <img src="images/screenshots/smiths-plumbing.png" alt="" loading="lazy" />
+            </div>
+          </div>
+          <div class="showcase-card-info">
+            <span class="showcase-type-tag">Static</span>
+            <span class="showcase-industry">Trades</span>
+          </div>
+        </div>
+
+        <div class="hero-reel-card" aria-hidden="true">
+          <div class="showcase-browser">
+            <div class="showcase-browser-bar">
+              <span class="showcase-browser-dots"><i></i><i></i><i></i></span>
+              <span class="showcase-browser-url">bloomflorist.co.uk</span>
+            </div>
+            <div class="showcase-browser-body showcase-ph-2">
+              <img src="images/screenshots/bloom-florist.png" alt="" loading="lazy" />
+            </div>
+          </div>
+          <div class="showcase-card-info">
+            <span class="showcase-type-tag showcase-type-dynamic">Dynamic</span>
+            <span class="showcase-industry">E-commerce</span>
+          </div>
+        </div>
+
+        <div class="hero-reel-card" aria-hidden="true">
+          <div class="showcase-browser">
+            <div class="showcase-browser-bar">
+              <span class="showcase-browser-dots"><i></i><i></i><i></i></span>
+              <span class="showcase-browser-url">theoak-restaurant.co.uk</span>
+            </div>
+            <div class="showcase-browser-body showcase-ph-3">
+              <img src="images/screenshots/oak-restaurant.png" alt="" loading="lazy" />
+            </div>
+          </div>
+          <div class="showcase-card-info">
+            <span class="showcase-type-tag">Static</span>
+            <span class="showcase-industry">Hospitality</span>
+          </div>
+        </div>
+
+        <div class="hero-reel-card" aria-hidden="true">
+          <div class="showcase-browser">
+            <div class="showcase-browser-bar">
+              <span class="showcase-browser-dots"><i></i><i></i><i></i></span>
+              <span class="showcase-browser-url">clarityclinic.co.uk</span>
+            </div>
+            <div class="showcase-browser-body showcase-ph-4">
+              <img src="images/screenshots/clarity-clinic.png" alt="" loading="lazy" />
+            </div>
+          </div>
+          <div class="showcase-card-info">
+            <span class="showcase-type-tag showcase-type-dynamic">Dynamic</span>
+            <span class="showcase-industry">Healthcare</span>
+          </div>
+        </div>
+
+        <div class="hero-reel-card" aria-hidden="true">
+          <div class="showcase-browser">
+            <div class="showcase-browser-bar">
+              <span class="showcase-browser-dots"><i></i><i></i><i></i></span>
+              <span class="showcase-browser-url">harrowdental.co.uk</span>
+            </div>
+            <div class="showcase-browser-body showcase-ph-5">
+              <img src="images/screenshots/harrow-dental.png" alt="" loading="lazy" />
+            </div>
+          </div>
+          <div class="showcase-card-info">
+            <span class="showcase-type-tag">Static</span>
+            <span class="showcase-industry">Dental</span>
+          </div>
+        </div>
+
+        </div><!-- /.reel-track -->
+      </div><!-- /.reel-wrap -->
+      <div class="progress" id="progress"></div>
+      <div class="reel-hint" id="reelHint">Click a card to find out more</div>
+    </div><!-- /.hero-reel -->
   </section>
 
   <!-- HOW IT WORKS -->
   <section class="how-it-works" id="how-it-works">
     <div class="container">
       <div class="hiw-header">
-        <p class="section-label hiw-label">Our Process</p>
-        <h2 class="hiw-title">We make the whole process<br><em>Simple &amp; Easy.</em></h2>
-        <p class="hiw-subtitle">From picking a design to going live — here's exactly what happens, step by step.</p>
+        <p class="section-label hiw-label">How it works?</p>
+        <h2 class="hiw-title">3 Simple Steps</h2>                               
+        <p class="hiw-subtitle">No stress, no confusion. Here's how we get your website live.</p>
       </div>
 
       <div class="hiw-steps">
-        <div class="hiw-step-card">
-          <div class="hiw-num">1</div>
-          <div class="hiw-emoji">🎨</div>
-          <h3>Pick Your Design</h3>
-          <p>Browse our templates and choose a style you love. Have your own idea or inspiration to share? Perfect — we're happy to work from that too.</p>
-        </div>
-        <div class="hiw-step-card">
-          <div class="hiw-num">2</div>
-          <div class="hiw-emoji">✏️</div>
-          <h3>We Build It For You</h3>
-          <p>We tailor everything to your brand — your logo, colours, images, content, and contact details all added in, exactly how you want them.</p>
-        </div>
-        <div class="hiw-step-card">
-          <div class="hiw-num">3</div>
-          <div class="hiw-emoji">✅</div>
-          <h3>You Approve &amp; Go Live</h3>
-          <p>Happy with the result? We launch it on your chosen domain. Then decide how you'd like to host it — the choice is entirely yours.</p>
-        </div>
-      </div>
 
-      <div class="hiw-hosting">
-        <div class="hiw-hosting-label">
-          <span>💬 What about payment &amp; hosting?</span>
-        </div>
-        <div class="hiw-hosting-cards">
-          <div class="hiw-hosting-card">
-            <div class="hiw-hosting-tag">One-off Payment</div>
-            <div class="hiw-hosting-icon">🏠</div>
-            <h3>Host It Yourself</h3>
-            <p>Pay once for the website we build you, take full ownership, and host it wherever you like. Zero ongoing costs from us — ever.</p>
-            <ul>
-              <li><span>✓</span> Single one-off payment</li>
-              <li><span>✓</span> Full ownership of your site</li>
-              <li><span>✓</span> Host on any platform you choose</li>
-            </ul>
+        <div class="hiw-step-card">
+          <div class="hiw-icon-box" aria-hidden="true">
+            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <polygon points="12 2 22 8.5 12 15 2 8.5 12 2"/>
+              <polyline points="2 8.5 12 15 22 8.5"/>
+              <polyline points="2 14.5 12 21 22 14.5"/>
+            </svg>
           </div>
-          <div class="hiw-hosting-card hiw-hosting-card-featured">
-            <div class="hiw-hosting-tag">Monthly Subscription</div>
-            <div class="hiw-hosting-icon">☁️</div>
-            <h3>We Host &amp; Manage It</h3>
-            <p>We handle hosting, security, and updates for you. Need a change made? Just ask — it's all included in your monthly plan.</p>
-            <ul>
-              <li><span>✓</span> We handle all hosting &amp; updates</li>
-              <li><span>✓</span> Request changes any time</li>
-              <li><span>✓</span> Ongoing support included</li>
-            </ul>
-          </div>
+          <h3 class="hiw-card-title">Main Design</h3>
+          <p class="hiw-card-desc">Choose a design from our templates, show us some inspiration you love, or browse our portfolio for ideas. Want something fully custom? That works too.</p>
+          <span class="hiw-card-foot">Step 01</span>
         </div>
+
+        <div class="hiw-step-card">
+          <div class="hiw-icon-box" aria-hidden="true">
+            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+            </svg>
+          </div>
+          <h3 class="hiw-card-title">Build &amp; Communication</h3>
+          <p class="hiw-card-desc">We build your website with you, step by step. Get new ideas along the way? We are more than happy to add them in and keep improving it together.</p>
+          <span class="hiw-card-foot">Step 02</span>
+        </div>
+
+        <div class="hiw-step-card">
+          <div class="hiw-icon-box" aria-hidden="true">
+            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z"/>
+              <path d="m3.29 15 1.5-1.5c.87-.87 2.28-1.05 3.5-.6L21 3l-9.9 13.71c-.45 1.22-.63 2.63-.6 3.5L9 21.71 3.29 15z"/>
+            </svg>
+          </div>
+          <h3 class="hiw-card-title">Go Live!</h3>
+          <p class="hiw-card-desc">Once everything is fully tested, approved, and working perfectly we launch. No domain yet? We can help with that too. <a href="how-it-works.html" class="hiw-inline-link">Learn more →</a></p>
+          <span class="hiw-card-foot">Step 03</span>
+        </div>
+
       </div>
 
       <div class="hiw-cta">
@@ -137,34 +282,22 @@
   <section class="about" id="about">
     <div class="container">
       <div class="about-grid">
-        <div class="about-text">
-          <p class="section-label">Who We Are</p>
-          <h2 class="section-title">Website building<br>made simple.</h2>
-          <p>Website Creator was built for one reason: to make getting a professional website online as simple and stress-free as possible. Whether you need a clean static site, a dynamic CMS-powered platform, or a full e-commerce store, we handle the hard parts so you don't have to.</p>
-          <p>We believe every small business deserves a great website — not just the ones with big budgets or in-house developers. Our team delivers clear communication, transparent pricing, and results you can actually see.</p>
-          <div class="about-stats">
-            <div class="stat">
-              <span class="stat-number">50</span><span class="stat-suffix">+</span>
-              <span class="stat-label">Websites Built</span>
-            </div>
-            <div class="stat">
-              <span class="stat-number">100</span><span class="stat-suffix">%</span>
-              <span class="stat-label">Client Satisfaction</span>
-            </div>
-            <div class="stat">
-              <span class="stat-number">3</span><span class="stat-suffix">wk</span>
-              <span class="stat-label">Avg. Delivery</span>
-            </div>
-          </div>
+        <div class="about-text" data-about-reveal>
+          <p class="section-label">Which website type?</p>
+          <h2 class="section-title about-title">Static or<br><em>Dynamic?</em></h2>
+          <p class="about-subtitle">How do you know what you need?</p>
+          <p class="about-body">Simple. There are two options. At Pixel Borough we help you pick the right one — no jargon, no confusion.</p>
         </div>
-        <div class="about-visual">
-          <div class="pizza-graphic">
-            <div class="pizza-circle">
-              <div class="pizza-emoji">💻</div>
-            </div>
-            <div class="float-tag tag-1">⚡ Fast Delivery</div>
-            <div class="float-tag tag-2">🛒 E-commerce Ready</div>
-            <div class="float-tag tag-3">📱 Mobile-First</div>
+        <div class="about-types" data-about-reveal data-reveal-delay="true">
+          <div class="about-type">
+            <span class="about-type-tag about-type-tag--static">Most popular</span>
+            <h3 class="about-type-name">Static Website</h3>
+            <p class="about-type-desc">For businesses who need a great online presence — services, contact, location. Fast, affordable, and easy to manage.</p>
+          </div>
+          <div class="about-type">
+            <span class="about-type-tag about-type-tag--dynamic">More powerful</span>
+            <h3 class="about-type-name about-type-name--dynamic">Dynamic Website</h3>
+            <p class="about-type-desc">When you need user accounts, e-commerce, bookings, or custom functionality built around your business.</p>
           </div>
         </div>
       </div>
@@ -175,62 +308,80 @@
   <section class="features">
     <div class="container">
       <div class="section-header">
-        <p class="section-label">Why Website Creator</p>
-        <h2 class="section-title">What Makes Us Different</h2>
+        <p class="section-label">Pricing</p>
+        <h2 class="section-title">You know the type and process,<br><em>now here's the pricing.</em></h2>
+        <p class="section-sub">Choose how involved you want us to be — we build it either way.</p>
       </div>
-      <div class="features-grid">
-        <div class="feature-card">
-          <div class="feature-icon-wrap">🚀</div>
-          <h3>Fast Delivery</h3>
-          <p>Most websites are delivered in 2–3 weeks. We move quickly so you can get online, get found, and start winning customers without the long wait.</p>
-        </div>
-        <div class="feature-card">
-          <div class="feature-icon-wrap">📱</div>
-          <h3>Mobile-First Design</h3>
-          <p>Every site we build looks and performs perfectly on phones, tablets, and desktops — because most of your visitors are on mobile.</p>
-        </div>
-        <div class="feature-card">
-          <div class="feature-icon-wrap">💰</div>
-          <h3>Transparent Pricing</h3>
-          <p>No hidden costs, no surprise invoices. You get a fixed-price quote upfront so you always know exactly what you're paying.</p>
-        </div>
-        <div class="feature-card">
-          <div class="feature-icon-wrap">🔧</div>
-          <h3>Easy to Manage</h3>
-          <p>We hand over websites you can actually update yourself — or sign up for a maintenance plan and let us handle everything for you.</p>
-        </div>
-      </div>
-    </div>
-  </section>
+      <div class="features-cards" id="featuresCards">
 
-  <!-- TESTIMONIALS -->
-  <section class="testimonials">
-    <div class="container">
-      <div class="section-header">
-        <p class="section-label">Reviews</p>
-        <h2 class="section-title">What Our Clients Say</h2>
-        <div class="overall-rating">
-          <span class="stars">⭐⭐⭐⭐⭐</span>
-          <span class="rating-score">5.0 / 5</span>
-          <span class="rating-source">Based on Google &amp; client reviews</span>
+        <div class="feat-card feat-card--default" id="fc1" onclick="featPick('fc1')">
+          <div class="feat-tab">
+            <div class="feat-tab-icon feat-icon--default">🏠</div>
+            <span class="feat-tab-label">One-Off</span>
+            <span class="feat-tab-arr">↑</span>
+          </div>
+          <div class="feat-full">
+            <div class="feat-icon-wrap feat-icon--default">🏠</div>
+            <span class="feat-tag feat-tag--default">Build only</span>
+            <h3 class="feat-title">One-Off Payment</h3>
+            <p class="feat-desc">We build your website and hand it over completely. You own it outright — no strings attached.</p>
+            <ul class="feat-pts">
+              <li>Full design and build</li>
+              <li>One round of revisions</li>
+              <li>Full ownership — yours to keep</li>
+              <li>Domain and hosting guidance</li>
+            </ul>
+            <div class="feat-click-prompt"><span class="feat-prompt-icon">↓</span> Click to find out more</div>
+            <div class="feat-extra">
+              <div class="feat-extra-inner">
+                <p class="feat-extra-label">After launch you get</p>
+                <ul class="feat-extra-pts">
+                  <li>Full source code and all project files</li>
+                  <li>A handover call to walk you through everything</li>
+                  <li>Step-by-step hosting setup instructions</li>
+                  <li>Best for businesses with someone to manage updates</li>
+                </ul>
+                <a href="register.html" class="btn feat-cta feat-cta--default" onclick="event.stopPropagation()">Get a Quote</a>
+              </div>
+            </div>
+          </div>
         </div>
-      </div>
-      <div class="testimonials-grid">
-        <div class="testimonial-card">
-          <div class="t-stars">⭐⭐⭐⭐⭐</div>
-          <p>"We needed a website fast and Website Creator delivered a stunning site in just 2 weeks. Our enquiries doubled within the first month. Absolutely worth every penny."</p>
-          <span class="reviewer">— Sarah T., Manchester</span>
+
+        <div class="feat-card feat-card--featured" id="fc2" onclick="featPick('fc2')">
+          <div class="feat-pop-strip">⭐ Most popular</div>
+          <div class="feat-tab">
+            <span class="feat-pop-side">⭐ Most popular</span>
+            <div class="feat-tab-icon feat-icon--featured">☁️</div>
+            <span class="feat-tab-label">Monthly</span>
+            <span class="feat-tab-arr">↑</span>
+          </div>
+          <div class="feat-full">
+            <div class="feat-icon-wrap feat-icon--featured">☁️</div>
+            <span class="feat-tag feat-tag--featured">Managed for you</span>
+            <h3 class="feat-title">Monthly Plan</h3>
+            <p class="feat-desc">We build your site and handle everything ongoing — no technical headaches, ever.</p>
+            <ul class="feat-pts">
+              <li>Everything in the one-off plan</li>
+              <li>Hosting and security managed</li>
+              <li>Ongoing changes and updates</li>
+              <li>Priority support whenever you need it</li>
+            </ul>
+            <div class="feat-click-prompt"><span class="feat-prompt-icon">↓</span> Click to find out more</div>
+            <div class="feat-extra">
+              <div class="feat-extra-inner">
+                <p class="feat-extra-label">Every month we handle</p>
+                <ul class="feat-extra-pts">
+                  <li>Hosting on our fast, secure servers with SSL</li>
+                  <li>Content updates — text, images, new pages</li>
+                  <li>Security monitoring and automatic backups</li>
+                  <li>Priority email and phone support — we're on it</li>
+                </ul>
+                <a href="register.html" class="btn feat-cta feat-cta--featured" onclick="event.stopPropagation()">Get a Quote</a>
+              </div>
+            </div>
+          </div>
         </div>
-        <div class="testimonial-card">
-          <div class="t-stars">⭐⭐⭐⭐⭐</div>
-          <p>"Finally a web agency that explains everything in plain English. They built our e-commerce store from scratch and it has been a complete game changer for our business."</p>
-          <span class="reviewer">— James K., Leeds</span>
-        </div>
-        <div class="testimonial-card">
-          <div class="t-stars">⭐⭐⭐⭐⭐</div>
-          <p>"The maintenance plan means I never have to worry about the site going down or being outdated. Reliable, responsive, and genuinely great value for money."</p>
-          <span class="reviewer">— Priya S., London</span>
-        </div>
+
       </div>
     </div>
   </section>
@@ -239,7 +390,7 @@
     <div class="container">
       <div class="footer-grid">
         <div class="footer-brand">
-          <span class="footer-logo">Website Creator</span>
+          <a href="index.html" class="footer-logo-link"><img src="images/pixelboroughlogo-white.png" alt="Pixel Borough logo" class="footer-logo-img" /></a>
           <p>Building fast, beautiful websites for small businesses.</p>
           <div class="social-links">
             <a href="#" aria-label="Instagram">📸</a>
@@ -283,6 +434,68 @@
       </div>
     </div>
   </footer>
+
+  <!-- REEL CARD POPUP -->
+  <div class="reel-popup-overlay" id="reelPopupOverlay" role="dialog" aria-modal="true" aria-label="Project preview">
+    <div class="reel-popup">
+      <button class="reel-popup-close" id="reelPopupClose" aria-label="Close">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+      <div class="reel-popup-img-wrap">
+        <img id="reelPopupImg" src="" alt="" />
+      </div>
+      <div class="reel-popup-body">
+        <div class="reel-popup-meta">
+          <span class="reel-popup-tag" id="reelPopupTag"></span>
+          <span class="reel-popup-ind" id="reelPopupInd"></span>
+        </div>
+        <h3 class="reel-popup-name" id="reelPopupName"></h3>
+        <p class="reel-popup-url" id="reelPopupUrl"></p>
+        <p class="reel-popup-desc" id="reelPopupDesc"></p>
+        <a href="portfolio.html" class="btn reel-popup-btn">View in Portfolio →</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- PORTFOLIO COMPARE MODAL (shared with portfolio page) -->
+  <div class="pf-modal-overlay" id="pfModalOverlay" role="dialog" aria-modal="true" aria-label="Project screenshots">
+    <div class="pf-modal">
+      <div class="pf-modal-header">
+        <div class="pf-modal-header-top">
+          <div class="pf-modal-info">
+            <span class="pf-modal-tag" id="pfModalTag"></span>
+            <h2 class="pf-modal-title" id="pfModalTitle"></h2>
+          </div>
+          <button class="pf-modal-close" id="pfModalClose" aria-label="Close">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+          </button>
+        </div>
+        <div class="pf-compare-bar" id="pfCompareBar">
+          <span class="pf-compare-bar-lbl pf-lbl-before">Before</span>
+          <div class="pf-compare-track" id="pfCompareTrack">
+            <div class="pf-compare-fill" id="pfCompareFill"></div>
+            <button class="pf-compare-thumb" id="pfCompareThumb" aria-label="Drag to compare">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8"><polyline points="15 18 9 12 15 6"/><polyline points="9 18 15 12 9 6"/></svg>
+            </button>
+          </div>
+          <span class="pf-compare-bar-lbl pf-lbl-after">After</span>
+        </div>
+      </div>
+      <div class="pf-modal-stage">
+        <button class="pf-modal-nav pf-modal-prev" id="pfModalPrev" aria-label="Previous page">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg>
+        </button>
+        <div class="pf-modal-slides" id="pfModalSlides"></div>
+        <button class="pf-modal-nav pf-modal-next" id="pfModalNext" aria-label="Next page">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
+        </button>
+      </div>
+      <div class="pf-modal-footer">
+        <div class="pf-modal-dots" id="pfModalDots"></div>
+        <span class="pf-modal-counter" id="pfModalCounter"></span>
+      </div>
+    </div>
+  </div>
 
   <script src="script.js"></script>
 </body>

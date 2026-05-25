@@ -12,14 +12,16 @@
 </head>
 <body>
 
-  <nav class="navbar scrolled" id="navbar">
+  <nav class="navbar" id="navbar">
     <div class="nav-container">
-      <a href="index.html" class="nav-logo">Website Creator</a>
+      <a href="index.html" class="nav-logo" aria-label="Website Creator home">
+        <img src="images/pixelboroughlogo-white.png" alt="Pixel Borough logo" />
+      </a>
       <button class="nav-toggle" id="navToggle" aria-label="Toggle navigation menu">
         <span></span><span></span><span></span>
       </button>
       <ul class="nav-menu" id="navMenu">
-        <li><a href="index.html"    class="nav-link">Home</a></li>
+        <li><a href="how-it-works.html" class="nav-link">How It Works</a></li>
         <li><a href="services.html"  class="nav-link">Services</a></li>
         <li><a href="portfolio.html" class="nav-link">Portfolio</a></li>
         <li><a href="contact.html"   class="nav-link">Contact</a></li>
@@ -28,154 +30,284 @@
     </div>
   </nav>
 
+  <!-- SERVICES HERO -->
+  <section class="services-hero">
+    <div class="services-hero-orb services-hero-orb--1"></div>
+    <div class="services-hero-orb services-hero-orb--2"></div>
+    <div class="services-hero-orb services-hero-orb--3"></div>
+    <div class="container">
+      <p class="section-label services-hero-label">What We Offer</p>
+      <h1 class="services-hero-title">Our <em>Services</em></h1>
+      <p class="services-hero-sub">Fixed pricing. Clear timelines. No hidden fees.<br>Pick the plan that suits you and we'll take care of the rest.</p>
+      <div class="services-hero-badges">
+        <span><svg width="13" height="13" viewBox="0 0 20 20" fill="currentColor"><path d="M16.707 5.293a1 1 0 00-1.414 0L8 12.586 4.707 9.293a1 1 0 00-1.414 1.414l4 4a1 1 0 001.414 0l8-8a1 1 0 000-1.414z"/></svg> Fixed-price quotes</span>
+        <span><svg width="13" height="13" viewBox="0 0 20 20" fill="currentColor"><path d="M16.707 5.293a1 1 0 00-1.414 0L8 12.586 4.707 9.293a1 1 0 00-1.414 1.414l4 4a1 1 0 001.414 0l8-8a1 1 0 000-1.414z"/></svg> Mobile-first design</span>
+        <span><svg width="13" height="13" viewBox="0 0 20 20" fill="currentColor"><path d="M16.707 5.293a1 1 0 00-1.414 0L8 12.586 4.707 9.293a1 1 0 00-1.414 1.414l4 4a1 1 0 001.414 0l8-8a1 1 0 000-1.414z"/></svg> UK-based team</span>
+        <span><svg width="13" height="13" viewBox="0 0 20 20" fill="currentColor"><path d="M16.707 5.293a1 1 0 00-1.414 0L8 12.586 4.707 9.293a1 1 0 00-1.414 1.414l4 4a1 1 0 001.414 0l8-8a1 1 0 000-1.414z"/></svg> Fast turnaround</span>
+      </div>
+    </div>
+  </section>
+
   <!-- SERVICES -->
   <section class="menu-section" id="services">
     <div class="container">
-      <div class="section-header">
-        <p class="section-label">What We Offer</p>
-        <h2 class="section-title">Our Services</h2>
-        <p class="section-desc">Every project comes with a fixed price, clear timeline, and a website built to last. Get in touch and we will find the right solution for you.</p>
-      </div>
       <div class="menu-tabs">
-        <button class="tab-btn active" data-tab="all">All</button>
-        <button class="tab-btn" data-tab="static">Static Sites</button>
-        <button class="tab-btn" data-tab="dynamic">Dynamic / CMS</button>
+        <button class="tab-btn active" data-tab="starter">
+          <span class="tab-geo tab-geo-starter"><span class="tri"></span></span>
+          <span class="tab-label">Starter</span>
+          <span class="tab-sub">1-page sites</span>
+        </button>
+        <button class="tab-btn" data-tab="business">
+          <span class="tab-geo tab-geo-business"><span class="ring"></span><span class="tri"></span></span>
+          <span class="tab-label">Business</span>
+          <span class="tab-sub">3–6 pages</span>
+        </button>
+        <button class="tab-btn" data-tab="custom">
+          <span class="tab-geo tab-geo-custom"><span class="ring"></span><span class="ring-2"></span><span class="tri"></span><span class="ball"></span></span>
+          <span class="tab-label">Custom</span>
+          <span class="tab-sub">Tailored builds</span>
+        </button>
       </div>
+
       <div class="menu-grid" id="menuGrid">
-        <!-- Static: Single -->
-        <div class="pizza-card" data-category="static">
+
+        <!-- ── STARTER ── -->
+        <div class="pizza-card tier-base" data-category="starter">
+          <div class="card-tier-bar"></div>
+          <div class="card-popular-ribbon ribbon-own">Own it outright</div>
           <div class="pizza-card-img static"><span>💻</span></div>
           <div class="pizza-card-body">
-            <div class="pizza-card-header">
-              <h3>Static Website</h3>
-              <span class="price">From £499</span>
-            </div>
-            <p>We build your website and hand it over. You own it outright and host it wherever you like — no ongoing costs from us.</p>
+            <div class="card-tier-label">One-Off</div>
+            <h3 class="card-title">Starter Build</h3>
+            <p class="card-tagline">We build it — you take it from there.</p>
+            <div class="card-price">From <strong>£399</strong></div>
             <ul class="card-features">
-              <li>✔ One-off payment</li>
-              <li>✔ Full ownership</li>
-              <li>✔ Host anywhere</li>
+              <li>1-page website</li>
+              <li>Mobile-friendly design</li>
+              <li>Contact form</li>
+              <li>Google Maps embed</li>
             </ul>
-            <span class="tag">One-off</span>
             <div class="card-actions">
-              <button class="read-more-btn" data-modal="static-single">Read More</button>
+              <button class="read-more-btn" data-modal="starter-one-off">View Details</button>
               <a href="register.html" class="btn btn-primary btn-sm">Get a Quote</a>
             </div>
           </div>
         </div>
-        <!-- Static: Bundle -->
-        <div class="pizza-card pizza-card-bundle" data-category="static">
-          <div class="pizza-card-bundle-badge">⭐ Bundle</div>
+
+        <div class="pizza-card tier-managed" data-category="starter">
+          <div class="card-tier-bar"></div>
+          <div class="card-popular-ribbon">Most Popular</div>
           <div class="pizza-card-img static"><span>📦</span></div>
           <div class="pizza-card-body">
-            <div class="pizza-card-header">
-              <h3>Static Website + Hosting</h3>
-              <span class="price">From £49/mo</span>
+            <div class="card-tier-label">Managed</div>
+            <h3 class="card-title">Starter — We Manage</h3>
+            <p class="card-tagline">Built, hosted, and maintained for you.</p>
+            <div class="card-offer-banner">Introductory offer — £20/mo off, limited availability</div>
+            <div class="card-price">
+              <span class="card-price-was">£80</span><strong>£60</strong><span>/mo</span><span class="card-price-save">Save £20/mo</span>
+              <small style="display:block;font-size:0.72rem;color:#64748b;margin-top:4px;">£200 deposit · £200 on launch</small>
             </div>
-            <p>Everything in the single plan, plus we host your site and you can request as many changes as you need — anytime.</p>
             <ul class="card-features">
-              <li>✔ Website build included</li>
-              <li>✔ + Hosting</li>
-              <li>✔ + Unlimited Changes</li>
+              <li>1-page website</li>
+              <li>Mobile-friendly design</li>
+              <li>Contact form &amp; Google Maps</li>
+              <li class="feature-bonus">Hosting included</li>
+              <li class="feature-bonus">Domain setup handled</li>
+              <li class="feature-bonus">Minor updates (48 hr turnaround)</li>
             </ul>
-            <span class="tag tag-hot">Most Popular</span>
             <div class="card-actions">
-              <button class="read-more-btn" data-modal="static-bundle">Read More</button>
+              <button class="read-more-btn" data-modal="starter-manage">View Details</button>
               <a href="register.html" class="btn btn-primary btn-sm">Get a Quote</a>
             </div>
           </div>
         </div>
-        <!-- Dynamic: Single -->
-        <div class="pizza-card" data-category="dynamic">
-          <div class="pizza-card-img dynamic"><span>⚙️</span></div>
+
+        <div class="pizza-card tier-priority" data-category="starter">
+          <div class="card-tier-bar"></div>
+          <div class="pizza-card-img static"><span>🚀</span></div>
           <div class="pizza-card-body">
-            <div class="pizza-card-header">
-              <h3>Dynamic Website</h3>
-              <span class="price">From £999</span>
+            <div class="card-tier-label">Priority</div>
+            <h3 class="card-title">Starter+ — Priority</h3>
+            <p class="card-tagline">Faster support, bigger changes welcome.</p>
+            <div class="card-price">From <strong>£109</strong><span>/mo</span>
+              <small style="display:block;font-size:0.72rem;color:#64748b;margin-top:4px;">£100 deposit · £150 on launch</small>
             </div>
-            <p>A CMS-powered website you can update yourself — add blog posts, change content, and manage pages without touching code.</p>
             <ul class="card-features">
-              <li>✔ One-off payment</li>
-              <li>✔ Full ownership</li>
-              <li>✔ Self-managed CMS</li>
+              <li>1-page website</li>
+              <li>Mobile-friendly design</li>
+              <li>Contact form &amp; Google Maps</li>
+              <li class="feature-bonus">Hosting included</li>
+              <li class="feature-bonus">Domain setup handled</li>
+              <li class="feature-priority">Major &amp; minor changes under 48 hrs</li>
             </ul>
-            <span class="tag">CMS-Powered</span>
             <div class="card-actions">
-              <button class="read-more-btn" data-modal="dynamic-single">Read More</button>
+              <button class="read-more-btn" data-modal="starter-plus">View Details</button>
               <a href="register.html" class="btn btn-primary btn-sm">Get a Quote</a>
             </div>
           </div>
         </div>
-        <!-- Dynamic: Bundle -->
-        <div class="pizza-card pizza-card-bundle" data-category="dynamic">
-          <div class="pizza-card-bundle-badge">⭐ Bundle</div>
+
+        <div class="pizza-card tier-advanced" data-category="starter">
+          <div class="card-tier-bar"></div>
+          <div class="pizza-card-img dynamic"><span>🧩</span></div>
+          <div class="pizza-card-body">
+            <div class="card-tier-label">Advanced</div>
+            <h3 class="card-title">Starter+++ — Backend</h3>
+            <p class="card-tagline">Full management plus backend features.</p>
+            <div class="card-price">From <strong>£189</strong><span>/mo</span>
+              <small style="display:block;font-size:0.72rem;color:#64748b;margin-top:4px;">£100 deposit · £150 on launch</small>
+            </div>
+            <ul class="card-features">
+              <li>1-page website</li>
+              <li>Mobile-friendly design</li>
+              <li>Contact form &amp; Google Maps</li>
+              <li class="feature-bonus">Hosting included</li>
+              <li class="feature-bonus">Domain setup handled</li>
+              <li class="feature-priority">Changes under 48 hrs</li>
+              <li class="feature-backend">Login / register backend features</li>
+            </ul>
+            <div class="card-actions">
+              <button class="read-more-btn" data-modal="starter-plus-plus-plus">View Details</button>
+              <a href="register.html" class="btn btn-primary btn-sm">Get a Quote</a>
+            </div>
+          </div>
+        </div>
+
+        <!-- ── BUSINESS ── -->
+        <div class="pizza-card tier-base" data-category="business">
+          <div class="card-tier-bar"></div>
+          <div class="card-popular-ribbon ribbon-own">Own it outright</div>
+          <div class="pizza-card-img dynamic"><span>🏢</span></div>
+          <div class="pizza-card-body">
+            <div class="card-tier-label">One-Off</div>
+            <h3 class="card-title">Business Build</h3>
+            <p class="card-tagline">A full multi-page site — yours to keep.</p>
+            <div class="card-price">From <strong>£999</strong></div>
+            <ul class="card-features">
+              <li>3–6 page website</li>
+              <li>Mobile-friendly design</li>
+              <li>Contact form</li>
+              <li>Google Maps embed</li>
+            </ul>
+            <div class="card-actions">
+              <button class="read-more-btn" data-modal="business-one-off">View Details</button>
+              <a href="register.html" class="btn btn-primary btn-sm">Get a Quote</a>
+            </div>
+          </div>
+        </div>
+
+        <div class="pizza-card tier-managed" data-category="business">
+          <div class="card-tier-bar"></div>
+          <div class="card-popular-ribbon">Most Popular</div>
           <div class="pizza-card-img dynamic"><span>📦</span></div>
           <div class="pizza-card-body">
-            <div class="pizza-card-header">
-              <h3>Dynamic Website + Hosting</h3>
-              <span class="price">From £89/mo</span>
-            </div>
-            <p>Everything in the single plan, plus we host your site and you can request as many changes as you need — anytime.</p>
+            <div class="card-tier-label">Managed</div>
+            <h3 class="card-title">Business — We Manage</h3>
+            <p class="card-tagline">Your full site built, hosted, and cared for.</p>
+            <div class="card-price">From <strong>£129</strong><span>/mo</span></div>
             <ul class="card-features">
-              <li>✔ Website build included</li>
-              <li>✔ + Hosting</li>
-              <li>✔ + Unlimited Changes</li>
+              <li>3–6 page website</li>
+              <li>Mobile-friendly design</li>
+              <li>Contact form &amp; Google Maps</li>
+              <li class="feature-bonus">Hosting included</li>
+              <li class="feature-bonus">Domain setup handled</li>
+              <li class="feature-bonus">Minor updates (48 hr turnaround)</li>
             </ul>
-            <span class="tag tag-hot">Best Value</span>
             <div class="card-actions">
-              <button class="read-more-btn" data-modal="dynamic-bundle">Read More</button>
+              <button class="read-more-btn" data-modal="business-manage">View Details</button>
               <a href="register.html" class="btn btn-primary btn-sm">Get a Quote</a>
             </div>
           </div>
         </div>
-        <div class="pizza-card pizza-card-locked" data-category="ecommerce">
-          <div class="pizza-card-lock-badge">🔒 Coming Soon</div>
-          <div class="pizza-card-img ecommerce"><span>🛒</span></div>
+
+        <div class="pizza-card tier-priority" data-category="business">
+          <div class="card-tier-bar"></div>
+          <div class="pizza-card-img dynamic"><span>🚀</span></div>
           <div class="pizza-card-body">
-            <div class="pizza-card-header">
-              <h3>E-commerce Store</h3>
-              <span class="price">From £1,499</span>
+            <div class="card-tier-label">Priority</div>
+            <h3 class="card-title">Business+ — Priority</h3>
+            <p class="card-tagline">Fast-tracked updates for your growing business.</p>
+            <div class="card-price">From <strong>£199</strong><span>/mo</span></div>
+            <ul class="card-features">
+              <li>3–6 page website</li>
+              <li>Mobile-friendly design</li>
+              <li>Contact form &amp; Google Maps</li>
+              <li class="feature-bonus">Hosting included</li>
+              <li class="feature-bonus">Domain setup handled</li>
+              <li class="feature-priority">Major &amp; minor changes under 48 hrs</li>
+            </ul>
+            <div class="card-actions">
+              <button class="read-more-btn" data-modal="business-plus">View Details</button>
+              <a href="register.html" class="btn btn-primary btn-sm">Get a Quote</a>
             </div>
-            <p>A fully featured online store with product listings, cart, checkout, and payment processing.</p>
-            <span class="tag">Not Available Yet</span>
           </div>
         </div>
-        <div class="pizza-card pizza-card-locked" data-category="other">
-          <div class="pizza-card-lock-badge">🔒 Coming Soon</div>
-          <div class="pizza-card-img other"><span>🎯</span></div>
+
+        <div class="pizza-card tier-advanced" data-category="business">
+          <div class="card-tier-bar"></div>
+          <div class="pizza-card-img dynamic"><span>🧩</span></div>
           <div class="pizza-card-body">
-            <div class="pizza-card-header">
-              <h3>Landing Page</h3>
-              <span class="price">From £299</span>
+            <div class="card-tier-label">Advanced</div>
+            <h3 class="card-title">Business+++ — Backend</h3>
+            <p class="card-tagline">Full management with backend power unlocked.</p>
+            <div class="card-price">From <strong>£399</strong><span>/mo</span></div>
+            <ul class="card-features">
+              <li>3–6 page website</li>
+              <li>Mobile-friendly design</li>
+              <li>Contact form &amp; Google Maps</li>
+              <li class="feature-bonus">Hosting included</li>
+              <li class="feature-bonus">Domain setup handled</li>
+              <li class="feature-priority">Changes under 48 hrs</li>
+              <li class="feature-backend">Login / register backend features</li>
+            </ul>
+            <div class="card-actions">
+              <button class="read-more-btn" data-modal="business-plus-plus-plus">View Details</button>
+              <a href="register.html" class="btn btn-primary btn-sm">Get a Quote</a>
             </div>
-            <p>A single, high-converting page for a campaign, product launch, or lead generation.</p>
-            <span class="tag">Not Available Yet</span>
           </div>
         </div>
-        <div class="pizza-card pizza-card-locked" data-category="other">
-          <div class="pizza-card-lock-badge">🔒 Coming Soon</div>
-          <div class="pizza-card-img other"><span>🔄</span></div>
+
+        <!-- ── CUSTOM ── -->
+        <div class="pizza-card tier-custom" data-category="custom">
+          <div class="card-tier-bar"></div>
+          <div class="pizza-card-img other"><span>🛠️</span></div>
           <div class="pizza-card-body">
-            <div class="pizza-card-header">
-              <h3>Redesign &amp; Migration</h3>
-              <span class="price">From £599</span>
+            <div class="card-tier-label">Support</div>
+            <h3 class="card-title">Help With Your Existing Site</h3>
+            <p class="card-tagline">Already have a website? We can improve it.</p>
+            <ul class="card-features">
+              <li>Fixes and improvements to your current site</li>
+              <li>Design and layout adjustments</li>
+              <li>Performance &amp; mobile optimisation</li>
+              <li>Ongoing support available</li>
+            </ul>
+            <div class="card-actions">
+              <button class="read-more-btn" data-modal="custom-support">View Details</button>
+              <a href="register.html" class="btn btn-primary btn-sm">Get a Quote</a>
             </div>
-            <p>Breathe new life into an outdated website or move your existing site to a better platform.</p>
-            <span class="tag">Not Available Yet</span>
           </div>
         </div>
-        <div class="pizza-card pizza-card-locked" data-category="other">
-          <div class="pizza-card-lock-badge">🔒 Coming Soon</div>
-          <div class="pizza-card-img other"><span>🛡️</span></div>
+
+        <div class="pizza-card tier-custom" data-category="custom">
+          <div class="card-tier-bar"></div>
+          <div class="pizza-card-img ecommerce"><span>🧰</span></div>
           <div class="pizza-card-body">
-            <div class="pizza-card-header">
-              <h3>Maintenance &amp; Support</h3>
-              <span class="price">From £49/mo</span>
+            <div class="card-tier-label">Custom Build</div>
+            <h3 class="card-title">Fully Custom Website</h3>
+            <p class="card-tagline">Built from scratch around your exact needs.</p>
+            <ul class="card-features">
+              <li>Any number of pages</li>
+              <li>Bespoke design and structure</li>
+              <li>Feature planning around your goals</li>
+              <li>Scalable for future growth</li>
+            </ul>
+            <div class="card-actions">
+              <button class="read-more-btn" data-modal="custom-website">View Details</button>
+              <a href="register.html" class="btn btn-primary btn-sm">Get a Quote</a>
             </div>
-            <p>Ongoing hosting, security updates, backups, and content changes handled for you each month.</p>
-            <span class="tag">Not Available Yet</span>
           </div>
         </div>
+
       </div>
     </div>
   </section>
@@ -215,7 +347,7 @@
     <div class="container">
       <div class="footer-grid">
         <div class="footer-brand">
-          <span class="footer-logo">Website Creator</span>
+          <a href="index.html" class="footer-logo-link"><img src="images/pixelboroughlogo-white.png" alt="Pixel Borough logo" class="footer-logo-img" /></a>
           <p>Building fast, beautiful websites for small businesses.</p>
           <div class="social-links">
             <a href="#" aria-label="Instagram">📸</a>
@@ -265,14 +397,23 @@
     <div class="service-modal-overlay" id="modalOverlay"></div>
     <div class="service-modal-box">
       <button class="service-modal-close" id="modalClose" aria-label="Close">&#x2715;</button>
-      <div class="service-modal-icon" id="modalIcon"></div>
-      <span class="service-modal-tag" id="modalTag"></span>
-      <h2 class="service-modal-title" id="modalTitle"></h2>
-      <p class="service-modal-price" id="modalPrice"></p>
+      <div class="service-modal-header">
+        <div class="service-modal-icon" id="modalIcon"></div>
+        <div>
+          <span class="service-modal-tag" id="modalTag"></span>
+          <h2 class="service-modal-title" id="modalTitle"></h2>
+          <p class="service-modal-price" id="modalPrice"></p>
+        </div>
+      </div>
       <p class="service-modal-desc" id="modalDesc"></p>
+      <div class="service-modal-deal" id="modalDeal"></div>
+      <div class="service-modal-meta" id="modalMeta"></div>
+      <div class="service-modal-section-label">What's included</div>
       <ul class="service-modal-features" id="modalFeatures"></ul>
+      <div class="service-modal-note" id="modalNote"></div>
       <div class="service-modal-actions">
         <a href="register.html" class="btn btn-primary">Get a Quote &rarr;</a>
+        <button class="service-modal-close-link" id="modalClose2">Close</button>
       </div>
     </div>
   </div>

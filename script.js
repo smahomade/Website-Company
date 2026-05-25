@@ -1,16 +1,15 @@
-/* Website Factory — script.js (multi-page) */
+﻿/* Website Factory — script.js (multi-page) */
 
 /* ---- Navigation ---- */
 const navbar    = document.getElementById('navbar');
 const navToggle = document.getElementById('navToggle');
 const navMenu   = document.getElementById('navMenu');
 
-const isHomePage = window.location.pathname.endsWith('index.html') || window.location.pathname === '/' || window.location.pathname.endsWith('/');
+// Set correct state immediately on page load
+navbar.classList.toggle('scrolled', window.scrollY > 60);
 
 window.addEventListener('scroll', () => {
-  if (isHomePage) {
-    navbar.classList.toggle('scrolled', window.scrollY > 60);
-  }
+  navbar.classList.toggle('scrolled', window.scrollY > 60);
 }, { passive: true });
 
 if (navToggle) {
@@ -49,16 +48,26 @@ document.querySelectorAll('.nav-link:not(.nav-cta)').forEach(link => {
 const tabBtns   = document.querySelectorAll('.tab-btn');
 const menuCards = document.querySelectorAll('.pizza-card');
 
+function applyServiceTab(tab) {
+  menuCards.forEach(card => {
+    card.classList.toggle('hidden', card.dataset.category !== tab);
+  });
+}
+
 tabBtns.forEach(btn => {
   btn.addEventListener('click', () => {
     tabBtns.forEach(b => b.classList.remove('active'));
     btn.classList.add('active');
-    const tab = btn.dataset.tab;
-    menuCards.forEach(card => {
-      card.classList.toggle('hidden', tab !== 'all' && card.dataset.category !== tab);
-    });
+    applyServiceTab(btn.dataset.tab);
   });
 });
+
+const defaultServiceTab = document.querySelector('.tab-btn.active') || tabBtns[0];
+if (defaultServiceTab) {
+  tabBtns.forEach(b => b.classList.remove('active'));
+  defaultServiceTab.classList.add('active');
+  applyServiceTab(defaultServiceTab.dataset.tab);
+}
 
 /* ---- Fade-in on scroll ---- */
 const fadeEls = document.querySelectorAll(
@@ -75,6 +84,52 @@ const io = new IntersectionObserver(entries => {
 }, { threshold: 0.08 });
 
 fadeEls.forEach(el => io.observe(el));
+
+/* ---- Pricing cards — expand on click ---- */
+(function () {
+  'use strict';
+  var featCur = null;
+  window.featPick = function (id) {
+    var cards = document.querySelectorAll('.feat-card');
+    if (featCur === id) {
+      cards.forEach(function (c) { c.classList.remove('feat-active', 'feat-inactive'); });
+      featCur = null;
+      return;
+    }
+    featCur = id;
+    cards.forEach(function (c) {
+      var hit = c.id === id;
+      c.classList.toggle('feat-active', hit);
+      c.classList.toggle('feat-inactive', !hit);
+    });
+  };
+})();
+
+/* ---- About — reveal on scroll ---- */
+(function () {
+  var els = document.querySelectorAll('[data-about-reveal]');
+  if (!els.length) return;
+  var obs = new IntersectionObserver(function (entries) {
+    entries.forEach(function (e) {
+      if (e.isIntersecting) { e.target.classList.add('about-visible'); obs.unobserve(e.target); }
+    });
+  }, { threshold: 0.15 });
+  els.forEach(function (el) { obs.observe(el); });
+})();
+
+/* ---- How It Works — staggered card entrance ---- */
+const hiwCards = document.querySelectorAll('.hiw-step-card');
+if (hiwCards.length) {
+  const hiwIO = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('hiw-visible');
+        hiwIO.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.12 });
+  hiwCards.forEach(card => hiwIO.observe(card));
+}
 
 /* ---- Portfolio filters ---- */
 const portfolioFilterBtns = document.querySelectorAll('.portfolio-filter-btn');
@@ -93,83 +148,266 @@ portfolioFilterBtns.forEach(btn => {
 
 /* ---- Service Modal ---- */
 const modalData = {
-  'static-single': {
-    icon: '\ud83d\udcbb',
-    tag: 'One-off Payment',
-    title: 'Static Website',
-    price: 'From \u00a3499',
-    desc: 'A fast, secure, hand-coded static website built from scratch around your brand. No bloated CMS, no unnecessary complexity \u2014 just clean HTML & CSS that loads instantly and ranks well on Google.',
+  'starter-one-off': {
+    icon: '💻',
+    tag: 'Starter · One-Off',
+    title: 'Starter Build',
+    price: 'From £299',
+    desc: 'A clean single-page website built to your brand — handed over to you as finished files with full ownership.',
+    meta: [
+      { icon: '👤', text: 'Ideal for: freelancers, sole traders, new businesses' },
+    ],
     features: [
-      'Custom design tailored to your brand',
-      'Mobile-friendly & fully responsive',
-      'Fast load times \u2014 no database needed',
-      'SEO-friendly structure built in',
-      'Contact form included',
-      'Delivered in 1\u20132 weeks',
-      'Full code ownership \u2014 yours to keep'
-    ]
+      { text: '1-page website covering all key sections', type: 'standard' },
+      { text: 'Fully mobile-responsive design', type: 'standard' },
+      { text: 'Enquiry / contact form', type: 'standard' },
+      { text: 'Google Maps embed', type: 'standard' },
+      { text: 'Basic on-page SEO setup', type: 'standard' },
+      { text: 'Source files handed over on completion', type: 'standard' },
+    ],
+    note: 'Hosting and domain are not included. You arrange your own after delivery.'
   },
-  'static-bundle': {
-    icon: '\ud83d\udce6',
-    tag: 'Bundle \u00b7 Monthly',
-    title: 'Static Website + Hosting',
-    price: 'From \u00a349/mo',
-    desc: 'Everything in the Static Website plan, plus we take care of everything after launch. Your site lives on our reliable hosting and you can request changes whenever you need \u2014 we handle it all, no tech knowledge required.',
+  'starter-manage': {
+    icon: '📦',
+    tag: 'Starter · Managed',
+    title: 'Starter — We Manage',
+    price: '£35/mo (was £59)',
+    desc: 'We build your site, put it live, and keep everything running — you just focus on your business.',
+    deal: '<strong style="display:block;margin-bottom:5px;">🏷️ Limited Deal — save £35/mo</strong>£100 deposit to start · £150 when your site goes live · then £35/mo from one month after. Total build cost: £250.',
+    meta: [
+      { icon: '👤', text: 'Ideal for: busy owners who want zero tech hassle' },
+      { icon: '🔄', text: 'Rolling monthly — cancel anytime' },
+    ],
     features: [
-      'Everything in the Static Website plan',
-      'Hosting included \u2014 fully managed',
-      'Unlimited change requests',
-      'SSL certificate included',
-      'Monthly backups',
-      'Priority email support'
-    ]
+      { text: '1-page website, professionally designed', type: 'standard' },
+      { text: 'Mobile-responsive design', type: 'standard' },
+      { text: 'Contact form & Google Maps', type: 'standard' },
+      { text: 'Hosting included', type: 'bonus' },
+      { text: 'Domain setup handled', type: 'bonus' },
+      { text: 'Minor text & image updates on request', type: 'bonus' },
+      { text: 'Security & uptime monitoring', type: 'bonus' },
+    ],
+    note: '* Minor changes handled within 48 hours. Structural redesigns are not included in this tier.'
   },
-  'dynamic-single': {
-    icon: '\u2699\ufe0f',
-    tag: 'One-off Payment',
-    title: 'Dynamic Website',
-    price: 'From \u00a3999',
-    desc: 'A fully CMS-powered website you can update yourself. Add blog posts, edit pages, change images \u2014 all through an easy-to-use dashboard. No coding skills needed, ever.',
+  'starter-plus': {
+    icon: '🚀',
+    tag: 'Starter+ · Priority',
+    title: 'Starter+ — Priority',
+    price: 'From £99/mo',
+    desc: 'Everything in Managed, with faster turnarounds and bigger change requests welcome.',
+    deal: '💰 £100 deposit to start · £150 when your site goes live · then £99/mo from one month after launch. Priority support + all change requests included.',
+    meta: [
+      { icon: '⚡', text: 'Changes turned around under 48 hours' },
+      { icon: '🔄', text: 'Rolling monthly — cancel anytime' },
+    ],
     features: [
-      'Custom design + full CMS setup',
-      'Blog / news section included',
-      'Edit your own content easily',
-      'Mobile-friendly & responsive',
-      'SEO tools built in',
-      'Delivered in 2\u20134 weeks',
-      'Full ownership \u2014 yours to keep'
-    ]
+      { text: '1-page website, professionally designed', type: 'standard' },
+      { text: 'Mobile-responsive design', type: 'standard' },
+      { text: 'Contact form & Google Maps', type: 'standard' },
+      { text: 'Hosting included', type: 'bonus' },
+      { text: 'Domain setup & configuration', type: 'bonus' },
+      { text: 'Major AND minor changes — under 48 hours', type: 'priority' },
+      { text: 'Priority support queue', type: 'priority' },
+    ],
+    note: '* 48-hour SLA applies during UK business hours. Weekend requests count from the next working day.'
   },
-  'dynamic-bundle': {
-    icon: '\ud83d\udce6',
-    tag: 'Bundle \u00b7 Monthly',
-    title: 'Dynamic Website + Hosting',
-    price: 'From \u00a389/mo',
-    desc: 'Everything in the Dynamic Website plan, plus we host your site and handle all the technical upkeep. You focus on your business \u2014 we keep everything running and take care of any changes you need.',
+  'starter-plus-plus-plus': {
+    icon: '🧩',
+    tag: 'Starter+++ · Backend',
+    title: 'Starter+++ — Backend',
+    price: 'From £189/mo',
+    desc: 'All priority management perks, plus ongoing backend features like user accounts and login flows.',
+    deal: '💰 £100 deposit to start · £150 when your site goes live · then £189/mo from one month after launch. Backend development + full priority management included.',
+    meta: [
+      { icon: '⚡', text: 'Changes under 48 hours' },
+      { icon: '⚙', text: 'Backend features supported' },
+    ],
     features: [
-      'Everything in the Dynamic Website plan',
-      'Hosting included \u2014 fully managed',
-      'Unlimited change requests',
-      'CMS & security updates handled for you',
-      'Monthly backups',
-      'Priority email support'
-    ]
+      { text: '1-page website, professionally designed', type: 'standard' },
+      { text: 'Mobile-responsive design', type: 'standard' },
+      { text: 'Contact form & Google Maps', type: 'standard' },
+      { text: 'Hosting included', type: 'bonus' },
+      { text: 'Domain setup & configuration', type: 'bonus' },
+      { text: 'Major & minor changes — under 48 hours', type: 'priority' },
+      { text: 'Login / register user account system', type: 'backend' },
+      { text: 'Backend dashboard or data features', type: 'backend' },
+    ],
+    note: '* Backend features are scoped before work begins. Complex features may be quoted separately.'
+  },
+  'business-one-off': {
+    icon: '🏢',
+    tag: 'Business · One-Off',
+    title: 'Business Build',
+    price: 'From £999',
+    desc: 'A structured multi-page site for your business — built to your brand and handed over in full.',
+    meta: [
+      { icon: '📄', text: '3–6 pages included' },
+      { icon: '👤', text: 'Ideal for: established businesses needing a proper web presence' },
+    ],
+    features: [
+      { text: '3–6 page website (Home, Services, About, Contact + more)', type: 'standard' },
+      { text: 'Mobile-responsive design throughout', type: 'standard' },
+      { text: 'Enquiry / contact form', type: 'standard' },
+      { text: 'Google Maps embed', type: 'standard' },
+      { text: 'On-page SEO for every page', type: 'standard' },
+      { text: 'Source files handed over on completion', type: 'standard' },
+    ],
+    note: 'Hosting and domain are not included. You arrange your own after delivery.'
+  },
+  'business-manage': {
+    icon: '📦',
+    tag: 'Business · Managed',
+    title: 'Business — We Manage',
+    price: 'From £129/mo',
+    desc: 'Your full business site built, hosted, and managed end-to-end — zero tech hassle for you.',
+    deal: '💰 Build fee quoted on request. Monthly management from £129/mo — hosting, domain, updates, and security monitoring all bundled in.',
+    meta: [
+      { icon: '📄', text: '3–6 pages included' },
+      { icon: '🔄', text: 'Rolling monthly — cancel anytime' },
+    ],
+    features: [
+      { text: '3–6 page website across all key sections', type: 'standard' },
+      { text: 'Mobile-responsive design', type: 'standard' },
+      { text: 'Contact form & Google Maps', type: 'standard' },
+      { text: 'Hosting included', type: 'bonus' },
+      { text: 'Domain setup handled', type: 'bonus' },
+      { text: 'Minor text & image updates on request', type: 'bonus' },
+      { text: 'Security & uptime monitoring', type: 'bonus' },
+    ],
+    note: '* Minor changes handled within 48 hours. New pages or structural redesigns are not included in this tier.'
+  },
+  'business-plus': {
+    icon: '🚀',
+    tag: 'Business+ · Priority',
+    title: 'Business+ — Priority',
+    price: 'From £199/mo',
+    desc: 'Full business site management with priority turnarounds on all change requests.',
+    deal: '💰 Build fee quoted on request. Priority management from £199/mo — all change requests turned around under 48 hours across your full business site.',
+    meta: [
+      { icon: '⚡', text: 'Changes under 48 hours' },
+      { icon: '📄', text: '3–6 pages included' },
+    ],
+    features: [
+      { text: '3–6 page website across all key sections', type: 'standard' },
+      { text: 'Mobile-responsive design', type: 'standard' },
+      { text: 'Contact form & Google Maps', type: 'standard' },
+      { text: 'Hosting included', type: 'bonus' },
+      { text: 'Domain setup & configuration', type: 'bonus' },
+      { text: 'Major AND minor changes — under 48 hours', type: 'priority' },
+      { text: 'Priority support queue', type: 'priority' },
+    ],
+    note: '* 48-hour SLA applies during UK business hours. Weekend requests count from the next working day.'
+  },
+  'business-plus-plus-plus': {
+    icon: '🧩',
+    tag: 'Business+++ · Backend',
+    title: 'Business+++ — Backend',
+    price: 'From £299/mo',
+    desc: 'Everything in Business+ with backend development included — accounts, admin panels, booking systems and more.',
+    deal: '💰 Build fee quoted on request. Full backend management from £299/mo — user accounts, admin panels, priority support and future scaling all included.',
+    meta: [
+      { icon: '⚡', text: 'Changes under 48 hours' },
+      { icon: '⚙', text: 'Backend features included' },
+    ],
+    features: [
+      { text: '3–6 page website across all key sections', type: 'standard' },
+      { text: 'Mobile-responsive design', type: 'standard' },
+      { text: 'Contact form & Google Maps', type: 'standard' },
+      { text: 'Hosting included', type: 'bonus' },
+      { text: 'Domain setup & configuration', type: 'bonus' },
+      { text: 'Major & minor changes — under 48 hours', type: 'priority' },
+      { text: 'Login / register user account system', type: 'backend' },
+      { text: 'Admin panel or data dashboard', type: 'backend' },
+    ],
+    note: '* Backend features are scoped before work begins. Complex integrations may be quoted separately.'
+  },
+  'custom-support': {
+    icon: '🛠️',
+    tag: 'Custom · Support',
+    title: 'Help With Your Existing Site',
+    desc: 'Already have a website? We can jump in and help — fixes, redesigns, speed improvements, or general tidying up.',
+    meta: [
+      { icon: '👤', text: 'Ideal for: businesses with an existing site needing work' },
+      { icon: '📅', text: 'Timelines quoted per project' },
+    ],
+    features: [
+      { text: 'Bug fixes and technical issues resolved', type: 'standard' },
+      { text: 'Design and layout improvements', type: 'standard' },
+      { text: 'Mobile & performance optimisation', type: 'standard' },
+      { text: 'Content updates (text, images, pages)', type: 'standard' },
+      { text: 'Ongoing maintenance packages available', type: 'bonus' },
+      { text: 'Works with most platforms and codebases', type: 'bonus' },
+    ],
+    note: 'Pricing is quoted after a free review of your current site.'
+  },
+  'custom-website': {
+    icon: '🧰',
+    tag: 'Custom · Build',
+    title: 'Fully Custom Website',
+    desc: 'Something that doesn\'t fit a standard package? We plan, design, and build entirely around your goals.',
+    meta: [
+      { icon: '👤', text: 'Ideal for: unique projects or complex requirements' },
+      { icon: '📄', text: 'Any page count, any features' },
+    ],
+    features: [
+      { text: 'Any number of pages to suit your content', type: 'standard' },
+      { text: 'Bespoke design tailored to your brand', type: 'standard' },
+      { text: 'Feature planning session included', type: 'standard' },
+      { text: 'Built to scale as your business grows', type: 'standard' },
+      { text: 'Backend, CMS, or e-commerce if needed', type: 'backend' },
+      { text: 'Hosting and domain advice included', type: 'bonus' },
+    ],
+    note: 'All custom projects start with a free discovery call — fixed price and timeline agreed before any work begins.'
   }
 };
 
 const serviceModal   = document.getElementById('serviceModal');
 const modalOverlayEl = document.getElementById('modalOverlay');
 const modalCloseBtn  = document.getElementById('modalClose');
+const modalCloseBtn2 = document.getElementById('modalClose2');
 
 function openServiceModal(key) {
   const d = modalData[key];
   if (!d || !serviceModal) return;
+
+  const modalPriceEl = document.getElementById('modalPrice');
+  const modalMetaEl  = document.getElementById('modalMeta');
+  const modalNoteEl  = document.getElementById('modalNote');
+  const modalDealEl  = document.getElementById('modalDeal');
+
   document.getElementById('modalIcon').textContent  = d.icon;
   document.getElementById('modalTag').textContent   = d.tag;
   document.getElementById('modalTitle').textContent = d.title;
-  document.getElementById('modalPrice').textContent = d.price;
-  document.getElementById('modalDesc').textContent  = d.desc;
-  document.getElementById('modalFeatures').innerHTML = d.features.map(f => `<li>${f}</li>`).join('');
+
+  modalPriceEl.textContent = d.price || '';
+  modalPriceEl.style.display = d.price ? '' : 'none';
+
+  document.getElementById('modalDesc').innerHTML = d.desc;
+
+  // Deal banner
+  if (modalDealEl) {
+    modalDealEl.innerHTML = d.deal || '';
+  }
+
+  // Meta pills
+  if (modalMetaEl) {
+    modalMetaEl.innerHTML = d.meta
+      ? d.meta.map(m => `<span class="meta-pill">${m.icon} ${m.text}</span>`).join('')
+      : '';
+  }
+
+  // Features with type classes
+  document.getElementById('modalFeatures').innerHTML = (d.features || []).map(f => {
+    const typeClass = f.type === 'bonus' ? ' feat-bonus'
+                    : f.type === 'priority' ? ' feat-priority'
+                    : f.type === 'backend' ? ' feat-backend'
+                    : '';
+    return `<li class="${typeClass.trim()}">${f.text}</li>`;
+  }).join('');
+
+  // Note
+  if (modalNoteEl) modalNoteEl.innerHTML = d.note || '';
+
   serviceModal.classList.add('open');
   document.body.style.overflow = 'hidden';
 }
@@ -188,5 +426,676 @@ document.querySelectorAll('.read-more-btn').forEach(btn => {
 });
 
 if (modalCloseBtn)  modalCloseBtn.addEventListener('click', closeServiceModal);
+if (modalCloseBtn2) modalCloseBtn2.addEventListener('click', closeServiceModal);
 if (modalOverlayEl) modalOverlayEl.addEventListener('click', closeServiceModal);
 document.addEventListener('keydown', e => { if (e.key === 'Escape') closeServiceModal(); });
+
+/* ---- Work Showcase Carousel ---- */
+(function () {
+  const track    = document.getElementById('showcaseTrack');
+  const prevBtn  = document.getElementById('showcasePrev');
+  const nextBtn  = document.getElementById('showcaseNext');
+  const dotsWrap = document.getElementById('showcaseDots');
+  if (!track) return;
+
+  const cards = Array.from(track.querySelectorAll('.showcase-card'));
+  let current = 0;
+
+  function perView() {
+    if (window.innerWidth < 600) return 1;
+    if (window.innerWidth < 960) return 2;
+    return 3;
+  }
+
+  function maxIndex() {
+    return Math.max(0, cards.length - perView());
+  }
+
+  function buildDots() {
+    if (!dotsWrap) return;
+    dotsWrap.innerHTML = '';
+    const count = maxIndex() + 1;
+    for (let i = 0; i < count; i++) {
+      const dot = document.createElement('button');
+      dot.className = 'showcase-dot' + (i === current ? ' active' : '');
+      dot.setAttribute('aria-label', 'Go to slide ' + (i + 1));
+      dot.addEventListener('click', () => goTo(i));
+      dotsWrap.appendChild(dot);
+    }
+  }
+
+  function goTo(index) {
+    current = Math.max(0, Math.min(index, maxIndex()));
+    const cardWidth = cards[0].offsetWidth + 24; // card + gap
+    track.style.transform = 'translateX(' + (-current * cardWidth) + 'px)';
+    if (dotsWrap) {
+      dotsWrap.querySelectorAll('.showcase-dot').forEach((d, i) => {
+        d.classList.toggle('active', i === current);
+      });
+    }
+    if (prevBtn) prevBtn.disabled = current === 0;
+    if (nextBtn) nextBtn.disabled = current >= maxIndex();
+  }
+
+  if (prevBtn) prevBtn.addEventListener('click', () => goTo(current - 1));
+  if (nextBtn) nextBtn.addEventListener('click', () => goTo(current + 1));
+
+  let resizeTimer;
+  window.addEventListener('resize', () => {
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(() => { buildDots(); goTo(Math.min(current, maxIndex())); }, 120);
+  });
+
+  buildDots();
+  goTo(0);
+})();
+
+/* ---- Hero Reel — auto-advancing interactive card carousel ---- */
+(function () {
+  var track      = document.getElementById('reelTrack');
+  if (!track) return; // not on a page with the hero reel
+
+  var wrap       = document.getElementById('reelWrap');
+  var wash       = document.getElementById('heroWash');
+  var imgBg      = document.getElementById('heroImgBg');
+  var vidBg      = document.getElementById('heroVidBg');
+  var orb1       = document.getElementById('orb1');
+  var orb2       = document.getElementById('orb2');
+  var progress   = document.getElementById('progress');
+  var infoText   = document.getElementById('infoText');
+  var hint       = document.getElementById('reelHint');
+
+  var heroCards = [
+    {url:'razaacademy.co.uk',      img:'images/screenshots/Raza/raza-academy-banner.JPG', video:'images/screenshots/Raza/raza-academy-video.mp4', imgPos:'center 12%', icon:'\ud83c\udfeb', tag:'Redesign', ind:'Education',   name:'Raza Academy',         desc:'A full redesign for a UK tutoring and home-schooling academy. We rebuilt their site from scratch — cleaner layout, better navigation, and a modern look that reflects the quality of their teaching.',     bg:'linear-gradient(135deg,#0d1a3c,#1e3a8a)', wash:'rgba(30,58,138,0.28)',  orb1:'rgba(249,115,22,0.35)', orb2:'rgba(234,88,12,0.18)',  accent:'#fdba74'},
+    {url:'topone.co.uk',           img:'images/screenshots/TopOne/top-one-banner.JPG', video:'images/screenshots/TopOne/top-one-video.mp4',       imgPos:'center top',  icon:'\u2702\ufe0f', tag:'Custom',   ind:'Beauty & Hair', name:'Top One Salon',        desc:'A premium custom build for one of London\'s top hair and beauty salons. Multi-page, fully responsive, with dedicated sections for services, team, gallery, and bookings.',                                   bg:'linear-gradient(135deg,#111111,#2a2a2a)', wash:'rgba(180,150,50,0.2)',  orb1:'rgba(212,175,55,0.32)', orb2:'rgba(160,130,40,0.15)', accent:'#d4af37'},
+    {url:'smithsplumbing.co.uk',  img:'images/screenshots/smiths-plumbing.png',  icon:'\ud83d\udd27', tag:'Static',  ind:'Trades',      name:"Smith's Plumbing",     desc:'A clean, fast static website for a local plumbing business. Clear contact details, service areas, and a no-fuss design that gets the phone ringing.',                                                           bg:'linear-gradient(135deg,#0d1f3c,#1a3c6e)', wash:'rgba(29,78,216,0.25)',  orb1:'rgba(59,130,246,0.3)',  orb2:'rgba(29,78,216,0.15)',  accent:'#93c5fd'},
+    {url:'bloomflorist.co.uk',    img:'images/screenshots/bloom-florist.png',    icon:'\ud83d\uded2', tag:'Dynamic', ind:'E-commerce',  name:'Bloom Florist',        desc:'A dynamic e-commerce site for an independent florist — complete with a product catalogue, seasonal collections, and a smooth checkout experience built to drive online orders.',                                    bg:'linear-gradient(135deg,#1a0d3c,#4c1d95)', wash:'rgba(124,58,237,0.25)', orb1:'rgba(139,92,246,0.3)', orb2:'rgba(124,58,237,0.15)', accent:'#c4b5fd'},
+  ];
+
+  var N         = heroCards.length;
+  var CARD_W    = 240;
+  var GAP       = 14;
+  var CARD_STEP = CARD_W + GAP;
+  var SETS      = 3;
+  var trackIdx  = N; // start at middle set, card 0
+  var realIdx   = 0;
+  var isHeld    = false;
+  var timer     = null;
+
+  function buildCards() {
+    track.innerHTML = '';
+    for (var s = 0; s < SETS; s++) {
+      heroCards.forEach(function (c, i) {
+        var el = document.createElement('div');
+        el.className = 'reel-card';
+        var globalIdx = s * N + i;
+        el.dataset.global = globalIdx;
+        el.dataset.real   = i;
+        var bodyContent = c.img
+          ? '<img src="' + c.img + '" alt="" loading="lazy" style="width:100%;height:100%;object-fit:cover;object-position:' + (c.imgPos || 'top') + ';">'
+          : '<span class="ph-icon">' + c.icon + '</span><span class="ph-text">Coming soon</span>';
+        el.innerHTML =
+          '<div class="reel-bar"><div class="reel-dots"><i></i><i></i><i></i></div><span class="reel-url">' + c.url + '</span></div>' +
+          '<div class="reel-body" style="background:' + c.bg + '">' + bodyContent + '</div>' +
+          '<div class="reel-foot"><span class="reel-tag">' + c.tag + '</span><span class="reel-ind">' + c.ind + '</span></div>';
+        el.style.cursor = 'pointer';
+        el.addEventListener('click', (function (card) {
+          return function () { openReelPopup(card); };
+        }(c)));
+        track.appendChild(el);
+      });
+    }
+  }
+
+  function buildDots() {
+    progress.innerHTML = '';
+    heroCards.forEach(function (c, i) {
+      var d = document.createElement('div');
+      d.className = 'prog-dot' + (i === 0 ? ' active' : '');
+      d.addEventListener('click', (function (ri) {
+        return function () { pickCard(ri, N + ri); };
+      }(i)));
+      progress.appendChild(d);
+    });
+  }
+
+  buildCards();
+  buildDots();
+
+  /* ---- Reel popup ---- */
+  var reelOverlay = document.getElementById('reelPopupOverlay');
+  var reelPopupClose = document.getElementById('reelPopupClose');
+
+  function openReelPopup(c) {
+    if (!reelOverlay) return;
+    document.getElementById('reelPopupImg').src = c.img || '';
+    document.getElementById('reelPopupImg').style.objectPosition = c.imgPos || 'top';
+    document.getElementById('reelPopupTag').textContent  = c.tag;
+    document.getElementById('reelPopupInd').textContent  = c.ind;
+    document.getElementById('reelPopupName').textContent = c.name;
+    document.getElementById('reelPopupUrl').textContent  = c.url;
+    document.getElementById('reelPopupDesc').textContent = c.desc || '';
+    reelOverlay.classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeReelPopup() {
+    if (!reelOverlay) return;
+    reelOverlay.classList.remove('open');
+    document.body.style.overflow = '';
+  }
+
+  if (reelPopupClose) reelPopupClose.addEventListener('click', closeReelPopup);
+  if (reelOverlay) {
+    reelOverlay.addEventListener('click', function (e) {
+      if (e.target === reelOverlay) closeReelPopup();
+    });
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape') closeReelPopup();
+    });
+  }
+
+  function getX(ti) {
+    var W = wrap.offsetWidth;
+    return W / 2 - ti * CARD_STEP - CARD_W / 2;
+  }
+
+  function setPos(ti, instant) {
+    if (instant) {
+      track.classList.add('instant');
+      track.style.transform = 'translateX(' + getX(ti) + 'px)';
+      track.offsetHeight; // force reflow
+      track.classList.remove('instant');
+    } else {
+      track.style.transform = 'translateX(' + getX(ti) + 'px)';
+    }
+  }
+
+  setPos(trackIdx, true);
+
+  function applyTheme(ri) {
+    var c = heroCards[ri];
+    if (c.video && vidBg) {
+      imgBg.style.opacity = '0';
+      vidBg.style.opacity = '0';
+      clearTimeout(vidBg._swapTimer);
+      vidBg._swapTimer = setTimeout(function () {
+        vidBg.src = c.video;
+        vidBg.load();
+        vidBg.play();
+        vidBg.style.opacity = '1';
+      }, 300);
+    } else if (imgBg) {
+      vidBg.style.opacity = '0';
+      imgBg.style.opacity = '0';
+      clearTimeout(imgBg._swapTimer);
+      imgBg._swapTimer = setTimeout(function () {
+        imgBg.style.backgroundImage    = 'url(' + c.img + ')';
+        imgBg.style.backgroundPosition = c.imgPos || 'center top';
+        imgBg.style.opacity            = '1';
+      }, 300);
+    }
+
+    progress.querySelectorAll('.prog-dot').forEach(function (d, i) {
+      d.classList.toggle('active', i === ri);
+      d.style.setProperty('--dot-accent', c.accent);
+    });
+    progress.style.setProperty('--dot-accent', c.accent);
+    track.querySelectorAll('.reel-card').forEach(function (el) {
+      var same = parseInt(el.dataset.real) === ri;
+      el.classList.toggle('active', same);
+      if (same) el.style.setProperty('--accent', c.accent);
+    });
+    if (infoText) infoText.textContent = 'Now viewing \u2014 ' + c.name;
+  }
+
+  function advance() {
+    if (isHeld) return;
+    var nextTrack = trackIdx + 1;
+    var nextReal  = (realIdx + 1) % N;
+    setPos(nextTrack, false);
+    timer = setTimeout(function () {
+      trackIdx = nextTrack;
+      realIdx  = nextReal;
+      applyTheme(realIdx);
+      if (trackIdx >= N * 2) {
+        trackIdx -= N;
+        setPos(trackIdx, true);
+        track.querySelectorAll('.reel-card').forEach(function (el) {
+          el.classList.toggle('active', parseInt(el.dataset.real) === realIdx);
+        });
+      }
+      if (!isHeld) timer = setTimeout(advance, 6000);
+    }, 1150);
+  }
+
+  function pickCard(ri, gi) {
+    clearTimeout(timer);
+    isHeld = true;
+
+    // Always move forward: find the nearest copy of this card at or ahead of current position
+    var copies = [ri, ri + N, ri + 2 * N];
+    var targetTrack = copies[copies.length - 1]; // fallback: furthest-ahead copy
+    for (var k = 0; k < copies.length; k++) {
+      if (copies[k] >= trackIdx) { targetTrack = copies[k]; break; }
+    }
+
+    setPos(targetTrack, false);
+    setTimeout(function () {
+      trackIdx = targetTrack;
+      realIdx  = ri;
+      applyTheme(ri);
+      // Normalise back to middle set so the loop stays seamless
+      if (trackIdx >= N * 2) { trackIdx -= N; setPos(trackIdx, true); }
+      // Auto-resume after 4 s
+      timer = setTimeout(function () {
+        isHeld = false;
+        if (infoText) infoText.textContent = 'Exploring our work';
+        timer = setTimeout(advance, 400);
+      }, 4000);
+    }, 1150);
+  }
+
+  // Recalculate position on resize
+  window.addEventListener('resize', function () { setPos(trackIdx, true); }, { passive: true });
+
+  // Kick off
+  timer = setTimeout(function () {
+    applyTheme(0);
+    timer = setTimeout(advance, 6000);
+  }, 600);
+}());
+
+/* ---- Portfolio Slideshow / Compare Modal ---- */
+(function () {
+  const overlay       = document.getElementById('pfModalOverlay');
+  if (!overlay) return;
+
+  const modalTitle    = document.getElementById('pfModalTitle');
+  const modalTag      = document.getElementById('pfModalTag');
+  const slidesWrap    = document.getElementById('pfModalSlides');
+  const dotsWrap      = document.getElementById('pfModalDots');
+  const counter       = document.getElementById('pfModalCounter');
+  const prevBtn       = document.getElementById('pfModalPrev');
+  const nextBtn       = document.getElementById('pfModalNext');
+  const closeBtn      = document.getElementById('pfModalClose');
+  const compareBar    = document.getElementById('pfCompareBar');
+  const compareTrack  = document.getElementById('pfCompareTrack');
+  const compareFill   = document.getElementById('pfCompareFill');
+  const compareThumb  = document.getElementById('pfCompareThumb');
+
+  let slides          = [];
+  let current         = 0;
+  let compareMode     = false;
+  let projectTitle    = '';
+  let compareDragging = false;
+  let dragSource      = null; /* 'track' | 'image' */
+  let activeDragContent = null;
+
+  /* --------------------------------
+     BUILD SLIDES
+  -------------------------------- */
+  function openModal(card) {
+    let rawSlides;
+    try { rawSlides = JSON.parse(card.dataset.slides); } catch (e) { return; }
+    if (!Array.isArray(rawSlides) || !rawSlides.length) return;
+    slides = rawSlides;
+
+    compareMode  = typeof rawSlides[0] === 'object' && 'before' in rawSlides[0];
+    projectTitle = card.querySelector('h3')?.textContent.trim() || 'Project';
+    modalTag.textContent = card.querySelector('.portfolio-type-tag')?.textContent.trim() || '';
+
+    compareBar.classList.toggle('active', compareMode);
+
+    /* Build slides + dots */
+    slidesWrap.innerHTML = '';
+    dotsWrap.innerHTML   = '';
+    slides.forEach(function (slide, i) {
+      const el = document.createElement('div');
+      el.className = 'pf-modal-slide' + (i === 0 ? ' active' : '');
+      el.appendChild(compareMode ? buildCompare(slide, i) : buildSimple(slide, i));
+      slidesWrap.appendChild(el);
+
+      const dot = document.createElement('button');
+      dot.className = 'pf-modal-dot' + (i === 0 ? ' active' : '');
+      dot.setAttribute('aria-label', 'Go to page ' + (i + 1));
+      dot.addEventListener('click', function () { goTo(i); });
+      dotsWrap.appendChild(dot);
+    });
+
+    current = 0;
+    refreshUI();
+    overlay.classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function buildSimple(src, i) {
+    const img = document.createElement('img');
+    img.src     = src;
+    img.alt     = projectTitle + ' � page ' + (i + 1);
+    img.loading = 'lazy';
+    return img;
+  }
+
+  function buildCompare(data, i) {
+    const wrap = document.createElement('div');
+    wrap.className = 'pf-compare-content';
+
+    /* After � in flow, sets container height, always fully visible (base layer) */
+    const after = document.createElement('img');
+    after.className = 'pf-compare-img-after';
+    after.src     = data.after;
+    after.alt     = 'After';
+    after.loading = 'lazy';
+
+    /* Before � absolutely positioned overlay, clipped to show only left portion */
+    const before = document.createElement('img');
+    before.className = 'pf-compare-img-before';
+    before.src     = data.before;
+    before.alt     = 'Before';
+    before.loading = 'lazy';
+    before.style.clipPath = 'inset(0 70% 0 0)'; /* 30% before / 70% after */
+
+    /* Vertical divider line */
+    const line = document.createElement('div');
+    line.className = 'pf-compare-divider';
+    line.style.left = '50%';
+
+    /* Corner labels */
+    const lblB = document.createElement('span');
+    lblB.className   = 'pf-compare-label pf-compare-label-before';
+    lblB.textContent = 'Before';
+
+    const lblA = document.createElement('span');
+    lblA.className   = 'pf-compare-label pf-compare-label-after';
+    lblA.textContent = 'After';
+
+    wrap.append(after, before, line, lblB, lblA);
+    return wrap;
+  }
+
+  /* --------------------------------
+     DIVIDER CONTROL
+  -------------------------------- */
+  function setDivider(pct) {
+    pct = Math.min(96, Math.max(4, pct));
+    /* Update bar */
+    compareFill.style.width  = pct + '%';
+    compareThumb.style.left  = pct + '%';
+    /* Update active slide */
+    const activeSlide = slidesWrap.querySelector('.pf-modal-slide.active');
+    if (!activeSlide) return;
+    const beforeImg = activeSlide.querySelector('.pf-compare-img-before');
+    const divLine   = activeSlide.querySelector('.pf-compare-divider');
+    if (beforeImg) beforeImg.style.clipPath = 'inset(0 ' + (100 - pct) + '% 0 0)';
+    if (divLine)   divLine.style.left = pct + '%';
+  }
+
+  function pctFromTrack(clientX) {
+    const r = compareTrack.getBoundingClientRect();
+    return (clientX - r.left) / r.width * 100;
+  }
+
+  function pctFromContent(content, clientX) {
+    const r = content.getBoundingClientRect();
+    return (clientX - r.left) / r.width * 100;
+  }
+
+  /* -- Compare bar drag -- */
+  compareTrack.addEventListener('mousedown', function (e) {
+    compareDragging = true;
+    dragSource = 'track';
+    setDivider(pctFromTrack(e.clientX));
+    e.preventDefault();
+  });
+  compareTrack.addEventListener('touchstart', function (e) {
+    compareDragging = true;
+    dragSource = 'track';
+    setDivider(pctFromTrack(e.touches[0].clientX));
+  }, { passive: true });
+
+  /* -- Drag on image -- */
+  slidesWrap.addEventListener('mousedown', function (e) {
+    if (!compareMode) return;
+    const content = e.target.closest('.pf-compare-content');
+    if (!content) return;
+    compareDragging   = true;
+    dragSource        = 'image';
+    activeDragContent = content;
+    setDivider(pctFromContent(content, e.clientX));
+    e.preventDefault();
+  });
+  slidesWrap.addEventListener('touchstart', function (e) {
+    touchStartX = e.touches[0].clientX;
+    if (!compareMode) return;
+    const content = e.target.closest('.pf-compare-content');
+    if (content) {
+      activeDragContent = content;
+      compareDragging   = true;
+      dragSource        = 'image';
+    }
+  }, { passive: true });
+
+  /* -- Global move / up -- */
+  document.addEventListener('mousemove', function (e) {
+    if (!compareDragging) return;
+    if (dragSource === 'track') setDivider(pctFromTrack(e.clientX));
+    else if (activeDragContent) setDivider(pctFromContent(activeDragContent, e.clientX));
+  });
+  document.addEventListener('mouseup', function () {
+    compareDragging   = false;
+    dragSource        = null;
+    activeDragContent = null;
+  });
+  document.addEventListener('touchmove', function (e) {
+    if (!compareDragging) return;
+    const x = e.touches[0].clientX;
+    if (dragSource === 'track') setDivider(pctFromTrack(x));
+    else if (activeDragContent) setDivider(pctFromContent(activeDragContent, x));
+  }, { passive: true });
+  document.addEventListener('touchend', function () {
+    compareDragging   = false;
+    dragSource        = null;
+    activeDragContent = null;
+  });
+
+  /* --------------------------------
+     NAVIGATION
+  -------------------------------- */
+  function closeModal() {
+    overlay.classList.remove('open');
+    document.body.style.overflow = '';
+    compareBar.classList.remove('active');
+    compareMode = false;
+    setTimeout(function () {
+      slidesWrap.innerHTML = '';
+      dotsWrap.innerHTML   = '';
+    }, 360);
+  }
+
+  function goTo(index) {
+    const allSlides = slidesWrap.querySelectorAll('.pf-modal-slide');
+    const allDots   = dotsWrap.querySelectorAll('.pf-modal-dot');
+    allSlides[current]?.classList.remove('active');
+    allDots[current]?.classList.remove('active');
+    current = ((index % slides.length) + slides.length) % slides.length;
+    allSlides[current]?.classList.add('active');
+    allDots[current]?.classList.add('active');
+    allSlides[current].scrollTop = 0;
+    refreshUI();
+  }
+
+  function refreshUI() {
+    const single = slides.length <= 1;
+    prevBtn.classList.toggle('pf-hidden', single);
+    nextBtn.classList.toggle('pf-hidden', single);
+    dotsWrap.style.display = single ? 'none' : 'flex';
+    const stage = overlay.querySelector('.pf-modal-stage');
+    if (stage) stage.classList.toggle('pf-single', single);
+
+    if (compareMode) {
+      const label = slides[current]?.label || ('Page ' + (current + 1));
+      modalTitle.textContent = projectTitle + ' � ' + label;
+      setDivider(30); /* 30% before / 70% after � reset on every page */
+    } else {
+      modalTitle.textContent = projectTitle;
+    }
+    counter.textContent = slides.length > 1 ? (current + 1) + ' / ' + slides.length : '';
+  }
+
+  /* -- Slide swipe (disabled in compare mode) -- */
+  let touchStartX = 0;
+  slidesWrap.addEventListener('touchend', function (e) {
+    if (compareMode) return;
+    const diff = touchStartX - e.changedTouches[0].clientX;
+    if (Math.abs(diff) > 40) goTo(current + (diff > 0 ? 1 : -1));
+  }, { passive: true });
+
+  /* -- Keyboard -- */
+  prevBtn.addEventListener('click',  function () { goTo(current - 1); });
+  nextBtn.addEventListener('click',  function () { goTo(current + 1); });
+  closeBtn.addEventListener('click', closeModal);
+  overlay.addEventListener('click',  function (e) { if (e.target === overlay) closeModal(); });
+  document.addEventListener('keydown', function (e) {
+    if (!overlay.classList.contains('open')) return;
+    if (e.key === 'Escape')     closeModal();
+    if (e.key === 'ArrowLeft')  goTo(current - 1);
+    if (e.key === 'ArrowRight') goTo(current + 1);
+  });
+
+  /* -- Wire up cards -- */
+  document.querySelectorAll('.portfolio-card[data-slides]').forEach(function (card) {
+    card.addEventListener('click', function () { openModal(card); });
+  });
+}());
+
+
+/* ====================================================
+   REGISTER / QUOTE PAGE
+   ==================================================== */
+/* =============================================
+   register.js — Quote / Register page logic
+   ============================================= */
+
+(function () {
+  'use strict';
+
+  /* ── Intent chooser ── */
+  var radios      = document.querySelectorAll('input[name="intent"]');
+  var formNew     = document.getElementById('formNew');
+  var formExisting = document.getElementById('formExisting');
+
+  function showForm(intent, scroll) {
+    var target = intent === 'new' ? formNew : formExisting;
+    var other  = intent === 'new' ? formExisting : formNew;
+
+    if (!target || !other) return;
+
+    other.classList.remove('visible');
+    other.style.display = 'none';
+
+    target.style.transition = 'none';
+    target.style.opacity    = '0';
+    target.style.transform  = 'translateY(22px)';
+    target.style.display    = 'block';
+
+    target.offsetHeight; // force reflow
+
+    // Clear inline overrides so CSS transition takes over
+    target.style.transition = '';
+    target.style.opacity    = '';
+    target.style.transform  = '';
+    target.classList.add('visible');
+
+    if (scroll !== false) {
+      setTimeout(function () {
+        target.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      }, 60);
+    }
+  }
+
+  radios.forEach(function (radio) {
+    radio.addEventListener('change', function () {
+      showForm(radio.value);
+    });
+  });
+
+  // Pre-select "New website" on page load
+  var defaultRadio = document.querySelector('input[name="intent"][value="new"]');
+  if (defaultRadio) {
+    defaultRadio.checked = true;
+    showForm('new', false);
+  }
+
+  /* ── Package tier toggle ── */
+  var pkgTierMap = {
+    'Starter':  'tier_starter',
+    'Business': 'tier_business',
+    'Custom':   'tier_custom'
+  };
+  var allTierIds = ['tier_starter', 'tier_business', 'tier_custom'];
+
+  document.querySelectorAll('input[name="pkg_category"]').forEach(function (radio) {
+    radio.addEventListener('change', function () {
+      // Hide all tier selectors
+      allTierIds.forEach(function (id) {
+        var wrap = document.getElementById(id);
+        if (wrap) {
+          wrap.classList.remove('active');
+          var sel = wrap.querySelector('select');
+          if (sel) { sel.required = false; sel.value = ''; }
+        }
+      });
+
+      // Show the matching one
+      var targetId = pkgTierMap[radio.value];
+      if (targetId) {
+        var target = document.getElementById(targetId);
+        if (target) {
+          target.classList.add('active');
+          var sel = target.querySelector('select');
+          if (sel) sel.required = true;
+        }
+      }
+    });
+  });
+
+  /* ── Form submission (replace with real endpoint as needed) ── */
+  function handleSubmit(formEl, successId) {
+    if (!formEl) return;
+    formEl.addEventListener('submit', function (e) {
+      e.preventDefault();
+
+      // Basic required-field check
+      var valid = true;
+      formEl.querySelectorAll('[required]').forEach(function (field) {
+        if (!field.value.trim()) {
+          valid = false;
+          field.style.borderColor = '#ef4444';
+          field.addEventListener('input', function () {
+            field.style.borderColor = '';
+          }, { once: true });
+        }
+      });
+
+      if (!valid) return;
+
+      // Hide form, show success
+      formEl.style.display = 'none';
+      var successEl = document.getElementById(successId);
+      if (successEl) successEl.style.display = 'block';
+
+      // Scroll success into view
+      if (successEl) {
+        setTimeout(function () {
+          successEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }, 80);
+      }
+    });
+  }
+
+  handleSubmit(document.getElementById('formNewInner'),      'successNew');
+  handleSubmit(document.getElementById('formExistingInner'), 'successExisting');
+
+}());
+

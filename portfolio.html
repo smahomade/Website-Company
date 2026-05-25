@@ -12,14 +12,16 @@
 </head>
 <body>
 
-  <nav class="navbar scrolled" id="navbar">
+  <nav class="navbar" id="navbar">
     <div class="nav-container">
-      <a href="index.html" class="nav-logo">Website Creator</a>
+      <a href="index.html" class="nav-logo" aria-label="Website Creator home">
+        <img src="images/pixelboroughlogo-white.png" alt="Pixel Borough logo" />
+      </a>
       <button class="nav-toggle" id="navToggle" aria-label="Toggle navigation menu">
         <span></span><span></span><span></span>
       </button>
       <ul class="nav-menu" id="navMenu">
-        <li><a href="index.html"     class="nav-link">Home</a></li>
+        <li><a href="how-it-works.html" class="nav-link">How It Works</a></li>
         <li><a href="services.html"  class="nav-link">Services</a></li>
         <li><a href="portfolio.html" class="nav-link">Portfolio</a></li>
         <li><a href="contact.html"   class="nav-link">Contact</a></li>
@@ -28,60 +30,105 @@
     </div>
   </nav>
 
-  <!-- PAGE HEADER -->
-  <header class="page-header">
+  <!-- PORTFOLIO HERO -->
+  <section class="services-hero">
+    <div class="services-hero-orb services-hero-orb--1"></div>
+    <div class="services-hero-orb services-hero-orb--2"></div>
+    <div class="services-hero-orb services-hero-orb--3"></div>
     <div class="container">
-      <h1>Our Work</h1>
-      <p class="page-header-sub">A selection of websites we've designed and built for real businesses. Every project is built from scratch — no templates, no shortcuts.</p>
+      <p class="section-label services-hero-label">Our Work</p>
+      <h1 class="services-hero-title">Our <em>Portfolio</em></h1>
+      <p class="services-hero-sub">Real websites for real businesses — no templates, no shortcuts. Browse what we've delivered and get inspired for your own project.</p>
+      <div class="services-hero-badges">
+        <span><svg width="13" height="13" viewBox="0 0 20 20" fill="currentColor"><path d="M16.707 5.293a1 1 0 00-1.414 0L8 12.586 4.707 9.293a1 1 0 00-1.414 1.414l4 4a1 1 0 001.414 0l8-8a1 1 0 000-1.414z"/></svg> Custom built</span>
+        <span><svg width="13" height="13" viewBox="0 0 20 20" fill="currentColor"><path d="M16.707 5.293a1 1 0 00-1.414 0L8 12.586 4.707 9.293a1 1 0 00-1.414 1.414l4 4a1 1 0 001.414 0l8-8a1 1 0 000-1.414z"/></svg> Static/Dynamic</span>
+        <span><svg width="13" height="13" viewBox="0 0 20 20" fill="currentColor"><path d="M16.707 5.293a1 1 0 00-1.414 0L8 12.586 4.707 9.293a1 1 0 00-1.414 1.414l4 4a1 1 0 001.414 0l8-8a1 1 0 000-1.414z"/></svg> Mobile-friendly</span>
+        <span><svg width="13" height="13" viewBox="0 0 20 20" fill="currentColor"><path d="M16.707 5.293a1 1 0 00-1.414 0L8 12.586 4.707 9.293a1 1 0 00-1.414 1.414l4 4a1 1 0 001.414 0l8-8a1 1 0 000-1.414z"/></svg> UK-based team</span>
+      </div>
     </div>
-  </header>
+  </section>
 
   <!-- PORTFOLIO GRID -->
   <section class="portfolio-section">
     <div class="container">
 
+      <div class="portfolio-section-header">
+        <h2 class="portfolio-section-title">Browse our projects</h2>
+        <p class="portfolio-section-sub">Filter by type or scroll through everything we've built.</p>
+      </div>
+
       <div class="portfolio-filters">
         <button class="portfolio-filter-btn active" data-filter="all">All</button>
+        <button class="portfolio-filter-btn" data-filter="redesign">Redesign</button>
         <button class="portfolio-filter-btn" data-filter="static">Static</button>
         <button class="portfolio-filter-btn" data-filter="dynamic">Dynamic</button>
       </div>
 
       <div class="portfolio-grid" id="portfolioGrid">
 
-        <!-- PLACEHOLDER CARD 1 -->
-        <div class="portfolio-card" data-type="static">
-          <div class="portfolio-card-preview portfolio-preview-placeholder">
-            <span class="portfolio-preview-icon">🖼️</span>
-            <span class="portfolio-preview-label">Screenshot coming soon</span>
+        <!-- RAZA ACADEMY -->
+        <div class="portfolio-card" data-type="redesign"
+             data-slides='[
+               {"before":"images/screenshots/Raza/FullWebsiteScreenieRaza-old/razaacademy.co.uk_.png","after":"images/screenshots/Raza/FullWebsiteScreenieRaza-new/razaacademy.co.uk_new.png","label":"Home"},
+               {"before":"images/screenshots/Raza/FullWebsiteScreenieRaza-old/razaacademy.co.uk_about.png","after":"images/screenshots/Raza/FullWebsiteScreenieRaza-new/razaacademy.co.uk_about_new.png","label":"About"},
+               {"before":"images/screenshots/Raza/FullWebsiteScreenieRaza-old/razaacademy.co.uk_courses.png","after":"images/screenshots/Raza/FullWebsiteScreenieRaza-new/razaacademy.co.uk_services_new.png","label":"Services"},
+               {"before":"images/screenshots/Raza/FullWebsiteScreenieRaza-old/razaacademy.co.uk_home-schooling.png","after":"images/screenshots/Raza/FullWebsiteScreenieRaza-new/razaacademy.co.uk_home-schooling_new.png","label":"Home Schooling"},
+               {"before":"images/screenshots/Raza/FullWebsiteScreenieRaza-old/razaacademy.co.uk_register.png","after":"images/screenshots/Raza/FullWebsiteScreenieRaza-new/razaacademy.co.uk_register_new.png","label":"Register"},
+               {"before":"images/screenshots/Raza/FullWebsiteScreenieRaza-old/razaacademy.co.uk_contact.png","after":"images/screenshots/Raza/FullWebsiteScreenieRaza-new/razaacademy.co.uk_contact_new.png","label":"Contact"}
+             ]'>
+          <div class="portfolio-card-preview">
+            <img src="images/screenshots/Raza/raza-academy-banner.JPG" alt="Raza Academy website" style="object-position: center 12%;" />
+            <div class="portfolio-card-overlay"><span class="portfolio-card-overlay-btn"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M1 6l5.5 5.5L12 6l5.5 5.5L23 6"/><path d="M1 13l5.5 5.5L12 13l5.5 5.5L23 13"/></svg> View Pages</span></div>
           </div>
           <div class="portfolio-card-body">
             <div class="portfolio-card-meta">
-              <span class="portfolio-type-tag">Static</span>
-              <span class="portfolio-industry">Business</span>
+              <span class="portfolio-type-tag">Redesign</span>
+              <span class="portfolio-industry">Education</span>
             </div>
-            <h3>Project Name</h3>
-            <p>A brief description of this project will go here — what the client needed and what we delivered.</p>
+            <h3>Raza Academy</h3>
+            <p>An 8-page full redesign for a Richmond-based Islamic education provider. New look, cleaner layout and a smoother user journey — covering courses, home-schooling, registration and contact. Completed and live.</p>
             <div class="portfolio-card-footer">
-              <span class="portfolio-coming-soon">Coming Soon</span>
+              <span class="portfolio-live-badge">✦ Live</span>
+              <a href="https://razaacademy.co.uk" target="_blank" rel="noopener noreferrer" class="portfolio-live-btn">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+                View Live
+              </a>
             </div>
           </div>
         </div>
 
-        <!-- PLACEHOLDER CARD 2 -->
-        <div class="portfolio-card" data-type="dynamic">
-          <div class="portfolio-card-preview portfolio-preview-placeholder">
-            <span class="portfolio-preview-icon">🖼️</span>
-            <span class="portfolio-preview-label">Screenshot coming soon</span>
+        <!-- TOP ONE SALON -->
+        <div class="portfolio-card" data-type="redesign"
+             data-slides='[
+               {"before":"images/screenshots/TopOne/FullWebsiteScreenieTop1One-old/topone.co.uk_.png","after":"images/screenshots/TopOne/FullWebsiteScreenieTop1One-new/top-one-salon-website.vercel.app_home.png","label":"Home"},
+               {"before":"images/screenshots/TopOne/FullWebsiteScreenieTop1One-old/topone.co.uk_about-us_.png","after":"images/screenshots/TopOne/FullWebsiteScreenieTop1One-new/top-one-salon-website.vercel.app_aboutus.png","label":"About"},
+               {"before":"images/screenshots/TopOne/FullWebsiteScreenieTop1One-old/topone.co.uk_collection_.png","after":"images/screenshots/TopOne/FullWebsiteScreenieTop1One-new/top-one-salon-website.vercel.app_collection.png","label":"Collection"},
+               {"before":"images/screenshots/TopOne/FullWebsiteScreenieTop1One-old/topone.co.uk_reviews_.png","after":"images/screenshots/TopOne/FullWebsiteScreenieTop1One-new/top-one-salon-website.vercel.app_reviews.png","label":"Reviews"},
+               {"before":"images/screenshots/TopOne/FullWebsiteScreenieTop1One-old/topone.co.uk_services_.png","after":"images/screenshots/TopOne/FullWebsiteScreenieTop1One-new/top-one-salon-website.vercel.app_hair.png","label":"Services"},
+               {"before":"images/screenshots/TopOne/FullWebsiteScreenieTop1One-old/topone.co.uk_special-offers_.png","after":"images/screenshots/TopOne/FullWebsiteScreenieTop1One-new/top-one-salon-website.vercel.app_offers.png","label":"Offers"},
+               {"before":"images/screenshots/TopOne/FullWebsiteScreenieTop1One-old/topone.co.uk_careers_.png","after":"images/screenshots/TopOne/FullWebsiteScreenieTop1One-new/top-one-salon-website.vercel.app_careers.png","label":"Careers"},
+               {"before":"images/screenshots/TopOne/FullWebsiteScreenieTop1One-old/topone.co.uk_contact-us_.png","after":"images/screenshots/TopOne/FullWebsiteScreenieTop1One-new/top-one-salon-website.vercel.app_contact-us.png","label":"Contact"},
+               {"before":"images/screenshots/TopOne/FullWebsiteScreenieTop1One-old/topone.co.uk_our-team_.png","after":"images/screenshots/TopOne/FullWebsiteScreenieTop1One-new/top-one-salon-website.vercel.app_explore_our-team.png","label":"Our Team"},
+               {"before":"images/screenshots/TopOne/FullWebsiteScreenieTop1One-old/topone.co.uk_services_.png","after":"images/screenshots/TopOne/FullWebsiteScreenieTop1One-new/top-one-salon-website.vercel.app_beauty.png","label":"Beauty"},
+               {"before":"images/screenshots/TopOne/FullWebsiteScreenieTop1One-old/topone.co.uk_special-offers_.png","after":"images/screenshots/TopOne/FullWebsiteScreenieTop1One-new/top-one-salon-website.vercel.app_pricing.png","label":"Pricing"}
+             ]'>
+          <div class="portfolio-card-preview">
+            <img src="images/screenshots/TopOne/top-one-banner.JPG" alt="Top One Hair &amp; Beauty Salon website" />
+            <div class="portfolio-card-overlay"><span class="portfolio-card-overlay-btn"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M1 6l5.5 5.5L12 6l5.5 5.5L23 6"/><path d="M1 13l5.5 5.5L12 13l5.5 5.5L23 13"/></svg> View Pages</span></div>
           </div>
           <div class="portfolio-card-body">
             <div class="portfolio-card-meta">
-              <span class="portfolio-type-tag portfolio-type-dynamic">Dynamic</span>
-              <span class="portfolio-industry">Retail</span>
+              <span class="portfolio-type-tag">Custom Build</span>
+              <span class="portfolio-industry">Beauty &amp; Hair</span>
             </div>
-            <h3>Project Name</h3>
-            <p>A brief description of this project will go here — what the client needed and what we delivered.</p>
+            <h3>Top One Salon</h3>
+            <p>A fully bespoke website built from scratch — 24 core pages covering hair services, beauty treatments, collections, team profiles, pricing, offers, careers and more, plus an additional 10–15 SEO-optimised supporting pages. Fully built and delivered; the client chose to hold off going live to protect their existing search rankings.</p>
             <div class="portfolio-card-footer">
-              <span class="portfolio-coming-soon">Coming Soon</span>
+              <span class="portfolio-delivered-badge">✦ Delivered</span>
+              <a href="https://top-one-salon-website.vercel.app" target="_blank" rel="noopener noreferrer" class="portfolio-live-btn">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+                View Project
+              </a>
             </div>
           </div>
         </div>
@@ -91,6 +138,7 @@
           <div class="portfolio-card-preview portfolio-preview-placeholder">
             <span class="portfolio-preview-icon">🖼️</span>
             <span class="portfolio-preview-label">Screenshot coming soon</span>
+            <div class="portfolio-card-overlay"><span class="portfolio-card-overlay-btn"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M9 9h6M9 12h6M9 15h4"/></svg> View Screenshots</span></div>
           </div>
           <div class="portfolio-card-body">
             <div class="portfolio-card-meta">
@@ -120,10 +168,13 @@
 
   <!-- CTA STRIP -->
   <section class="portfolio-cta">
-    <div class="container">
+    <div class="services-hero-orb services-hero-orb--1" style="opacity:0.22;width:480px;height:480px;top:-160px;right:-100px;"></div>
+    <div class="services-hero-orb services-hero-orb--2" style="opacity:0.16;width:340px;height:340px;bottom:-100px;left:-70px;"></div>
+    <div class="container" style="position:relative;z-index:1;">
       <div class="portfolio-cta-inner">
         <div>
-          <h2>Want a website like these?</h2>
+          <p class="portfolio-cta-label">Seen enough?</p>
+          <h2>Let's build yours next.</h2>
           <p>Tell us about your project and we'll send you a fixed-price quote within 24 hours.</p>
         </div>
         <a href="register.html" class="btn btn-white">Get a Free Quote &rarr;</a>
@@ -135,7 +186,7 @@
     <div class="container">
       <div class="footer-grid">
         <div class="footer-brand">
-          <span class="footer-logo">Website Creator</span>
+          <a href="index.html" class="footer-logo-link"><img src="images/pixelboroughlogo-white.png" alt="Pixel Borough logo" class="footer-logo-img" /></a>
           <p>Building fast, beautiful websites for small businesses.</p>
           <div class="social-links">
             <a href="#" aria-label="Instagram">📸</a>
@@ -179,6 +230,55 @@
       </div>
     </div>
   </footer>
+
+  <!-- PORTFOLIO SLIDESHOW / COMPARE MODAL -->
+  <div class="pf-modal-overlay" id="pfModalOverlay" role="dialog" aria-modal="true" aria-label="Project screenshots">
+    <div class="pf-modal">
+
+      <div class="pf-modal-header">
+
+        <!-- Row 1: title + close -->
+        <div class="pf-modal-header-top">
+          <div class="pf-modal-info">
+            <span class="pf-modal-tag" id="pfModalTag"></span>
+            <h2 class="pf-modal-title" id="pfModalTitle"></h2>
+          </div>
+          <button class="pf-modal-close" id="pfModalClose" aria-label="Close">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+          </button>
+        </div>
+
+        <!-- Row 2: compare slider bar (hidden unless compare mode) -->
+        <div class="pf-compare-bar" id="pfCompareBar">
+          <span class="pf-compare-bar-lbl pf-lbl-before">Before</span>
+          <div class="pf-compare-track" id="pfCompareTrack">
+            <div class="pf-compare-fill" id="pfCompareFill"></div>
+            <button class="pf-compare-thumb" id="pfCompareThumb" aria-label="Drag to compare">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8"><polyline points="15 18 9 12 15 6"/><polyline points="9 18 15 12 9 6"/></svg>
+            </button>
+          </div>
+          <span class="pf-compare-bar-lbl pf-lbl-after">After</span>
+        </div>
+
+      </div>
+
+      <div class="pf-modal-stage">
+        <button class="pf-modal-nav pf-modal-prev" id="pfModalPrev" aria-label="Previous page">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg>
+        </button>
+        <div class="pf-modal-slides" id="pfModalSlides"></div>
+        <button class="pf-modal-nav pf-modal-next" id="pfModalNext" aria-label="Next page">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
+        </button>
+      </div>
+
+      <div class="pf-modal-footer">
+        <div class="pf-modal-dots" id="pfModalDots"></div>
+        <span class="pf-modal-counter" id="pfModalCounter"></span>
+      </div>
+
+    </div>
+  </div>
 
   <script src="script.js"></script>
 </body>

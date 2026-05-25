@@ -12,14 +12,16 @@
 </head>
 <body>
 
-  <nav class="navbar scrolled" id="navbar">
+  <nav class="navbar" id="navbar">
     <div class="nav-container">
-      <a href="index.html" class="nav-logo">Website Creator</a>
+      <a href="index.html" class="nav-logo" aria-label="Website Creator home">
+        <img src="images/pixelboroughlogo-white.png" alt="Pixel Borough logo" />
+      </a>
       <button class="nav-toggle" id="navToggle" aria-label="Toggle navigation menu">
         <span></span><span></span><span></span>
       </button>
       <ul class="nav-menu" id="navMenu">
-        <li><a href="index.html"    class="nav-link">Home</a></li>
+        <li><a href="how-it-works.html" class="nav-link">How It Works</a></li>
         <li><a href="services.html"  class="nav-link">Services</a></li>
         <li><a href="portfolio.html" class="nav-link">Portfolio</a></li>
         <li><a href="contact.html"   class="nav-link">Contact</a></li>
@@ -28,54 +30,94 @@
     </div>
   </nav>
 
-  <!-- FIND US -->
-  <section class="find-us" id="find-us">
+  <!-- CONTACT HERO -->
+  <section class="services-hero">
+    <div class="services-hero-orb services-hero-orb--1"></div>
+    <div class="services-hero-orb services-hero-orb--2"></div>
+    <div class="services-hero-orb services-hero-orb--3"></div>
     <div class="container">
-      <div class="find-us-grid">
-        <div class="find-us-info">
-          <p class="section-label">Find Us</p>
-          <h2 class="section-title">Get in Touch</h2>
-          <div class="info-list">
-            <div class="info-item">
-              <span class="info-icon">📍</span>
-              <div>
-                <strong>Address</strong>
-                <p>Website Creator<br>[Your Address]<br>[Your City, Postcode]</p>
-              </div>
-            </div>
-            <div class="info-item">
-              <span class="info-icon">🕐</span>
-              <div>
-                <strong>Working Hours</strong>
-                <p>Mon – Fri: 9am – 6pm<br>Sat: 10am – 2pm<br>Sun: Closed</p>
-              </div>
-            </div>
-            <div class="info-item">
-              <span class="info-icon">📞</span>
-              <div>
-                <strong>Phone</strong>
-                <p><a href="tel:+440000000000">+44 0000 000 000</a></p>
-              </div>
-            </div>
-            <div class="info-item">
-              <span class="info-icon">✉️</span>
+      <p class="section-label services-hero-label">Get in Touch</p>
+      <h1 class="services-hero-title">Contact Us</h1>
+      <p class="services-hero-sub">Got a project in mind? A question about pricing? Or just want to say hello — drop us a message and we'll get straight back to you.</p>
+      <div class="services-hero-badges">
+        <span><svg width="13" height="13" viewBox="0 0 20 20" fill="currentColor"><path d="M16.707 5.293a1 1 0 00-1.414 0L8 12.586 4.707 9.293a1 1 0 00-1.414 1.414l4 4a1 1 0 001.414 0l8-8a1 1 0 000-1.414z"/></svg> 24 hr response</span>
+        <span><svg width="13" height="13" viewBox="0 0 20 20" fill="currentColor"><path d="M16.707 5.293a1 1 0 00-1.414 0L8 12.586 4.707 9.293a1 1 0 00-1.414 1.414l4 4a1 1 0 001.414 0l8-8a1 1 0 000-1.414z"/></svg> No obligation</span>
+        <span><svg width="13" height="13" viewBox="0 0 20 20" fill="currentColor"><path d="M16.707 5.293a1 1 0 00-1.414 0L8 12.586 4.707 9.293a1 1 0 00-1.414 1.414l4 4a1 1 0 001.414 0l8-8a1 1 0 000-1.414z"/></svg> Free quote included</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- CONTACT BODY -->
+  <section class="contact-section">
+    <div class="container">
+      <div class="contact-grid">
+
+        <!-- LEFT — Info -->
+        <div class="contact-info">
+          <h2 class="contact-info-title">Let's talk</h2>
+          <p class="contact-info-sub">We're a UK-based team. Whether you want a brand-new site or to improve an existing one, we'd love to hear from you.</p>
+
+          <div class="contact-info-cards">
+            <div class="contact-info-card">
+              <span class="contact-info-icon">✉️</span>
               <div>
                 <strong>Email</strong>
-                <p><a href="mailto:hello@websitecreator.co.uk">hello@websitecreator.co.uk</a></p>
+                <a href="mailto:hello@pixelborough.co.uk">hello@pixelborough.co.uk</a>
+              </div>
+            </div>
+            <div class="contact-info-card">
+              <span class="contact-info-icon">📞</span>
+              <div>
+                <strong>Phone</strong>
+                <a href="tel:+440000000000">+44 0000 000 000</a>
+              </div>
+            </div>
+            <div class="contact-info-card">
+              <span class="contact-info-icon">🕐</span>
+              <div>
+                <strong>Hours</strong>
+                <span>Mon – Fri, 9am – 6pm</span>
               </div>
             </div>
           </div>
-        </div>
-        <div class="map-area">
-          <div class="map-box">
-            <div class="map-content">
-              <span class="map-pin">📍</span>
-              <p>Website Creator</p>
-              <small>United Kingdom</small>
-              <a href="https://maps.google.com/?q=United+Kingdom" target="_blank" rel="noopener noreferrer" class="btn btn-primary">Open in Google Maps</a>
-            </div>
+
+          <div class="contact-reassurance">
+            <p>Not ready to commit? That's fine — just say hi. Every conversation starts with a free, no-pressure chat about what you need.</p>
           </div>
         </div>
+
+        <!-- RIGHT — Form -->
+        <div class="contact-form-wrap">
+          <form class="contact-form" action="#" method="POST" novalidate>
+            <div class="contact-form-row">
+              <div class="contact-form-group">
+                <label for="contact-name">Your name</label>
+                <input type="text" id="contact-name" name="name" placeholder="Jane Smith" autocomplete="name" required />
+              </div>
+              <div class="contact-form-group">
+                <label for="contact-email">Email address</label>
+                <input type="email" id="contact-email" name="email" placeholder="jane@example.com" autocomplete="email" required />
+              </div>
+            </div>
+            <div class="contact-form-group">
+              <label for="contact-subject">Subject</label>
+              <select id="contact-subject" name="subject">
+                <option value="" disabled selected>What's this about?</option>
+                <option value="new-website">I need a new website</option>
+                <option value="redesign">I want to redesign my existing site</option>
+                <option value="pricing">Pricing question</option>
+                <option value="maintenance">Ongoing maintenance / managed plan</option>
+                <option value="other">Something else</option>
+              </select>
+            </div>
+            <div class="contact-form-group">
+              <label for="contact-message">Your message</label>
+              <textarea id="contact-message" name="message" rows="6" placeholder="Tell us a bit about your project — what you do, what you need, and any questions you have…" required></textarea>
+            </div>
+            <button type="submit" class="btn btn-primary contact-submit">Send Message &rarr;</button>
+          </form>
+        </div>
+
       </div>
     </div>
   </section>
@@ -84,7 +126,7 @@
     <div class="container">
       <div class="footer-grid">
         <div class="footer-brand">
-          <span class="footer-logo">Website Creator</span>
+          <a href="index.html" class="footer-logo-link"><img src="images/pixelboroughlogo-white.png" alt="Pixel Borough logo" class="footer-logo-img" /></a>
           <p>Building fast, beautiful websites for small businesses.</p>
           <div class="social-links">
             <a href="#" aria-label="Instagram">📸</a>

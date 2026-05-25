@@ -8,203 +8,386 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="styles.css" />
-  <style>
-    /* ── Page header ── */
-    .page-header {
-      padding: 80px 0 48px;
-      text-align: center;
-      border-bottom: 1px solid rgba(0,0,0,0.08);
-    }
-    .page-header h1 {
-      font-size: clamp(1.8rem, 4vw, 2.6rem);
-      font-weight: 700;
-      margin-bottom: 12px;
-    }
-    .page-header-sub {
-      font-size: 1rem;
-      color: var(--muted, var(--text-muted, #666));
-      max-width: 520px;
-      margin: 0 auto;
-    }
-    /* ── Register section ── */
-    .register-section { padding: 64px 0 96px; }
-    .register-wrap { max-width: 680px; margin: 0 auto; }
-    /* ── Form grid ── */
-    .form-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 20px 24px;
-    }
-    .form-field { display: flex; flex-direction: column; gap: 6px; }
-    .form-field-full { grid-column: 1 / -1; }
-    .form-field-half { grid-column: span 1; }
-    label {
-      font-size: 0.85rem;
-      font-weight: 600;
-      letter-spacing: 0.02em;
-      color: var(--text, var(--ink, #1a1a1a));
-    }
-    .field-req { color: #e53e3e; margin-left: 2px; }
-    input[type="text"],
-    input[type="email"],
-    input[type="tel"],
-    input[type="number"],
-    input[type="date"],
-    select,
-    textarea {
-      padding: 11px 14px;
-      border: 1.5px solid rgba(0,0,0,0.18);
-      border-radius: var(--radius-sm, 8px);
-      font-size: 0.95rem;
-      font-family: inherit;
-      color: #1a1a1a;
-      background: #ffffff;
-      width: 100%;
-      box-sizing: border-box;
-      transition: border-color 0.15s, box-shadow 0.15s;
-    }
-    input:focus, select:focus, textarea:focus {
-      outline: none;
-      border-color: var(--primary);
-      box-shadow: 0 0 0 3px color-mix(in srgb, var(--primary), transparent 80%);
-    }
-    textarea { resize: vertical; min-height: 100px; }
-    .form-submit { margin-top: 32px; text-align: center; }
-    .btn-submit { min-width: 220px; padding: 14px 36px; font-size: 1rem; cursor: pointer; }
-    /* ── Success state ── */
-    .register-success { text-align: center; padding: 56px 24px; }
-    .success-icon {
-      width: 72px; height: 72px; border-radius: 50%;
-      background: var(--primary); color: #fff;
-      font-size: 2rem; display: flex; align-items: center;
-      justify-content: center; margin: 0 auto 20px;
-    }
-    .register-success p { font-size: 1.1rem; color: var(--text, var(--ink, #1a1a1a)); }
-    @media (max-width: 600px) {
-      .form-grid { grid-template-columns: 1fr; }
-      .form-field-half { grid-column: 1 / -1; }
-    }
-  </style>
 </head>
 <body>
 
-<nav class="navbar scrolled" id="navbar">
+  <nav class="navbar" id="navbar">
     <div class="nav-container">
-      <a href="index.html" class="nav-logo">Website Creator</a>
+      <a href="index.html" class="nav-logo" aria-label="Website Creator home">
+        <img src="images/pixelboroughlogo-white.png" alt="Pixel Borough logo" />
+      </a>
       <button class="nav-toggle" id="navToggle" aria-label="Toggle navigation menu">
         <span></span><span></span><span></span>
       </button>
       <ul class="nav-menu" id="navMenu">
-        <li><a href="index.html"    class="nav-link">Home</a></li>
-        <li><a href="services.html"  class="nav-link">Services</a></li>
-        <li><a href="portfolio.html" class="nav-link">Portfolio</a></li>
-        <li><a href="contact.html"   class="nav-link">Contact</a></li>
-        <li><a href="register.html" class="nav-link nav-cta">Get a Quote</a></li>
+        <li><a href="how-it-works.html" class="nav-link">How It Works</a></li>
+        <li><a href="services.html"      class="nav-link">Services</a></li>
+        <li><a href="portfolio.html"     class="nav-link">Portfolio</a></li>
+        <li><a href="contact.html"       class="nav-link">Contact</a></li>
+        <li><a href="register.html"      class="nav-link nav-cta">Get a Quote</a></li>
       </ul>
     </div>
   </nav>
 
-  <!-- PAGE HEADER -->
-  <header class="page-header">
+  <!-- HERO -->
+  <section class="services-hero">
+    <div class="services-hero-orb services-hero-orb--1"></div>
+    <div class="services-hero-orb services-hero-orb--2"></div>
+    <div class="services-hero-orb services-hero-orb--3"></div>
     <div class="container">
-      <h1>Get a Free Quote</h1>
-      <p class="page-header-sub">Tell us about your project and we'll send you a detailed, fixed-price quote within 24 hours. No obligation, no pressure.</p>
-    </div>
-  </header>
-
-  <!-- QUOTE FORM -->
-  <section class="register-section">
-    <div class="container">
-      <div class="register-wrap">
-        <form class="register-form" id="registerForm" action="#" method="POST" novalidate>
-          <div class="form-grid">
-          <div class="form-field form-field-half">
-            <label for="full_name">Your Full Name <span class="field-req">*</span></label>
-            <input type="text" name="full_name" id="full_name" placeholder="e.g. Jane Smith" required>
-          </div>
-          <div class="form-field form-field-half">
-            <label for="business_name">Business / Company Name</label>
-            <input type="text" name="business_name" id="business_name" placeholder="e.g. Acme Ltd">
-          </div>
-          <div class="form-field form-field-half">
-            <label for="email">Email Address <span class="field-req">*</span></label>
-            <input type="email" name="email" id="email" placeholder="you@example.com" required>
-          </div>
-          <div class="form-field form-field-half">
-            <label for="phone">Phone Number</label>
-            <input type="tel" name="phone" id="phone" placeholder="+44 7700 000 000">
-          </div>
-          <div class="form-field form-field-half">
-            <label for="website_type">Type of Website <span class="field-req">*</span></label>
-            <select name="website_type" id="website_type" required>
-              <option value="" disabled selected>Select…</option>
-              <option value="Static Website">Static Website</option>
-              <option value="Dynamic / CMS Website">Dynamic / CMS Website</option>
-              <option value="E-commerce Store">E-commerce Store</option>
-              <option value="Landing Page">Landing Page</option>
-              <option value="Redesign / Migration">Redesign / Migration</option>
-              <option value="Maintenance Plan">Maintenance Plan</option>
-              <option value="Not Sure">Not Sure — advise me</option>
-            </select>
-          </div>
-          <div class="form-field form-field-half">
-            <label for="budget">Approximate Budget <span class="field-req">*</span></label>
-            <select name="budget" id="budget" required>
-              <option value="" disabled selected>Select…</option>
-              <option value="Under £500">Under £500</option>
-              <option value="£500 – £1,000">£500 – £1,000</option>
-              <option value="£1,000 – £2,500">£1,000 – £2,500</option>
-              <option value="£2,500 – £5,000">£2,500 – £5,000</option>
-              <option value="£5,000+">£5,000+</option>
-              <option value="Not Sure">Not Sure</option>
-            </select>
-          </div>
-          <div class="form-field form-field-half">
-            <label for="timeline">Desired Timeline</label>
-            <select name="timeline" id="timeline">
-              <option value="" disabled selected>Select…</option>
-              <option value="ASAP (1–2 weeks)">ASAP (1–2 weeks)</option>
-              <option value="Within 1 month">Within 1 month</option>
-              <option value="2–3 months">2–3 months</option>
-              <option value="Flexible">Flexible</option>
-            </select>
-          </div>
-          <div class="form-field form-field-half">
-            <label for="existing_site">Do you have an existing website?</label>
-            <select name="existing_site" id="existing_site">
-              <option value="" disabled selected>Select…</option>
-              <option value="No">No</option>
-              <option value="Yes – I want a redesign">Yes – I want a redesign</option>
-              <option value="Yes – I want to keep it">Yes – I want to keep it</option>
-            </select>
-          </div>
-          <div class="form-field form-field-full">
-            <label for="description">Project Description <span class="field-req">*</span></label>
-            <textarea name="description" id="description" placeholder="Briefly describe your business, what you need, and any specific features or pages required…" rows="5" required></textarea>
-          </div>
-          </div>
-          <div class="form-submit">
-            <button type="submit" class="btn btn-primary btn-submit">Send My Brief</button>
-          </div>
-        </form>
-        <div class="register-success" id="registerSuccess" hidden>
-          <div class="success-icon">✓</div>
-          <p>Thanks! We'll review your brief and send you a quote within 24 hours.</p>
-        </div>
+      <p class="section-label services-hero-label">Free Quote</p>
+      <h1 class="services-hero-title">Speak to us, <em>It's Easy</em></h1>
+      <p class="services-hero-sub">Fill in the brief below and we'll send you a fixed-price quote within 24 hours. No obligation, no pressure.</p>
+      <div class="services-hero-badges">
+        <span><svg width="13" height="13" viewBox="0 0 20 20" fill="currentColor"><path d="M16.707 5.293a1 1 0 00-1.414 0L8 12.586 4.707 9.293a1 1 0 00-1.414 1.414l4 4a1 1 0 001.414 0l8-8a1 1 0 000-1.414z"/></svg> 100% free</span>
+        <span><svg width="13" height="13" viewBox="0 0 20 20" fill="currentColor"><path d="M16.707 5.293a1 1 0 00-1.414 0L8 12.586 4.707 9.293a1 1 0 00-1.414 1.414l4 4a1 1 0 001.414 0l8-8a1 1 0 000-1.414z"/></svg> Fixed-price quote</span>
+        <span><svg width="13" height="13" viewBox="0 0 20 20" fill="currentColor"><path d="M16.707 5.293a1 1 0 00-1.414 0L8 12.586 4.707 9.293a1 1 0 00-1.414 1.414l4 4a1 1 0 001.414 0l8-8a1 1 0 000-1.414z"/></svg> Reply within 24 hrs</span>
+        <span><svg width="13" height="13" viewBox="0 0 20 20" fill="currentColor"><path d="M16.707 5.293a1 1 0 00-1.414 0L8 12.586 4.707 9.293a1 1 0 00-1.414 1.414l4 4a1 1 0 001.414 0l8-8a1 1 0 000-1.414z"/></svg> No commitment</span>
       </div>
     </div>
   </section>
 
-<footer class="footer">
+  <!-- QUOTE SECTION -->
+  <section class="register-section">
+    <div class="container">
+      <div class="register-wrap">
+
+        <!-- Intent chooser -->
+        <div class="intent-cards">
+
+          <label class="intent-card">
+            <input type="radio" name="intent" value="new">
+            <div class="intent-card-label">
+              <div class="geo-wrap geo-new">
+                <div class="ring"></div>
+                <div class="ring ring-2"></div>
+                <div class="diamond"></div>
+                <div class="orbit-dot"></div>
+              </div>
+              <div class="intent-text">
+                <div class="intent-card-name">New website?</div>
+                <div class="intent-card-desc">Build a brand new site from scratch</div>
+              </div>
+            </div>
+            <div class="intent-check">&#10003;</div>
+          </label>
+
+          <label class="intent-card">
+            <input type="radio" name="intent" value="existing">
+            <div class="intent-card-label">
+              <div class="geo-wrap geo-existing">
+                <div class="hex"></div>
+                <div class="hex-inner"></div>
+                <div class="scan-line"></div>
+              </div>
+              <div class="intent-text">
+                <div class="intent-card-name">Already have a website?</div>
+                <div class="intent-card-desc">Improve or fix your existing site</div>
+              </div>
+            </div>
+            <div class="intent-check">&#10003;</div>
+          </label>
+
+        </div>
+        <!-- end intent-cards -->
+
+        <!-- ── Form: New website ── -->
+        <div class="register-form-card" id="formNew">
+          <div class="form-header">
+            <div class="form-header-left">
+              <div class="form-path-label"><span class="form-path-line"></span>New website build</div>
+              <h2>Your project<br><em>brief.</em></h2>
+              <p>The more you share, the sharper your quote. Takes about 2 minutes.</p>
+            </div>
+            <div class="form-header-geo">
+              <div class="fh-ring"></div>
+              <div class="fh-ring fh-ring-2"></div>
+              <div class="fh-dot"></div>
+              <div class="fh-center"></div>
+            </div>
+          </div>
+
+          <div class="form-body">
+            <form id="formNewInner" novalidate>
+
+              <!-- Step 1 -->
+              <div class="form-section-head">
+                <div class="form-section-num">1</div>
+                <span class="form-section-title">Your details</span>
+                <div class="form-section-line"></div>
+              </div>
+              <div class="form-grid">
+                <div class="form-field">
+                  <label for="new_name">Full Name <span class="field-req">*</span></label>
+                  <input type="text" id="new_name" name="full_name" placeholder="e.g. Jane Smith" required>
+                </div>
+                <div class="form-field">
+                  <label for="new_biz">Business / Company Name</label>
+                  <input type="text" id="new_biz" name="business_name" placeholder="e.g. Acme Ltd">
+                </div>
+                <div class="form-field">
+                  <label for="new_email">Email Address <span class="field-req">*</span></label>
+                  <input type="email" id="new_email" name="email" placeholder="you@example.com" required>
+                </div>
+                <div class="form-field">
+                  <label for="new_phone">Phone Number</label>
+                  <input type="tel" id="new_phone" name="phone" placeholder="+44 7700 000 000">
+                </div>
+              </div>
+
+              <!-- Step 2 -->
+              <div class="form-section-head">
+                <div class="form-section-num">2</div>
+                <span class="form-section-title">Package</span>
+                <div class="form-section-line"></div>
+              </div>
+              <div class="form-grid">
+                <div class="form-field form-field-full">
+                  <p class="pkg-section-label">Choose a package type <span class="field-req">*</span></p>
+                  <div class="pkg-category-cards">
+
+                    <!-- Starter -->
+                    <label class="pkg-cat-card">
+                      <input type="radio" name="pkg_category" value="Starter" id="pkg_starter" required>
+                      <span class="pkg-cat-label">
+                        <div class="pkg-ico pkg-ico-starter"><div class="d"></div></div>
+                        <span class="pkg-cat-name">Starter</span>
+                        <span class="pkg-cat-hint">1-page site</span>
+                      </span>
+                    </label>
+
+                    <!-- Business -->
+                    <label class="pkg-cat-card">
+                      <input type="radio" name="pkg_category" value="Business" id="pkg_business">
+                      <span class="pkg-cat-label">
+                        <div class="pkg-ico pkg-ico-business">
+                          <div class="b-ring"></div>
+                          <div class="b-d"></div>
+                        </div>
+                        <span class="pkg-cat-name">Business</span>
+                        <span class="pkg-cat-hint">3&ndash;6 pages</span>
+                      </span>
+                    </label>
+
+                    <!-- Custom -->
+                    <label class="pkg-cat-card">
+                      <input type="radio" name="pkg_category" value="Custom" id="pkg_custom">
+                      <span class="pkg-cat-label">
+                        <div class="pkg-ico pkg-ico-custom">
+                          <div class="c-ring"></div>
+                          <div class="c-ring c-ring-2"></div>
+                          <div class="c-d"></div>
+                          <div class="c-dot"></div>
+                        </div>
+                        <span class="pkg-cat-name">Custom</span>
+                        <span class="pkg-cat-hint">Tailored build</span>
+                      </span>
+                    </label>
+
+                  </div>
+
+                  <!-- Tier selectors -->
+                  <div class="pkg-tier-wrap" id="tier_starter">
+                    <label for="pkg_starter_tier">Which Starter package? <span class="field-req">*</span></label>
+                    <select name="pkg_tier" id="pkg_starter_tier">
+                      <option value="" disabled selected>Select a package&hellip;</option>
+                      <option value="Starter — One-Off Build (from £299)">One-Off Build &mdash; from &pound;299 (you host it)</option>
+                      <option value="Starter — We Manage (from £49/mo)">We Manage &mdash; from &pound;49/mo (hosting included)</option>
+                      <option value="Starter+ — Priority (from £99/mo)">Starter+ Priority &mdash; from &pound;99/mo (fast changes)</option>
+                      <option value="Starter+++ — Backend (from £189/mo)">Starter+++ Backend &mdash; from &pound;189/mo (login features)</option>
+                    </select>
+                  </div>
+                  <div class="pkg-tier-wrap" id="tier_business">
+                    <label for="pkg_business_tier">Which Business package? <span class="field-req">*</span></label>
+                    <select name="pkg_tier" id="pkg_business_tier">
+                      <option value="" disabled selected>Select a package&hellip;</option>
+                      <option value="Business — One-Off Build (from £999)">One-Off Build &mdash; from &pound;999 (you host it)</option>
+                      <option value="Business — We Manage (from £129/mo)">We Manage &mdash; from &pound;129/mo (hosting included)</option>
+                      <option value="Business+ — Priority (from £199/mo)">Business+ Priority &mdash; from &pound;199/mo (fast changes)</option>
+                      <option value="Business+++ — Backend (from £299/mo)">Business+++ Backend &mdash; from &pound;299/mo (login features)</option>
+                    </select>
+                  </div>
+                  <div class="pkg-tier-wrap" id="tier_custom">
+                    <label for="pkg_custom_tier">What do you need? <span class="field-req">*</span></label>
+                    <select name="pkg_tier" id="pkg_custom_tier">
+                      <option value="" disabled selected>Select an option&hellip;</option>
+                      <option value="Custom — Fully Custom Build">Fully custom website build</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Step 3 -->
+              <div class="form-section-head">
+                <div class="form-section-num">3</div>
+                <span class="form-section-title">Project info</span>
+                <div class="form-section-line"></div>
+              </div>
+              <div class="form-grid">
+                <div class="form-field">
+                  <label for="new_timeline">Desired Timeline</label>
+                  <select name="timeline" id="new_timeline">
+                    <option value="" disabled selected>Select&hellip;</option>
+                    <option value="ASAP (1–2 weeks)">ASAP (1&ndash;2 weeks)</option>
+                    <option value="Within 1 month">Within 1 month</option>
+                    <option value="2–3 months">2&ndash;3 months</option>
+                    <option value="Flexible">Flexible</option>
+                  </select>
+                </div>
+                <div class="form-field">
+                  <label for="new_industry">Your Industry / Sector</label>
+                  <input type="text" id="new_industry" name="industry" placeholder="e.g. Hair &amp; Beauty, Retail&hellip;">
+                </div>
+                <div class="form-field form-field-full">
+                  <label for="new_desc">Project Description <span class="field-req">*</span></label>
+                  <textarea id="new_desc" name="description" rows="4" placeholder="Describe your business, what you need, and any features or pages required&hellip;" required></textarea>
+                </div>
+              </div>
+
+              <div class="form-submit-area">
+                <button type="submit" class="btn btn-primary btn-submit">Send My Brief &rarr;</button>
+                <div class="form-assurance">
+                  <span><svg class="fa-check" viewBox="0 0 20 20" fill="#22c55e"><path d="M16.707 5.293a1 1 0 00-1.414 0L8 12.586 4.707 9.293a1 1 0 00-1.414 1.414l4 4a1 1 0 001.414 0l8-8a1 1 0 000-1.414z"/></svg>100% free</span>
+                  <span><svg class="fa-check" viewBox="0 0 20 20" fill="#22c55e"><path d="M16.707 5.293a1 1 0 00-1.414 0L8 12.586 4.707 9.293a1 1 0 00-1.414 1.414l4 4a1 1 0 001.414 0l8-8a1 1 0 000-1.414z"/></svg>Reply within 24 hrs</span>
+                  <span><svg class="fa-check" viewBox="0 0 20 20" fill="#22c55e"><path d="M16.707 5.293a1 1 0 00-1.414 0L8 12.586 4.707 9.293a1 1 0 00-1.414 1.414l4 4a1 1 0 001.414 0l8-8a1 1 0 000-1.414z"/></svg>No commitment</span>
+                </div>
+              </div>
+
+            </form>
+
+            <div class="register-success" id="successNew">
+              <div class="success-icon">&#10003;</div>
+              <h3>Brief received!</h3>
+              <p>We'll review your project and send a fixed-price quote within 24 hours.</p>
+            </div>
+          </div>
+        </div>
+        <!-- end formNew -->
+
+        <!-- ── Form: Existing website ── -->
+        <div class="register-form-card" id="formExisting">
+          <div class="form-header">
+            <div class="form-header-left">
+              <div class="form-path-label"><span class="form-path-line"></span>Existing site support</div>
+              <h2>Tell us about<br><em>your site.</em></h2>
+              <p>Share the details and we'll come back with next steps and a clear price.</p>
+            </div>
+            <div class="form-header-geo geo-hex">
+              <div class="fh-ring"></div>
+              <div class="fh-ring fh-ring-2"></div>
+              <div class="fh-dot"></div>
+              <div class="fh-center"></div>
+            </div>
+          </div>
+
+          <div class="form-body">
+            <form id="formExistingInner" novalidate>
+
+              <div class="form-section-head">
+                <div class="form-section-num">1</div>
+                <span class="form-section-title">Your details</span>
+                <div class="form-section-line"></div>
+              </div>
+              <div class="form-grid">
+                <div class="form-field">
+                  <label for="ex_name">Full Name <span class="field-req">*</span></label>
+                  <input type="text" id="ex_name" name="full_name" placeholder="e.g. Jane Smith" required>
+                </div>
+                <div class="form-field">
+                  <label for="ex_biz">Business / Company Name</label>
+                  <input type="text" id="ex_biz" name="business_name" placeholder="e.g. Acme Ltd">
+                </div>
+                <div class="form-field">
+                  <label for="ex_email">Email Address <span class="field-req">*</span></label>
+                  <input type="email" id="ex_email" name="email" placeholder="you@example.com" required>
+                </div>
+                <div class="form-field">
+                  <label for="ex_phone">Phone Number</label>
+                  <input type="tel" id="ex_phone" name="phone" placeholder="+44 7700 000 000">
+                </div>
+              </div>
+
+              <div class="form-section-head">
+                <div class="form-section-num">2</div>
+                <span class="form-section-title">Your website</span>
+                <div class="form-section-line"></div>
+              </div>
+              <div class="form-grid">
+                <div class="form-field form-field-full">
+                  <label for="ex_url">Website URL <span class="field-req">*</span></label>
+                  <input type="url" id="ex_url" name="website_url" placeholder="https://yoursite.co.uk" required>
+                </div>
+                <div class="form-field">
+                  <label for="ex_platform">Platform / CMS</label>
+                  <select id="ex_platform" name="platform">
+                    <option value="" disabled selected>Select&hellip;</option>
+                    <option>WordPress</option>
+                    <option>Squarespace</option>
+                    <option>Wix</option>
+                    <option>Custom / hand-coded</option>
+                    <option>Not sure</option>
+                  </select>
+                </div>
+                <div class="form-field">
+                  <label for="ex_help">What do you need help with?</label>
+                  <select id="ex_help" name="help_type">
+                    <option value="" disabled selected>Select&hellip;</option>
+                    <option>Bug fixes / technical issues</option>
+                    <option>Design refresh / redesign</option>
+                    <option>Speed &amp; performance</option>
+                    <option>Adding new pages or features</option>
+                    <option>Ongoing maintenance</option>
+                    <option>Something else</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="form-section-head">
+                <div class="form-section-num">3</div>
+                <span class="form-section-title">Tell us more</span>
+                <div class="form-section-line"></div>
+              </div>
+              <div class="form-grid">
+                <div class="form-field form-field-full">
+                  <label for="ex_desc">What's going on? <span class="field-req">*</span></label>
+                  <textarea id="ex_desc" name="description" rows="4" placeholder="Describe what's not working, what you'd like improved, or what you need added&hellip;" required></textarea>
+                </div>
+              </div>
+
+              <div class="form-submit-area">
+                <button type="submit" class="btn btn-primary btn-submit">Send My Brief &rarr;</button>
+                <div class="form-assurance">
+                  <span><svg class="fa-check" viewBox="0 0 20 20" fill="#22c55e"><path d="M16.707 5.293a1 1 0 00-1.414 0L8 12.586 4.707 9.293a1 1 0 00-1.414 1.414l4 4a1 1 0 001.414 0l8-8a1 1 0 000-1.414z"/></svg>100% free</span>
+                  <span><svg class="fa-check" viewBox="0 0 20 20" fill="#22c55e"><path d="M16.707 5.293a1 1 0 00-1.414 0L8 12.586 4.707 9.293a1 1 0 00-1.414 1.414l4 4a1 1 0 001.414 0l8-8a1 1 0 000-1.414z"/></svg>Reply within 24 hrs</span>
+                  <span><svg class="fa-check" viewBox="0 0 20 20" fill="#22c55e"><path d="M16.707 5.293a1 1 0 00-1.414 0L8 12.586 4.707 9.293a1 1 0 00-1.414 1.414l4 4a1 1 0 001.414 0l8-8a1 1 0 000-1.414z"/></svg>No commitment</span>
+                </div>
+              </div>
+
+            </form>
+
+            <div class="register-success" id="successExisting">
+              <div class="success-icon">&#10003;</div>
+              <h3>Got it!</h3>
+              <p>We'll take a look and come back to you within 24 hours with next steps.</p>
+            </div>
+          </div>
+        </div>
+        <!-- end formExisting -->
+
+      </div>
+    </div>
+  </section>
+
+  <footer class="footer">
     <div class="container">
       <div class="footer-grid">
         <div class="footer-brand">
-          <span class="footer-logo">Website Creator</span>
+          <a href="index.html" class="footer-logo-link"><img src="images/pixelboroughlogo-white.png" alt="Pixel Borough logo" class="footer-logo-img" /></a>
           <p>Building fast, beautiful websites for small businesses.</p>
           <div class="social-links">
-            <a href="#" aria-label="Instagram">📸</a>
-            <a href="#" aria-label="Facebook">👥</a>
-            <a href="#" aria-label="LinkedIn">💼</a>
+            <a href="#" aria-label="Instagram">&#128248;</a>
+            <a href="#" aria-label="Facebook">&#128101;</a>
+            <a href="#" aria-label="LinkedIn">&#128188;</a>
           </div>
         </div>
         <div class="footer-col">
@@ -239,24 +422,11 @@
       </div>
       <div class="footer-bottom">
         <p>&copy; 2026 Website Creator. All rights reserved.</p>
-        <p>Built with ❤️ in the UK</p>
+        <p>Built with &#10084;&#65039; in the UK</p>
       </div>
     </div>
   </footer>
 
-  <script>
-  (function(){
-    var form = document.getElementById("registerForm");
-    var ok   = document.getElementById("registerSuccess");
-    if(!form) return;
-    form.addEventListener("submit", function(e){
-      e.preventDefault();
-      form.hidden = true;
-      ok.hidden   = false;
-      window.scrollTo({top: 0, behavior: "smooth"});
-    });
-  })();
-  </script>
   <script src="script.js"></script>
 </body>
 </html>
