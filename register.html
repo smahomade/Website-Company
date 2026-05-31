@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
@@ -14,7 +14,7 @@
   <nav class="navbar" id="navbar">
     <div class="nav-container">
       <a href="index.html" class="nav-logo" aria-label="Website Creator home">
-        <img src="images/pixelboroughlogo-white.png" alt="Pixel Borough logo" />
+        <img src="images/logo/pixelborough_full_transparent_2.png" alt="Pixel Borough logo" class="logo-full" /><img src="images/logo/pixelborough_pb_transparent_2.png" alt="Pixel Borough logo" class="logo-mark" />
       </a>
       <button class="nav-toggle" id="navToggle" aria-label="Toggle navigation menu">
         <span></span><span></span><span></span>
@@ -117,21 +117,21 @@
                 <div class="form-section-line"></div>
               </div>
               <div class="form-grid">
-                <div class="form-field">
+                <div class="form-field float-field">
+                  <input type="text" id="new_name" name="full_name" placeholder=" " required>
                   <label for="new_name">Full Name <span class="field-req">*</span></label>
-                  <input type="text" id="new_name" name="full_name" placeholder="e.g. Jane Smith" required>
                 </div>
-                <div class="form-field">
+                <div class="form-field float-field">
+                  <input type="text" id="new_biz" name="business_name" placeholder=" ">
                   <label for="new_biz">Business / Company Name</label>
-                  <input type="text" id="new_biz" name="business_name" placeholder="e.g. Acme Ltd">
                 </div>
-                <div class="form-field">
+                <div class="form-field float-field">
+                  <input type="email" id="new_email" name="email" placeholder=" " required>
                   <label for="new_email">Email Address <span class="field-req">*</span></label>
-                  <input type="email" id="new_email" name="email" placeholder="you@example.com" required>
                 </div>
-                <div class="form-field">
+                <div class="form-field float-field">
+                  <input type="tel" id="new_phone" name="phone" placeholder=" ">
                   <label for="new_phone">Phone Number</label>
-                  <input type="tel" id="new_phone" name="phone" placeholder="+44 7700 000 000">
                 </div>
               </div>
 
@@ -186,14 +186,21 @@
 
                   </div>
 
+                  <!-- Not sure checkbox -->
+                  <label class="pkg-unsure-check">
+                    <input type="checkbox" id="pkg_unsure" name="pkg_unsure">
+                    <span class="pkg-unsure-box"></span>
+                    <span class="pkg-unsure-label">I'm not sure what I want yet — just get in touch</span>
+                  </label>
+
                   <!-- Tier selectors -->
                   <div class="pkg-tier-wrap" id="tier_starter">
                     <label for="pkg_starter_tier">Which Starter package? <span class="field-req">*</span></label>
                     <select name="pkg_tier" id="pkg_starter_tier">
                       <option value="" disabled selected>Select a package&hellip;</option>
-                      <option value="Starter — One-Off Build (from £299)">One-Off Build &mdash; from &pound;299 (you host it)</option>
-                      <option value="Starter — We Manage (from £49/mo)">We Manage &mdash; from &pound;49/mo (hosting included)</option>
-                      <option value="Starter+ — Priority (from £99/mo)">Starter+ Priority &mdash; from &pound;99/mo (fast changes)</option>
+                      <option value="Starter — One-Off Build (from £399)">One-Off Build &mdash; from &pound;399 (you host it)</option>
+                      <option value="Starter — We Manage (from £60/mo)">We Manage &mdash; from &pound;60/mo (hosting included)</option>
+                      <option value="Starter+ — Priority (from £109/mo)">Starter+ Priority &mdash; from &pound;109/mo (fast changes)</option>
                       <option value="Starter+++ — Backend (from £189/mo)">Starter+++ Backend &mdash; from &pound;189/mo (login features)</option>
                     </select>
                   </div>
@@ -204,13 +211,14 @@
                       <option value="Business — One-Off Build (from £999)">One-Off Build &mdash; from &pound;999 (you host it)</option>
                       <option value="Business — We Manage (from £129/mo)">We Manage &mdash; from &pound;129/mo (hosting included)</option>
                       <option value="Business+ — Priority (from £199/mo)">Business+ Priority &mdash; from &pound;199/mo (fast changes)</option>
-                      <option value="Business+++ — Backend (from £299/mo)">Business+++ Backend &mdash; from &pound;299/mo (login features)</option>
+                      <option value="Business+++ — Backend (from £399/mo)">Business+++ Backend &mdash; from &pound;399/mo (login features)</option>
                     </select>
                   </div>
                   <div class="pkg-tier-wrap" id="tier_custom">
                     <label for="pkg_custom_tier">What do you need? <span class="field-req">*</span></label>
                     <select name="pkg_tier" id="pkg_custom_tier">
                       <option value="" disabled selected>Select an option&hellip;</option>
+                      <option value="Custom — Help With Existing Site">Help with my existing site (fixes, improvements, support)</option>
                       <option value="Custom — Fully Custom Build">Fully custom website build</option>
                     </select>
                   </div>
@@ -234,13 +242,13 @@
                     <option value="Flexible">Flexible</option>
                   </select>
                 </div>
-                <div class="form-field">
+                <div class="form-field float-field">
+                  <input type="text" id="new_industry" name="industry" placeholder=" ">
                   <label for="new_industry">Your Industry / Sector</label>
-                  <input type="text" id="new_industry" name="industry" placeholder="e.g. Hair &amp; Beauty, Retail&hellip;">
                 </div>
-                <div class="form-field form-field-full">
+                <div class="form-field form-field-full float-field float-field--area">
+                  <textarea id="new_desc" name="description" rows="4" placeholder=" " required></textarea>
                   <label for="new_desc">Project Description <span class="field-req">*</span></label>
-                  <textarea id="new_desc" name="description" rows="4" placeholder="Describe your business, what you need, and any features or pages required&hellip;" required></textarea>
                 </div>
               </div>
 
@@ -289,21 +297,21 @@
                 <div class="form-section-line"></div>
               </div>
               <div class="form-grid">
-                <div class="form-field">
+                <div class="form-field float-field">
+                  <input type="text" id="ex_name" name="full_name" placeholder=" " required>
                   <label for="ex_name">Full Name <span class="field-req">*</span></label>
-                  <input type="text" id="ex_name" name="full_name" placeholder="e.g. Jane Smith" required>
                 </div>
-                <div class="form-field">
+                <div class="form-field float-field">
+                  <input type="text" id="ex_biz" name="business_name" placeholder=" ">
                   <label for="ex_biz">Business / Company Name</label>
-                  <input type="text" id="ex_biz" name="business_name" placeholder="e.g. Acme Ltd">
                 </div>
-                <div class="form-field">
+                <div class="form-field float-field">
+                  <input type="email" id="ex_email" name="email" placeholder=" " required>
                   <label for="ex_email">Email Address <span class="field-req">*</span></label>
-                  <input type="email" id="ex_email" name="email" placeholder="you@example.com" required>
                 </div>
-                <div class="form-field">
+                <div class="form-field float-field">
+                  <input type="tel" id="ex_phone" name="phone" placeholder=" ">
                   <label for="ex_phone">Phone Number</label>
-                  <input type="tel" id="ex_phone" name="phone" placeholder="+44 7700 000 000">
                 </div>
               </div>
 
@@ -313,9 +321,9 @@
                 <div class="form-section-line"></div>
               </div>
               <div class="form-grid">
-                <div class="form-field form-field-full">
+                <div class="form-field form-field-full float-field">
+                  <input type="url" id="ex_url" name="website_url" placeholder=" " required>
                   <label for="ex_url">Website URL <span class="field-req">*</span></label>
-                  <input type="url" id="ex_url" name="website_url" placeholder="https://yoursite.co.uk" required>
                 </div>
                 <div class="form-field">
                   <label for="ex_platform">Platform / CMS</label>
@@ -348,9 +356,9 @@
                 <div class="form-section-line"></div>
               </div>
               <div class="form-grid">
-                <div class="form-field form-field-full">
+                <div class="form-field form-field-full float-field float-field--area">
+                  <textarea id="ex_desc" name="description" rows="4" placeholder=" " required></textarea>
                   <label for="ex_desc">What's going on? <span class="field-req">*</span></label>
-                  <textarea id="ex_desc" name="description" rows="4" placeholder="Describe what's not working, what you'd like improved, or what you need added&hellip;" required></textarea>
                 </div>
               </div>
 
@@ -382,7 +390,7 @@
     <div class="container">
       <div class="footer-grid">
         <div class="footer-brand">
-          <a href="index.html" class="footer-logo-link"><img src="images/pixelboroughlogo-white.png" alt="Pixel Borough logo" class="footer-logo-img" /></a>
+          <a href="index.html" class="footer-logo-link"><img src="images/logo/pixelborough_full_transparent_2.png" alt="Pixel Borough logo" class="footer-logo-img" /></a>
           <p>Building fast, beautiful websites for small businesses.</p>
           <div class="social-links">
             <a href="#" aria-label="Instagram">&#128248;</a>

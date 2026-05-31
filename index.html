@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
@@ -15,7 +15,7 @@
   <nav class="navbar" id="navbar">
     <div class="nav-container">
       <a href="index.html" class="nav-logo" aria-label="Website Creator home">
-        <img src="images/pixelboroughlogo-white.png" alt="Pixel Borough logo" />
+        <img src="images/logo/pixelborough_full_transparent_2.png" alt="Pixel Borough logo" class="logo-full" /><img src="images/logo/pixelborough_pb_transparent_2.png" alt="Pixel Borough logo" class="logo-mark" />
       </a>
       <button class="nav-toggle" id="navToggle" aria-label="Toggle navigation menu">
         <span></span><span></span><span></span>
@@ -35,6 +35,13 @@
     <div class="hero-bg"></div>
     <div class="hero-img-bg" id="heroImgBg"></div>
     <video class="hero-vid-bg" id="heroVidBg" autoplay muted loop playsinline></video>
+    <div class="hero-logo-bg" id="heroLogoBg">
+      <img src="images/logo/pixelborough_pb_transparent_2.png" alt="">
+      <div class="hero-logo-text" id="heroLogoText">
+        <span class="hero-logo-coming-badge">Coming Soon</span>
+        <p class="hero-logo-coming-name"></p>
+      </div>
+    </div>
     <div class="hero-wash" id="heroWash"></div>
     <div class="hero-grid-overlay"></div>
     <div class="hero-orb hero-orb--1" id="orb1"></div>
@@ -274,6 +281,7 @@
 
       <div class="hiw-cta">
         <a href="register.html" class="btn hiw-btn">Get Started — It's Free to Enquire</a>
+        <a href="how-it-works.html" class="btn btn-outline hiw-btn-secondary">Read More</a>
       </div>
     </div>
   </section>
@@ -299,6 +307,7 @@
             <h3 class="about-type-name about-type-name--dynamic">Dynamic Website</h3>
             <p class="about-type-desc">When you need user accounts, e-commerce, bookings, or custom functionality built around your business.</p>
           </div>
+          <a href="how-it-works.html#faq" class="btn btn-outline about-read-more">Read More</a>
         </div>
       </div>
     </div>
@@ -383,6 +392,9 @@
         </div>
 
       </div>
+      <div class="features-footer-cta">
+        <a href="services.html" class="btn btn-outline">View All Services</a>
+      </div>
     </div>
   </section>
 
@@ -390,7 +402,7 @@
     <div class="container">
       <div class="footer-grid">
         <div class="footer-brand">
-          <a href="index.html" class="footer-logo-link"><img src="images/pixelboroughlogo-white.png" alt="Pixel Borough logo" class="footer-logo-img" /></a>
+          <a href="index.html" class="footer-logo-link"><img src="images/logo/pixelborough_full_transparent_2.png" alt="Pixel Borough logo" class="footer-logo-img" /></a>
           <p>Building fast, beautiful websites for small businesses.</p>
           <div class="social-links">
             <a href="#" aria-label="Instagram">📸</a>
@@ -443,11 +455,16 @@
       </button>
       <div class="reel-popup-img-wrap">
         <img id="reelPopupImg" src="" alt="" />
+        <div class="reel-popup-img-fallback" id="reelPopupFallback">
+          <img src="images/logo/pixelborough_pb_transparent_2.png" alt="">
+          <span>Coming Soon</span>
+        </div>
       </div>
       <div class="reel-popup-body">
         <div class="reel-popup-meta">
           <span class="reel-popup-tag" id="reelPopupTag"></span>
           <span class="reel-popup-ind" id="reelPopupInd"></span>
+          <span class="reel-popup-pages" id="reelPopupPages"></span>
         </div>
         <h3 class="reel-popup-name" id="reelPopupName"></h3>
         <p class="reel-popup-url" id="reelPopupUrl"></p>

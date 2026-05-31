@@ -13,27 +13,41 @@ window.addEventListener('scroll', () => {
 }, { passive: true });
 
 if (navToggle) {
-  navToggle.addEventListener('click', () => {
-    const open = navMenu.classList.toggle('open');
-    navToggle.setAttribute('aria-expanded', open);
-    const [t, m, b] = navToggle.querySelectorAll('span');
-    if (open) {
-      t.style.transform = 'rotate(45deg) translate(5px,5px)';
-      m.style.opacity   = '0';
-      b.style.transform = 'rotate(-45deg) translate(5px,-5px)';
-    } else {
-      [t, m, b].forEach(s => { s.style.transform = ''; s.style.opacity = ''; });
-    }
+  /* Cache the menu's original DOM position so we can restore it on close */
+  var menuParent      = navMenu.parentElement;
+  var menuNextSibling = navMenu.nextElementSibling;
+
+  function openMenu() {
+    /* Portal to <body> — escapes the backdrop-filter containing block on .navbar.scrolled */
+    document.body.appendChild(navMenu);
+    navMenu.classList.add('open');
+    document.body.style.overflow = 'hidden';
+    navbar.style.zIndex = '1001'; /* keep navbar (and toggle) above the overlay */
+    navToggle.setAttribute('aria-expanded', 'true');
+    var spans = navToggle.querySelectorAll('span');
+    spans[0].style.transform = 'rotate(45deg) translate(5px,5px)';
+    spans[1].style.opacity   = '0';
+    spans[2].style.transform = 'rotate(-45deg) translate(5px,-5px)';
+  }
+
+  function closeMenu() {
+    navMenu.classList.remove('open');
+    /* Return menu to its original place inside the navbar */
+    menuParent.insertBefore(navMenu, menuNextSibling);
+    document.body.style.overflow = '';
+    navbar.style.zIndex = '';
+    navToggle.setAttribute('aria-expanded', 'false');
+    navToggle.querySelectorAll('span').forEach(function(s) { s.style.transform = ''; s.style.opacity = ''; });
+  }
+
+  navToggle.addEventListener('click', function() {
+    navMenu.classList.contains('open') ? closeMenu() : openMenu();
+  });
+
+  navMenu.addEventListener('click', function(e) {
+    if (e.target.classList.contains('nav-link')) closeMenu();
   });
 }
-
-navMenu && navMenu.querySelectorAll('.nav-link').forEach(link =>
-  link.addEventListener('click', () => {
-    navMenu.classList.remove('open');
-    navToggle && navToggle.setAttribute('aria-expanded', 'false');
-    navToggle && navToggle.querySelectorAll('span').forEach(s => { s.style.transform = ''; s.style.opacity = ''; });
-  })
-);
 
 /* ---- Active nav link — based on current page URL ---- */
 const currentPage = window.location.pathname.split('/').pop() || 'index.html';
@@ -501,15 +515,16 @@ document.addEventListener('keydown', e => { if (e.key === 'Escape') closeService
   var vidBg      = document.getElementById('heroVidBg');
   var orb1       = document.getElementById('orb1');
   var orb2       = document.getElementById('orb2');
-  var progress   = document.getElementById('progress');
+  var logoBg      = document.getElementById('heroLogoBg');
+  var logoText    = document.getElementById('heroLogoText');
   var infoText   = document.getElementById('infoText');
   var hint       = document.getElementById('reelHint');
 
   var heroCards = [
-    {url:'razaacademy.co.uk',      img:'images/screenshots/Raza/raza-academy-banner.JPG', video:'images/screenshots/Raza/raza-academy-video.mp4', imgPos:'center 12%', icon:'\ud83c\udfeb', tag:'Redesign', ind:'Education',   name:'Raza Academy',         desc:'A full redesign for a UK tutoring and home-schooling academy. We rebuilt their site from scratch — cleaner layout, better navigation, and a modern look that reflects the quality of their teaching.',     bg:'linear-gradient(135deg,#0d1a3c,#1e3a8a)', wash:'rgba(30,58,138,0.28)',  orb1:'rgba(249,115,22,0.35)', orb2:'rgba(234,88,12,0.18)',  accent:'#fdba74'},
-    {url:'topone.co.uk',           img:'images/screenshots/TopOne/top-one-banner.JPG', video:'images/screenshots/TopOne/top-one-video.mp4',       imgPos:'center top',  icon:'\u2702\ufe0f', tag:'Custom',   ind:'Beauty & Hair', name:'Top One Salon',        desc:'A premium custom build for one of London\'s top hair and beauty salons. Multi-page, fully responsive, with dedicated sections for services, team, gallery, and bookings.',                                   bg:'linear-gradient(135deg,#111111,#2a2a2a)', wash:'rgba(180,150,50,0.2)',  orb1:'rgba(212,175,55,0.32)', orb2:'rgba(160,130,40,0.15)', accent:'#d4af37'},
-    {url:'smithsplumbing.co.uk',  img:'images/screenshots/smiths-plumbing.png',  icon:'\ud83d\udd27', tag:'Static',  ind:'Trades',      name:"Smith's Plumbing",     desc:'A clean, fast static website for a local plumbing business. Clear contact details, service areas, and a no-fuss design that gets the phone ringing.',                                                           bg:'linear-gradient(135deg,#0d1f3c,#1a3c6e)', wash:'rgba(29,78,216,0.25)',  orb1:'rgba(59,130,246,0.3)',  orb2:'rgba(29,78,216,0.15)',  accent:'#93c5fd'},
-    {url:'bloomflorist.co.uk',    img:'images/screenshots/bloom-florist.png',    icon:'\ud83d\uded2', tag:'Dynamic', ind:'E-commerce',  name:'Bloom Florist',        desc:'A dynamic e-commerce site for an independent florist — complete with a product catalogue, seasonal collections, and a smooth checkout experience built to drive online orders.',                                    bg:'linear-gradient(135deg,#1a0d3c,#4c1d95)', wash:'rgba(124,58,237,0.25)', orb1:'rgba(139,92,246,0.3)', orb2:'rgba(124,58,237,0.15)', accent:'#c4b5fd'},
+    {url:'razaacademy.co.uk',      img:'images/screenshots/Raza/raza-academy-banner.JPG', video:'images/screenshots/Raza/raza-academy-video.mp4', imgPos:'center 12%', icon:'\ud83c\udfeb', tag:'Redesign', ind:'Education',   pages:'8 pages',   name:'Raza Academy',         desc:'A full redesign for a UK tutoring and home-schooling academy. We rebuilt their site from scratch — cleaner layout, better navigation, and a modern look that reflects the quality of their teaching.',     bg:'linear-gradient(135deg,#0d1a3c,#1e3a8a)', wash:'rgba(30,58,138,0.28)',  orb1:'rgba(249,115,22,0.35)', orb2:'rgba(234,88,12,0.18)',  accent:'#fdba74'},
+    {url:'topone.co.uk',           img:'images/screenshots/TopOne/top-one-banner.JPG', video:'images/screenshots/TopOne/top-one-video.mp4',       imgPos:'center top',  icon:'\u2702\ufe0f', tag:'Custom',   ind:'Beauty & Hair', pages:'40+ pages', name:'Top One Salon',        desc:'A premium custom build for one of London\'s top hair and beauty salons. Multi-page, fully responsive, with dedicated sections for services, team, gallery, and bookings.',                                   bg:'linear-gradient(135deg,#111111,#2a2a2a)', wash:'rgba(180,150,50,0.2)',  orb1:'rgba(212,175,55,0.32)', orb2:'rgba(160,130,40,0.15)', accent:'#d4af37'},
+    {url:'smithsplumbing.co.uk',  icon:'\ud83d\udd27', tag:'Static',  ind:'Trades',      name:"Smith's Plumbing",     desc:'A clean, fast static website for a local plumbing business. Clear contact details, service areas, and a no-fuss design that gets the phone ringing.',                                                           bg:'linear-gradient(135deg,#0d1f3c,#1a3c6e)', wash:'rgba(29,78,216,0.25)',  orb1:'rgba(59,130,246,0.3)',  orb2:'rgba(29,78,216,0.15)',  accent:'#93c5fd'},
+    {url:'bloomflorist.co.uk',    icon:'\ud83d\uded2', tag:'Dynamic', ind:'E-commerce',  name:'Bloom Florist',        desc:'A dynamic e-commerce site for an independent florist — complete with a product catalogue, seasonal collections, and a smooth checkout experience built to drive online orders.',                                    bg:'linear-gradient(135deg,#1a0d3c,#4c1d95)', wash:'rgba(124,58,237,0.25)', orb1:'rgba(139,92,246,0.3)', orb2:'rgba(124,58,237,0.15)', accent:'#c4b5fd'},
   ];
 
   var N         = heroCards.length;
@@ -533,7 +548,7 @@ document.addEventListener('keydown', e => { if (e.key === 'Escape') closeService
         el.dataset.real   = i;
         var bodyContent = c.img
           ? '<img src="' + c.img + '" alt="" loading="lazy" style="width:100%;height:100%;object-fit:cover;object-position:' + (c.imgPos || 'top') + ';">'
-          : '<span class="ph-icon">' + c.icon + '</span><span class="ph-text">Coming soon</span>';
+          : '<img src="images/logo/pixelborough_pb_transparent_2.png" class="reel-ph-logo" alt=""><span class="ph-text">Coming soon</span>';
         el.innerHTML =
           '<div class="reel-bar"><div class="reel-dots"><i></i><i></i><i></i></div><span class="reel-url">' + c.url + '</span></div>' +
           '<div class="reel-body" style="background:' + c.bg + '">' + bodyContent + '</div>' +
@@ -568,10 +583,25 @@ document.addEventListener('keydown', e => { if (e.key === 'Escape') closeService
 
   function openReelPopup(c) {
     if (!reelOverlay) return;
-    document.getElementById('reelPopupImg').src = c.img || '';
-    document.getElementById('reelPopupImg').style.objectPosition = c.imgPos || 'top';
+    var popupImg      = document.getElementById('reelPopupImg');
+    var popupFallback = document.getElementById('reelPopupFallback');
+    var popupBtn      = reelOverlay.querySelector('.reel-popup-btn');
+    if (c.img) {
+      popupImg.src = c.img;
+      popupImg.style.objectPosition = c.imgPos || 'top';
+      popupImg.style.display = 'block';
+      if (popupFallback) popupFallback.style.display = 'none';
+      if (popupBtn) popupBtn.style.display = 'inline-flex';
+    } else {
+      popupImg.src = '';
+      popupImg.style.display = 'none';
+      if (popupFallback) popupFallback.style.display = 'flex';
+      if (popupBtn) popupBtn.style.display = 'none';
+    }
     document.getElementById('reelPopupTag').textContent  = c.tag;
     document.getElementById('reelPopupInd').textContent  = c.ind;
+    var pagesEl = document.getElementById('reelPopupPages');
+    if (pagesEl) { pagesEl.textContent = c.pages || ''; pagesEl.style.display = c.pages ? '' : 'none'; }
     document.getElementById('reelPopupName').textContent = c.name;
     document.getElementById('reelPopupUrl').textContent  = c.url;
     document.getElementById('reelPopupDesc').textContent = c.desc || '';
@@ -615,6 +645,7 @@ document.addEventListener('keydown', e => { if (e.key === 'Escape') closeService
 
   function applyTheme(ri) {
     var c = heroCards[ri];
+    if (logoBg) logoBg.style.opacity = '0';
     if (c.video && vidBg) {
       imgBg.style.opacity = '0';
       vidBg.style.opacity = '0';
@@ -625,7 +656,7 @@ document.addEventListener('keydown', e => { if (e.key === 'Escape') closeService
         vidBg.play();
         vidBg.style.opacity = '1';
       }, 300);
-    } else if (imgBg) {
+    } else if (c.img && imgBg) {
       vidBg.style.opacity = '0';
       imgBg.style.opacity = '0';
       clearTimeout(imgBg._swapTimer);
@@ -634,6 +665,15 @@ document.addEventListener('keydown', e => { if (e.key === 'Escape') closeService
         imgBg.style.backgroundPosition = c.imgPos || 'center top';
         imgBg.style.opacity            = '1';
       }, 300);
+    } else {
+      vidBg.style.opacity = '0';
+      imgBg.style.opacity = '0';
+      if (logoBg) {
+        if (logoText) {
+          logoText.querySelector('.hero-logo-coming-name').textContent = c.name;
+        }
+        setTimeout(function () { logoBg.style.opacity = '1'; }, 300);
+      }
     }
 
     progress.querySelectorAll('.prog-dot').forEach(function (d, i) {
@@ -665,7 +705,7 @@ document.addEventListener('keydown', e => { if (e.key === 'Escape') closeService
           el.classList.toggle('active', parseInt(el.dataset.real) === realIdx);
         });
       }
-      if (!isHeld) timer = setTimeout(advance, 6000);
+      if (!isHeld) timer = setTimeout(advance, 8000);
     }, 1150);
   }
 
@@ -702,7 +742,7 @@ document.addEventListener('keydown', e => { if (e.key === 'Escape') closeService
   // Kick off
   timer = setTimeout(function () {
     applyTheme(0);
-    timer = setTimeout(advance, 6000);
+    timer = setTimeout(advance, 8000);
   }, 600);
 }());
 
@@ -750,10 +790,26 @@ document.addEventListener('keydown', e => { if (e.key === 'Escape') closeService
     /* Build slides + dots */
     slidesWrap.innerHTML = '';
     dotsWrap.innerHTML   = '';
+    slidesWrap.classList.remove('pf-at-bottom');
     slides.forEach(function (slide, i) {
       const el = document.createElement('div');
       el.className = 'pf-modal-slide' + (i === 0 ? ' active' : '');
       el.appendChild(compareMode ? buildCompare(slide, i) : buildSimple(slide, i));
+
+      /* End-of-page marker — only for simple (non-compare) slides */
+      if (!compareMode) {
+        const endMarker = document.createElement('div');
+        endMarker.className = 'pf-page-end';
+        endMarker.innerHTML = '<span>End of page</span>';
+        el.appendChild(endMarker);
+      }
+
+      /* Hide the bottom fade once the user scrolls to the end */
+      el.addEventListener('scroll', function () {
+        const atBottom = this.scrollTop + this.clientHeight >= this.scrollHeight - 8;
+        slidesWrap.classList.toggle('pf-at-bottom', atBottom);
+      }, { passive: true });
+
       slidesWrap.appendChild(el);
 
       const dot = document.createElement('button');
@@ -781,20 +837,60 @@ document.addEventListener('keydown', e => { if (e.key === 'Escape') closeService
     const wrap = document.createElement('div');
     wrap.className = 'pf-compare-content';
 
-    /* After � in flow, sets container height, always fully visible (base layer) */
+    /* Spacer sets the container height once both images are measured */
+    const spacer = document.createElement('div');
+    spacer.className = 'pf-compare-spacer';
+
+    /* After — absolutely positioned base layer */
     const after = document.createElement('img');
     after.className = 'pf-compare-img-after';
     after.src     = data.after;
     after.alt     = 'After';
     after.loading = 'lazy';
 
-    /* Before � absolutely positioned overlay, clipped to show only left portion */
+    /* Before — absolutely positioned overlay, clipped to show only left portion */
     const before = document.createElement('img');
     before.className = 'pf-compare-img-before';
     before.src     = data.before;
     before.alt     = 'Before';
     before.loading = 'lazy';
-    before.style.clipPath = 'inset(0 70% 0 0)'; /* 30% before / 70% after */
+    before.style.clipPath = 'inset(0 70% 0 0)';
+    after.style.clipPath  = 'inset(0 0 0 30%)';
+
+    /* End-of-image markers — one per image, shown at the bottom of whichever ends first */
+    const beforeEnd = document.createElement('div');
+    beforeEnd.className = 'pf-img-end pf-img-end-before';
+    beforeEnd.innerHTML = '<span>Before ends here</span>';
+    beforeEnd.style.right = '70%'; /* initial: divider at 30% */
+
+    const afterEnd = document.createElement('div');
+    afterEnd.className = 'pf-img-end pf-img-end-after';
+    afterEnd.innerHTML = '<span>After ends here</span>';
+    afterEnd.style.left = '30%';  /* initial: divider at 30% */
+
+    /* Once both images load, size the spacer and position the end marker */
+    let loadedCount = 0;
+    function onImgLoad() {
+      loadedCount++;
+      if (loadedCount < 2) return;
+      var w = wrap.offsetWidth || 900;
+      var bh = before.naturalHeight / before.naturalWidth * w;
+      var ah = after.naturalHeight  / after.naturalWidth  * w;
+      spacer.style.height = Math.max(bh, ah) + 'px';
+      if (bh < ah - 4) {
+        beforeEnd.style.top = bh + 'px';
+        beforeEnd.classList.add('active');
+      } else if (ah < bh - 4) {
+        afterEnd.style.top = ah + 'px';
+        afterEnd.classList.add('active');
+      }
+    }
+    function tryLoad(img) {
+      if (img.complete && img.naturalWidth) { onImgLoad(); }
+      else { img.addEventListener('load', onImgLoad); }
+    }
+    tryLoad(before);
+    tryLoad(after);
 
     /* Vertical divider line */
     const line = document.createElement('div');
@@ -810,7 +906,7 @@ document.addEventListener('keydown', e => { if (e.key === 'Escape') closeService
     lblA.className   = 'pf-compare-label pf-compare-label-after';
     lblA.textContent = 'After';
 
-    wrap.append(after, before, line, lblB, lblA);
+    wrap.append(spacer, after, before, beforeEnd, afterEnd, line, lblB, lblA);
     return wrap;
   }
 
@@ -826,9 +922,16 @@ document.addEventListener('keydown', e => { if (e.key === 'Escape') closeService
     const activeSlide = slidesWrap.querySelector('.pf-modal-slide.active');
     if (!activeSlide) return;
     const beforeImg = activeSlide.querySelector('.pf-compare-img-before');
+    const afterImg  = activeSlide.querySelector('.pf-compare-img-after');
     const divLine   = activeSlide.querySelector('.pf-compare-divider');
     if (beforeImg) beforeImg.style.clipPath = 'inset(0 ' + (100 - pct) + '% 0 0)';
+    if (afterImg)  afterImg.style.clipPath  = 'inset(0 0 0 ' + pct + '%)';
     if (divLine)   divLine.style.left = pct + '%';
+    /* Keep end-marker bands confined to their own side of the divider */
+    const beforeEndEl = activeSlide.querySelector('.pf-img-end-before');
+    const afterEndEl  = activeSlide.querySelector('.pf-img-end-after');
+    if (beforeEndEl) beforeEndEl.style.right = (100 - pct) + '%';
+    if (afterEndEl)  afterEndEl.style.left   = pct + '%';
   }
 
   function pctFromTrack(clientX) {
@@ -922,6 +1025,7 @@ document.addEventListener('keydown', e => { if (e.key === 'Escape') closeService
     allSlides[current]?.classList.add('active');
     allDots[current]?.classList.add('active');
     allSlides[current].scrollTop = 0;
+    slidesWrap.classList.remove('pf-at-bottom'); /* reset fade for new slide */
     refreshUI();
   }
 
@@ -969,6 +1073,65 @@ document.addEventListener('keydown', e => { if (e.key === 'Escape') closeService
   });
 }());
 
+
+/* ====================================================
+   HIW — Section scroll-reveal with staggered entrance
+   ==================================================== */
+(function () {
+  if (!document.querySelector('.hiw-step-section')) return;
+
+  var ITEMS = [
+    '.hiw-step-num',
+    '.hiw-step-title-wrap',
+    '.hiw-step-intro',
+    '.hiw-path-divider',
+    '.hiw-path-card',
+    '.hiw-pillar',
+    '.hiw-completion-note',
+    '.hiw-pf-item'
+  ].join(', ');
+
+  document.querySelectorAll('.hiw-step-section, .hiw-step-section--alt').forEach(function (section) {
+    var els = Array.from(section.querySelectorAll(ITEMS));
+
+    els.forEach(function (el, i) {
+      var animCls = 'hiw-anim';
+
+      if (el.classList.contains('hiw-path-card')) {
+        var cards = Array.from(el.closest('.hiw-paths').querySelectorAll('.hiw-path-card'));
+        animCls = cards.indexOf(el) === 0 ? 'hiw-anim-left' : 'hiw-anim-right';
+      } else if (el.classList.contains('hiw-pf-item')) {
+        var items = Array.from(section.querySelectorAll('.hiw-pf-item'));
+        animCls = items.indexOf(el) === 0 ? 'hiw-anim-left' : 'hiw-anim-right';
+      }
+
+      el.classList.add(animCls);
+      el.style.setProperty('--anim-delay', (i * 0.08) + 's');
+    });
+
+    var obs = new IntersectionObserver(function (entries) {
+      if (!entries[0].isIntersecting) return;
+      section.querySelectorAll('.hiw-anim, .hiw-anim-left, .hiw-anim-right')
+             .forEach(function (el) { el.classList.add('is-visible'); });
+      obs.disconnect();
+    }, { threshold: 0.08 });
+
+    obs.observe(section);
+  });
+}());
+
+/* ── FAQ accordion ── */
+(function () {
+  document.querySelectorAll('.faq-item').forEach(function (item) {
+    item.querySelector('.faq-q').addEventListener('click', function () {
+      var isOpen = item.classList.contains('open');
+      // Close all
+      document.querySelectorAll('.faq-item.open').forEach(function (o) { o.classList.remove('open'); });
+      // Toggle clicked
+      if (!isOpen) item.classList.add('open');
+    });
+  });
+}());
 
 /* ====================================================
    REGISTER / QUOTE PAGE
@@ -1059,6 +1222,29 @@ document.addEventListener('keydown', e => { if (e.key === 'Escape') closeService
       }
     });
   });
+
+  /* ── "Not sure" checkbox — disables tier selection ── */
+  var pkgUnsure = document.getElementById('pkg_unsure');
+  if (pkgUnsure) {
+    pkgUnsure.addEventListener('change', function () {
+      allTierIds.forEach(function (id) {
+        var wrap = document.getElementById(id);
+        if (!wrap) return;
+        if (pkgUnsure.checked) {
+          wrap.classList.add('tier-disabled');
+          var sel = wrap.querySelector('select');
+          if (sel) { sel.required = false; }
+        } else {
+          wrap.classList.remove('tier-disabled');
+          // Restore required on the currently active tier
+          if (wrap.classList.contains('active')) {
+            var sel = wrap.querySelector('select');
+            if (sel) sel.required = true;
+          }
+        }
+      });
+    });
+  }
 
   /* ── Form submission (replace with real endpoint as needed) ── */
   function handleSubmit(formEl, successId) {
