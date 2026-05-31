@@ -1,4 +1,4 @@
-ï»¿/* Website Factory â€” script.js (multi-page) */
+/* Website Factory — script.js (multi-page) */
 
 /* ---- Navigation ---- */
 const navbar    = document.getElementById('navbar');
@@ -18,7 +18,7 @@ if (navToggle) {
   var menuNextSibling = navMenu.nextElementSibling;
 
   function openMenu() {
-    /* Portal to <body> â€” escapes the backdrop-filter containing block on .navbar.scrolled */
+    /* Portal to <body> — escapes the backdrop-filter containing block on .navbar.scrolled */
     document.body.appendChild(navMenu);
     navMenu.classList.add('open');
     document.body.style.overflow = 'hidden';
@@ -49,7 +49,7 @@ if (navToggle) {
   });
 }
 
-/* ---- Active nav link â€” based on current page URL ---- */
+/* ---- Active nav link — based on current page URL ---- */
 const currentPage = window.location.pathname.split('/').pop() || 'index.html';
 document.querySelectorAll('.nav-link:not(.nav-cta)').forEach(link => {
   const href = link.getAttribute('href').split('#')[0];   // strip any #hash
@@ -99,7 +99,7 @@ const io = new IntersectionObserver(entries => {
 
 fadeEls.forEach(el => io.observe(el));
 
-/* ---- Pricing cards â€” expand on click ---- */
+/* ---- Pricing cards — expand on click ---- */
 (function () {
   'use strict';
   var featCur = null;
@@ -119,7 +119,7 @@ fadeEls.forEach(el => io.observe(el));
   };
 })();
 
-/* ---- About â€” reveal on scroll ---- */
+/* ---- About — reveal on scroll ---- */
 (function () {
   var els = document.querySelectorAll('[data-about-reveal]');
   if (!els.length) return;
@@ -131,7 +131,7 @@ fadeEls.forEach(el => io.observe(el));
   els.forEach(function (el) { obs.observe(el); });
 })();
 
-/* ---- How It Works â€” staggered card entrance ---- */
+/* ---- How It Works — staggered card entrance ---- */
 const hiwCards = document.querySelectorAll('.hiw-step-card');
 if (hiwCards.length) {
   const hiwIO = new IntersectionObserver(entries => {
@@ -163,13 +163,13 @@ portfolioFilterBtns.forEach(btn => {
 /* ---- Service Modal ---- */
 const modalData = {
   'starter-one-off': {
-    icon: 'ğŸ’»',
-    tag: 'Starter Â· One-Off',
+    icon: '??',
+    tag: 'Starter · One-Off',
     title: 'Starter Build',
-    price: 'From Â£299',
-    desc: 'A clean single-page website built to your brand â€” handed over to you as finished files with full ownership.',
+    price: 'From £299',
+    desc: 'A clean single-page website built to your brand — handed over to you as finished files with full ownership.',
     meta: [
-      { icon: 'ğŸ‘¤', text: 'Ideal for: freelancers, sole traders, new businesses' },
+      { icon: '??', text: 'Ideal for: freelancers, sole traders, new businesses' },
     ],
     features: [
       { text: '1-page website covering all key sections', type: 'standard' },
@@ -182,15 +182,15 @@ const modalData = {
     note: 'Hosting and domain are not included. You arrange your own after delivery.'
   },
   'starter-manage': {
-    icon: 'ğŸ“¦',
-    tag: 'Starter Â· Managed',
-    title: 'Starter â€” We Manage',
-    price: 'Â£35/mo (was Â£59)',
-    desc: 'We build your site, put it live, and keep everything running â€” you just focus on your business.',
-    deal: '<strong style="display:block;margin-bottom:5px;">ğŸ·ï¸ Limited Deal â€” save Â£35/mo</strong>Â£100 deposit to start Â· Â£150 when your site goes live Â· then Â£35/mo from one month after. Total build cost: Â£250.',
+    icon: '??',
+    tag: 'Starter · Managed',
+    title: 'Starter — We Manage',
+    price: '£35/mo (was £59)',
+    desc: 'We build your site, put it live, and keep everything running — you just focus on your business.',
+    deal: '<strong style="display:block;margin-bottom:5px;">??? Limited Deal — save £35/mo</strong>£100 deposit to start · £150 when your site goes live · then £35/mo from one month after. Total build cost: £250.',
     meta: [
-      { icon: 'ğŸ‘¤', text: 'Ideal for: busy owners who want zero tech hassle' },
-      { icon: 'ğŸ”„', text: 'Rolling monthly â€” cancel anytime' },
+      { icon: '??', text: 'Ideal for: busy owners who want zero tech hassle' },
+      { icon: '??', text: 'Rolling monthly — cancel anytime' },
     ],
     features: [
       { text: '1-page website, professionally designed', type: 'standard' },
@@ -204,15 +204,15 @@ const modalData = {
     note: '* Minor changes handled within 48 hours. Structural redesigns are not included in this tier.'
   },
   'starter-plus': {
-    icon: 'ğŸš€',
-    tag: 'Starter+ Â· Priority',
-    title: 'Starter+ â€” Priority',
-    price: 'From Â£99/mo',
+    icon: '??',
+    tag: 'Starter+ · Priority',
+    title: 'Starter+ — Priority',
+    price: 'From £99/mo',
     desc: 'Everything in Managed, with faster turnarounds and bigger change requests welcome.',
-    deal: 'ğŸ’° Â£100 deposit to start Â· Â£150 when your site goes live Â· then Â£99/mo from one month after launch. Priority support + all change requests included.',
+    deal: '?? £100 deposit to start · £150 when your site goes live · then £99/mo from one month after launch. Priority support + all change requests included.',
     meta: [
-      { icon: 'âš¡', text: 'Changes turned around under 48 hours' },
-      { icon: 'ğŸ”„', text: 'Rolling monthly â€” cancel anytime' },
+      { icon: '?', text: 'Changes turned around under 48 hours' },
+      { icon: '??', text: 'Rolling monthly — cancel anytime' },
     ],
     features: [
       { text: '1-page website, professionally designed', type: 'standard' },
@@ -220,21 +220,21 @@ const modalData = {
       { text: 'Contact form & Google Maps', type: 'standard' },
       { text: 'Hosting included', type: 'bonus' },
       { text: 'Domain setup & configuration', type: 'bonus' },
-      { text: 'Major AND minor changes â€” under 48 hours', type: 'priority' },
+      { text: 'Major AND minor changes — under 48 hours', type: 'priority' },
       { text: 'Priority support queue', type: 'priority' },
     ],
     note: '* 48-hour SLA applies during UK business hours. Weekend requests count from the next working day.'
   },
   'starter-plus-plus-plus': {
-    icon: 'ğŸ§©',
-    tag: 'Starter+++ Â· Backend',
-    title: 'Starter+++ â€” Backend',
-    price: 'From Â£189/mo',
+    icon: '??',
+    tag: 'Starter+++ · Backend',
+    title: 'Starter+++ — Backend',
+    price: 'From £189/mo',
     desc: 'All priority management perks, plus ongoing backend features like user accounts and login flows.',
-    deal: 'ğŸ’° Â£100 deposit to start Â· Â£150 when your site goes live Â· then Â£189/mo from one month after launch. Backend development + full priority management included.',
+    deal: '?? £100 deposit to start · £150 when your site goes live · then £189/mo from one month after launch. Backend development + full priority management included.',
     meta: [
-      { icon: 'âš¡', text: 'Changes under 48 hours' },
-      { icon: 'âš™', text: 'Backend features supported' },
+      { icon: '?', text: 'Changes under 48 hours' },
+      { icon: '?', text: 'Backend features supported' },
     ],
     features: [
       { text: '1-page website, professionally designed', type: 'standard' },
@@ -242,24 +242,24 @@ const modalData = {
       { text: 'Contact form & Google Maps', type: 'standard' },
       { text: 'Hosting included', type: 'bonus' },
       { text: 'Domain setup & configuration', type: 'bonus' },
-      { text: 'Major & minor changes â€” under 48 hours', type: 'priority' },
+      { text: 'Major & minor changes — under 48 hours', type: 'priority' },
       { text: 'Login / register user account system', type: 'backend' },
       { text: 'Backend dashboard or data features', type: 'backend' },
     ],
     note: '* Backend features are scoped before work begins. Complex features may be quoted separately.'
   },
   'business-one-off': {
-    icon: 'ğŸ¢',
-    tag: 'Business Â· One-Off',
+    icon: '??',
+    tag: 'Business · One-Off',
     title: 'Business Build',
-    price: 'From Â£999',
-    desc: 'A structured multi-page site for your business â€” built to your brand and handed over in full.',
+    price: 'From £999',
+    desc: 'A structured multi-page site for your business — built to your brand and handed over in full.',
     meta: [
-      { icon: 'ğŸ“„', text: '3â€“6 pages included' },
-      { icon: 'ğŸ‘¤', text: 'Ideal for: established businesses needing a proper web presence' },
+      { icon: '??', text: '3–6 pages included' },
+      { icon: '??', text: 'Ideal for: established businesses needing a proper web presence' },
     ],
     features: [
-      { text: '3â€“6 page website (Home, Services, About, Contact + more)', type: 'standard' },
+      { text: '3–6 page website (Home, Services, About, Contact + more)', type: 'standard' },
       { text: 'Mobile-responsive design throughout', type: 'standard' },
       { text: 'Enquiry / contact form', type: 'standard' },
       { text: 'Google Maps embed', type: 'standard' },
@@ -269,18 +269,18 @@ const modalData = {
     note: 'Hosting and domain are not included. You arrange your own after delivery.'
   },
   'business-manage': {
-    icon: 'ğŸ“¦',
-    tag: 'Business Â· Managed',
-    title: 'Business â€” We Manage',
-    price: 'From Â£129/mo',
-    desc: 'Your full business site built, hosted, and managed end-to-end â€” zero tech hassle for you.',
-    deal: 'ğŸ’° Build fee quoted on request. Monthly management from Â£129/mo â€” hosting, domain, updates, and security monitoring all bundled in.',
+    icon: '??',
+    tag: 'Business · Managed',
+    title: 'Business — We Manage',
+    price: 'From £129/mo',
+    desc: 'Your full business site built, hosted, and managed end-to-end — zero tech hassle for you.',
+    deal: '?? Build fee quoted on request. Monthly management from £129/mo — hosting, domain, updates, and security monitoring all bundled in.',
     meta: [
-      { icon: 'ğŸ“„', text: '3â€“6 pages included' },
-      { icon: 'ğŸ”„', text: 'Rolling monthly â€” cancel anytime' },
+      { icon: '??', text: '3–6 pages included' },
+      { icon: '??', text: 'Rolling monthly — cancel anytime' },
     ],
     features: [
-      { text: '3â€“6 page website across all key sections', type: 'standard' },
+      { text: '3–6 page website across all key sections', type: 'standard' },
       { text: 'Mobile-responsive design', type: 'standard' },
       { text: 'Contact form & Google Maps', type: 'standard' },
       { text: 'Hosting included', type: 'bonus' },
@@ -291,58 +291,58 @@ const modalData = {
     note: '* Minor changes handled within 48 hours. New pages or structural redesigns are not included in this tier.'
   },
   'business-plus': {
-    icon: 'ğŸš€',
-    tag: 'Business+ Â· Priority',
-    title: 'Business+ â€” Priority',
-    price: 'From Â£199/mo',
+    icon: '??',
+    tag: 'Business+ · Priority',
+    title: 'Business+ — Priority',
+    price: 'From £199/mo',
     desc: 'Full business site management with priority turnarounds on all change requests.',
-    deal: 'ğŸ’° Build fee quoted on request. Priority management from Â£199/mo â€” all change requests turned around under 48 hours across your full business site.',
+    deal: '?? Build fee quoted on request. Priority management from £199/mo — all change requests turned around under 48 hours across your full business site.',
     meta: [
-      { icon: 'âš¡', text: 'Changes under 48 hours' },
-      { icon: 'ğŸ“„', text: '3â€“6 pages included' },
+      { icon: '?', text: 'Changes under 48 hours' },
+      { icon: '??', text: '3–6 pages included' },
     ],
     features: [
-      { text: '3â€“6 page website across all key sections', type: 'standard' },
+      { text: '3–6 page website across all key sections', type: 'standard' },
       { text: 'Mobile-responsive design', type: 'standard' },
       { text: 'Contact form & Google Maps', type: 'standard' },
       { text: 'Hosting included', type: 'bonus' },
       { text: 'Domain setup & configuration', type: 'bonus' },
-      { text: 'Major AND minor changes â€” under 48 hours', type: 'priority' },
+      { text: 'Major AND minor changes — under 48 hours', type: 'priority' },
       { text: 'Priority support queue', type: 'priority' },
     ],
     note: '* 48-hour SLA applies during UK business hours. Weekend requests count from the next working day.'
   },
   'business-plus-plus-plus': {
-    icon: 'ğŸ§©',
-    tag: 'Business+++ Â· Backend',
-    title: 'Business+++ â€” Backend',
-    price: 'From Â£299/mo',
-    desc: 'Everything in Business+ with backend development included â€” accounts, admin panels, booking systems and more.',
-    deal: 'ğŸ’° Build fee quoted on request. Full backend management from Â£299/mo â€” user accounts, admin panels, priority support and future scaling all included.',
+    icon: '??',
+    tag: 'Business+++ · Backend',
+    title: 'Business+++ — Backend',
+    price: 'From £299/mo',
+    desc: 'Everything in Business+ with backend development included — accounts, admin panels, booking systems and more.',
+    deal: '?? Build fee quoted on request. Full backend management from £299/mo — user accounts, admin panels, priority support and future scaling all included.',
     meta: [
-      { icon: 'âš¡', text: 'Changes under 48 hours' },
-      { icon: 'âš™', text: 'Backend features included' },
+      { icon: '?', text: 'Changes under 48 hours' },
+      { icon: '?', text: 'Backend features included' },
     ],
     features: [
-      { text: '3â€“6 page website across all key sections', type: 'standard' },
+      { text: '3–6 page website across all key sections', type: 'standard' },
       { text: 'Mobile-responsive design', type: 'standard' },
       { text: 'Contact form & Google Maps', type: 'standard' },
       { text: 'Hosting included', type: 'bonus' },
       { text: 'Domain setup & configuration', type: 'bonus' },
-      { text: 'Major & minor changes â€” under 48 hours', type: 'priority' },
+      { text: 'Major & minor changes — under 48 hours', type: 'priority' },
       { text: 'Login / register user account system', type: 'backend' },
       { text: 'Admin panel or data dashboard', type: 'backend' },
     ],
     note: '* Backend features are scoped before work begins. Complex integrations may be quoted separately.'
   },
   'custom-support': {
-    icon: 'ğŸ› ï¸',
-    tag: 'Custom Â· Support',
+    icon: '???',
+    tag: 'Custom · Support',
     title: 'Help With Your Existing Site',
-    desc: 'Already have a website? We can jump in and help â€” fixes, redesigns, speed improvements, or general tidying up.',
+    desc: 'Already have a website? We can jump in and help — fixes, redesigns, speed improvements, or general tidying up.',
     meta: [
-      { icon: 'ğŸ‘¤', text: 'Ideal for: businesses with an existing site needing work' },
-      { icon: 'ğŸ“…', text: 'Timelines quoted per project' },
+      { icon: '??', text: 'Ideal for: businesses with an existing site needing work' },
+      { icon: '??', text: 'Timelines quoted per project' },
     ],
     features: [
       { text: 'Bug fixes and technical issues resolved', type: 'standard' },
@@ -355,13 +355,13 @@ const modalData = {
     note: 'Pricing is quoted after a free review of your current site.'
   },
   'custom-website': {
-    icon: 'ğŸ§°',
-    tag: 'Custom Â· Build',
+    icon: '??',
+    tag: 'Custom · Build',
     title: 'Fully Custom Website',
     desc: 'Something that doesn\'t fit a standard package? We plan, design, and build entirely around your goals.',
     meta: [
-      { icon: 'ğŸ‘¤', text: 'Ideal for: unique projects or complex requirements' },
-      { icon: 'ğŸ“„', text: 'Any page count, any features' },
+      { icon: '??', text: 'Ideal for: unique projects or complex requirements' },
+      { icon: '??', text: 'Any page count, any features' },
     ],
     features: [
       { text: 'Any number of pages to suit your content', type: 'standard' },
@@ -371,7 +371,7 @@ const modalData = {
       { text: 'Backend, CMS, or e-commerce if needed', type: 'backend' },
       { text: 'Hosting and domain advice included', type: 'bonus' },
     ],
-    note: 'All custom projects start with a free discovery call â€” fixed price and timeline agreed before any work begins.'
+    note: 'All custom projects start with a free discovery call — fixed price and timeline agreed before any work begins.'
   }
 };
 
@@ -504,7 +504,7 @@ document.addEventListener('keydown', e => { if (e.key === 'Escape') closeService
   goTo(0);
 })();
 
-/* ---- Hero Reel â€” auto-advancing interactive card carousel ---- */
+/* ---- Hero Reel — auto-advancing interactive card carousel ---- */
 (function () {
   var track      = document.getElementById('reelTrack');
   if (!track) return; // not on a page with the hero reel
@@ -521,10 +521,10 @@ document.addEventListener('keydown', e => { if (e.key === 'Escape') closeService
   var hint       = document.getElementById('reelHint');
 
   var heroCards = [
-    {url:'razaacademy.co.uk',      img:'images/screenshots/Raza/raza-academy-banner.JPG', video:'images/screenshots/Raza/raza-academy-video.mp4', imgPos:'center 12%', icon:'\ud83c\udfeb', tag:'Redesign', ind:'Education',   pages:'8 pages',   name:'Raza Academy',         desc:'A full redesign for a UK tutoring and home-schooling academy. We rebuilt their site from scratch â€” cleaner layout, better navigation, and a modern look that reflects the quality of their teaching.',     bg:'linear-gradient(135deg,#0d1a3c,#1e3a8a)', wash:'rgba(30,58,138,0.28)',  orb1:'rgba(249,115,22,0.35)', orb2:'rgba(234,88,12,0.18)',  accent:'#fdba74'},
-    {url:'topone.co.uk',           img:'images/screenshots/TopOne/top-one-banner.JPG', video:'images/screenshots/TopOne/top-one-video.mp4',       imgPos:'center top',  icon:'\u2702\ufe0f', tag:'Custom',   ind:'Beauty & Hair', pages:'40+ pages', name:'Top One Salon',        desc:'A premium custom build for one of London\'s top hair and beauty salons. Multi-page, fully responsive, with dedicated sections for services, team, gallery, and bookings.',                                   bg:'linear-gradient(135deg,#111111,#2a2a2a)', wash:'rgba(180,150,50,0.2)',  orb1:'rgba(212,175,55,0.32)', orb2:'rgba(160,130,40,0.15)', accent:'#d4af37'},
+    {url:'razaacademy.co.uk',      img:'https://pub-6d3ae22e684b4feaab4ea4d3b9f86c86.r2.dev/screenshots/Raza/raza-academy-banner.JPG', video:'https://pub-6d3ae22e684b4feaab4ea4d3b9f86c86.r2.dev/screenshots/Raza/raza-academy-video.mp4', imgPos:'center 12%', icon:'\ud83c\udfeb', tag:'Redesign', ind:'Education',   pages:'8 pages',   name:'Raza Academy',         desc:'A full redesign for a UK tutoring and home-schooling academy. We rebuilt their site from scratch — cleaner layout, better navigation, and a modern look that reflects the quality of their teaching.',     bg:'linear-gradient(135deg,#0d1a3c,#1e3a8a)', wash:'rgba(30,58,138,0.28)',  orb1:'rgba(249,115,22,0.35)', orb2:'rgba(234,88,12,0.18)',  accent:'#fdba74'},
+    {url:'topone.co.uk',           img:'https://pub-6d3ae22e684b4feaab4ea4d3b9f86c86.r2.dev/screenshots/TopOne/top-one-banner.JPG', video:'https://pub-6d3ae22e684b4feaab4ea4d3b9f86c86.r2.dev/screenshots/TopOne/top-one-video.mp4',       imgPos:'center top',  icon:'\u2702\ufe0f', tag:'Custom',   ind:'Beauty & Hair', pages:'40+ pages', name:'Top One Salon',        desc:'A premium custom build for one of London\'s top hair and beauty salons. Multi-page, fully responsive, with dedicated sections for services, team, gallery, and bookings.',                                   bg:'linear-gradient(135deg,#111111,#2a2a2a)', wash:'rgba(180,150,50,0.2)',  orb1:'rgba(212,175,55,0.32)', orb2:'rgba(160,130,40,0.15)', accent:'#d4af37'},
     {url:'smithsplumbing.co.uk',  icon:'\ud83d\udd27', tag:'Static',  ind:'Trades',      name:"Smith's Plumbing",     desc:'A clean, fast static website for a local plumbing business. Clear contact details, service areas, and a no-fuss design that gets the phone ringing.',                                                           bg:'linear-gradient(135deg,#0d1f3c,#1a3c6e)', wash:'rgba(29,78,216,0.25)',  orb1:'rgba(59,130,246,0.3)',  orb2:'rgba(29,78,216,0.15)',  accent:'#93c5fd'},
-    {url:'bloomflorist.co.uk',    icon:'\ud83d\uded2', tag:'Dynamic', ind:'E-commerce',  name:'Bloom Florist',        desc:'A dynamic e-commerce site for an independent florist â€” complete with a product catalogue, seasonal collections, and a smooth checkout experience built to drive online orders.',                                    bg:'linear-gradient(135deg,#1a0d3c,#4c1d95)', wash:'rgba(124,58,237,0.25)', orb1:'rgba(139,92,246,0.3)', orb2:'rgba(124,58,237,0.15)', accent:'#c4b5fd'},
+    {url:'bloomflorist.co.uk',    icon:'\ud83d\uded2', tag:'Dynamic', ind:'E-commerce',  name:'Bloom Florist',        desc:'A dynamic e-commerce site for an independent florist — complete with a product catalogue, seasonal collections, and a smooth checkout experience built to drive online orders.',                                    bg:'linear-gradient(135deg,#1a0d3c,#4c1d95)', wash:'rgba(124,58,237,0.25)', orb1:'rgba(139,92,246,0.3)', orb2:'rgba(124,58,237,0.15)', accent:'#c4b5fd'},
   ];
 
   var N         = heroCards.length;
@@ -796,7 +796,7 @@ document.addEventListener('keydown', e => { if (e.key === 'Escape') closeService
       el.className = 'pf-modal-slide' + (i === 0 ? ' active' : '');
       el.appendChild(compareMode ? buildCompare(slide, i) : buildSimple(slide, i));
 
-      /* End-of-page marker â€” only for simple (non-compare) slides */
+      /* End-of-page marker — only for simple (non-compare) slides */
       if (!compareMode) {
         const endMarker = document.createElement('div');
         endMarker.className = 'pf-page-end';
@@ -828,7 +828,7 @@ document.addEventListener('keydown', e => { if (e.key === 'Escape') closeService
   function buildSimple(src, i) {
     const img = document.createElement('img');
     img.src     = src;
-    img.alt     = projectTitle + ' ï¿½ page ' + (i + 1);
+    img.alt     = projectTitle + ' ? page ' + (i + 1);
     img.loading = 'lazy';
     return img;
   }
@@ -841,14 +841,14 @@ document.addEventListener('keydown', e => { if (e.key === 'Escape') closeService
     const spacer = document.createElement('div');
     spacer.className = 'pf-compare-spacer';
 
-    /* After â€” absolutely positioned base layer */
+    /* After — absolutely positioned base layer */
     const after = document.createElement('img');
     after.className = 'pf-compare-img-after';
     after.src     = data.after;
     after.alt     = 'After';
     after.loading = 'lazy';
 
-    /* Before â€” absolutely positioned overlay, clipped to show only left portion */
+    /* Before — absolutely positioned overlay, clipped to show only left portion */
     const before = document.createElement('img');
     before.className = 'pf-compare-img-before';
     before.src     = data.before;
@@ -857,7 +857,7 @@ document.addEventListener('keydown', e => { if (e.key === 'Escape') closeService
     before.style.clipPath = 'inset(0 70% 0 0)';
     after.style.clipPath  = 'inset(0 0 0 30%)';
 
-    /* End-of-image markers â€” one per image, shown at the bottom of whichever ends first */
+    /* End-of-image markers — one per image, shown at the bottom of whichever ends first */
     const beforeEnd = document.createElement('div');
     beforeEnd.className = 'pf-img-end pf-img-end-before';
     beforeEnd.innerHTML = '<span>Before ends here</span>';
@@ -1039,8 +1039,8 @@ document.addEventListener('keydown', e => { if (e.key === 'Escape') closeService
 
     if (compareMode) {
       const label = slides[current]?.label || ('Page ' + (current + 1));
-      modalTitle.textContent = projectTitle + ' ï¿½ ' + label;
-      setDivider(30); /* 30% before / 70% after ï¿½ reset on every page */
+      modalTitle.textContent = projectTitle + ' ? ' + label;
+      setDivider(30); /* 30% before / 70% after ? reset on every page */
     } else {
       modalTitle.textContent = projectTitle;
     }
@@ -1075,7 +1075,7 @@ document.addEventListener('keydown', e => { if (e.key === 'Escape') closeService
 
 
 /* ====================================================
-   HIW â€” Section scroll-reveal with staggered entrance
+   HIW — Section scroll-reveal with staggered entrance
    ==================================================== */
 (function () {
   if (!document.querySelector('.hiw-step-section')) return;
@@ -1120,7 +1120,7 @@ document.addEventListener('keydown', e => { if (e.key === 'Escape') closeService
   });
 }());
 
-/* â”€â”€ FAQ accordion â”€â”€ */
+/* -- FAQ accordion -- */
 (function () {
   document.querySelectorAll('.faq-item').forEach(function (item) {
     item.querySelector('.faq-q').addEventListener('click', function () {
@@ -1137,13 +1137,13 @@ document.addEventListener('keydown', e => { if (e.key === 'Escape') closeService
    REGISTER / QUOTE PAGE
    ==================================================== */
 /* =============================================
-   register.js â€” Quote / Register page logic
+   register.js — Quote / Register page logic
    ============================================= */
 
 (function () {
   'use strict';
 
-  /* â”€â”€ Intent chooser â”€â”€ */
+  /* -- Intent chooser -- */
   var radios      = document.querySelectorAll('input[name="intent"]');
   var formNew     = document.getElementById('formNew');
   var formExisting = document.getElementById('formExisting');
@@ -1190,7 +1190,7 @@ document.addEventListener('keydown', e => { if (e.key === 'Escape') closeService
     showForm('new', false);
   }
 
-  /* â”€â”€ Package tier toggle â”€â”€ */
+  /* -- Package tier toggle -- */
   var pkgTierMap = {
     'Starter':  'tier_starter',
     'Business': 'tier_business',
@@ -1223,7 +1223,7 @@ document.addEventListener('keydown', e => { if (e.key === 'Escape') closeService
     });
   });
 
-  /* â”€â”€ "Not sure" checkbox â€” disables tier selection â”€â”€ */
+  /* -- "Not sure" checkbox — disables tier selection -- */
   var pkgUnsure = document.getElementById('pkg_unsure');
   if (pkgUnsure) {
     pkgUnsure.addEventListener('change', function () {
@@ -1246,7 +1246,7 @@ document.addEventListener('keydown', e => { if (e.key === 'Escape') closeService
     });
   }
 
-  /* â”€â”€ Form submission (replace with real endpoint as needed) â”€â”€ */
+  /* -- Form submission (replace with real endpoint as needed) -- */
   function handleSubmit(formEl, successId) {
     if (!formEl) return;
     formEl.addEventListener('submit', function (e) {
