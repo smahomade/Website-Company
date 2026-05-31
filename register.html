@@ -437,5 +437,77 @@
   </footer>
 
   <script src="script.js"></script>
+  <script>
+  (function () {
+    var SERVICE  = 'service_wpmt56n';
+    var TEMPLATE = 'template_64k892h';
+
+    function getActiveTier() {
+      var pkg = document.querySelector('input[name="pkg_category"]:checked');
+      if (!pkg) return '';
+      var map = { Starter: 'pkg_starter_tier', Business: 'pkg_business_tier', Custom: 'pkg_custom_tier' };
+      var sel = document.getElementById(map[pkg.value]);
+      return sel ? sel.value : '';
+    }
+
+    function handleForm(formId, successId, intent) {
+      var form = document.getElementById(formId);
+      var success = document.getElementById(successId);
+      if (!form) return;
+
+      form.addEventListener('submit', function (e) {
+        e.preventDefault();
+        var btn = form.querySelector('button[type="submit"]');
+        btn.disabled = true;
+        btn.textContent = 'Sending…';
+
+        var fd = new FormData(form);
+        var params = {
+          intent:        intent === 'new' ? 'New Website' : 'Existing Website',
+          full_name:     fd.get('full_name') || '',
+          business_name: fd.get('business_name') || '',
+          reply_to:      fd.get('email') || '',
+          phone:         fd.get('phone') || '',
+          description:   fd.get('description') || '',
+          time:          new Date().toLocaleString('en-GB', { dateStyle: 'full', timeStyle: 'short' }),
+          pkg_category:  '',
+          pkg_tier:      '',
+          industry:      '',
+          timeline:      '',
+          website_url:   '',
+          platform:      '',
+          help_type:     ''
+        };
+
+        if (intent === 'new') {
+          var pkgRadio = form.querySelector('input[name="pkg_category"]:checked');
+          params.pkg_category = pkgRadio ? pkgRadio.value : (document.getElementById('pkg_unsure') && document.getElementById('pkg_unsure').checked ? 'Not sure yet' : '');
+          params.pkg_tier     = getActiveTier();
+          params.industry     = fd.get('industry') || '';
+          params.timeline     = fd.get('timeline') || '';
+        } else {
+          params.website_url  = fd.get('website_url') || '';
+          params.platform     = fd.get('platform') || '';
+          params.help_type    = fd.get('help_type') || '';
+        }
+
+        emailjs.send(SERVICE, TEMPLATE, params)
+          .then(function () {
+            form.style.display = 'none';
+            if (success) success.style.display = 'flex';
+          })
+          .catch(function (err) {
+            console.error('EmailJS error:', err);
+            btn.disabled = false;
+            btn.textContent = 'Send My Brief →';
+            alert('Something went wrong — please try again or email us directly at info@pixelborough.co.uk');
+          });
+      });
+    }
+
+    handleForm('formNewInner',      'successNew',      'new');
+    handleForm('formExistingInner', 'successExisting', 'existing');
+  })();
+  </script>
 </body>
 </html>
