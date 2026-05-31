@@ -117,6 +117,11 @@
             </div>
             <button type="submit" class="btn btn-primary contact-submit">Send Message &rarr;</button>
           </form>
+          <div class="register-success" id="contactSuccess" style="display:none">
+            <div class="success-icon">&#10003;</div>
+            <h3>Message sent!</h3>
+            <p>Thanks for reaching out — we'll get back to you within 24 hours.</p>
+          </div>
         </div>
 
       </div>
@@ -173,5 +178,39 @@
   </footer>
 
   <script src="script.js"></script>
+  <script>
+  (function () {
+    var form    = document.querySelector('.contact-form');
+    var success = document.getElementById('contactSuccess');
+    if (!form) return;
+
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
+      var btn = form.querySelector('button[type="submit"]');
+      btn.disabled = true;
+      btn.textContent = 'Sending…';
+
+      var fd = new FormData(form);
+      emailjs.send('service_wpmt56n', 'template_g0ddwvl', {
+        full_name: fd.get('name') || '',
+        reply_to:  fd.get('email') || '',
+        phone:     '',
+        subject:   fd.get('subject') || 'General Enquiry',
+        message:   fd.get('message') || '',
+        time:      new Date().toLocaleString('en-GB', { dateStyle: 'full', timeStyle: 'short' })
+      })
+      .then(function () {
+        form.style.display = 'none';
+        if (success) success.style.display = 'flex';
+      })
+      .catch(function (err) {
+        console.error('EmailJS error:', err);
+        btn.disabled = false;
+        btn.textContent = 'Send Message →';
+        alert('Something went wrong — please try again or email us at info@pixelborough.co.uk');
+      });
+    });
+  })();
+  </script>
 </body>
 </html>
