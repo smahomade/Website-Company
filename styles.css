@@ -282,7 +282,6 @@ h1, h2, h3, h4 {
   overflow: visible;
   background: var(--dark);
   padding-bottom: 240px;
-  padding-left: max(5vw, 32px);
 }
 
 /* Hero image background — client screenshot fades in behind the hero */
@@ -484,6 +483,53 @@ h1, h2, h3, h4 {
   max-width: 560px;
   padding: 130px 24px 100px;
   margin-left: 0;
+}
+
+/* ── Hero Intro — the H1/subtitle/CTA block that sits below the banner ── */
+.hero-intro {
+  background: var(--dark);
+  padding: 96px 0 88px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+.hero-intro::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse 80% 60% at 50% 0%, rgba(92,213,214,0.06) 0%, transparent 70%);
+  pointer-events: none;
+}
+.hero-intro::after {
+  content: '';
+  position: absolute;
+  bottom: 0; left: 50%;
+  transform: translateX(-50%);
+  width: 48px; height: 2px;
+  background: linear-gradient(90deg, transparent, rgba(92,213,214,0.4), transparent);
+}
+.hero-intro .container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.hero-intro-label {
+  margin-bottom: 22px;
+}
+.hero-intro-title {
+  font-size: clamp(2.4rem, 5vw, 4rem) !important;
+  text-align: center !important;
+  margin-bottom: 24px !important;
+  max-width: 820px;
+}
+.hero-intro-sub {
+  text-align: center !important;
+  margin: 0 0 44px !important;
+  max-width: 560px;
+}
+.hero-intro-actions {
+  justify-content: center !important;
+  margin-bottom: 0 !important;
 }
 
 .hero-eyebrow {
@@ -5292,3 +5338,19 @@ h1, h2, h3, h4 {
   .perks-grid { grid-template-columns: 1fr 1fr; }
 }
 @media (max-width: 560px) { .perks-grid { grid-template-columns: 1fr; } }
+
+
+/* ====================================================
+   LARGE SCREEN (1400px+) — prevent hero from being too wide
+   ==================================================== */
+@media (min-width: 1400px) {
+  .hero-intro-title {
+    font-size: 4.2rem !important;
+  }
+  .hero {
+    padding-bottom: 300px;
+  }
+  .hero-content {
+    max-width: 640px;
+  }
+}
