@@ -846,14 +846,14 @@ document.addEventListener('keydown', e => { if (e.key === 'Escape') closeService
     after.className = 'pf-compare-img-after';
     after.src     = data.after;
     after.alt     = 'After';
-    after.loading = 'lazy';
+    after.loading = 'eager';
 
     /* Before — absolutely positioned overlay, clipped to show only left portion */
     const before = document.createElement('img');
     before.className = 'pf-compare-img-before';
     before.src     = data.before;
     before.alt     = 'Before';
-    before.loading = 'lazy';
+    before.loading = 'eager';
     before.style.clipPath = 'inset(0 70% 0 0)';
     after.style.clipPath  = 'inset(0 0 0 30%)';
 
