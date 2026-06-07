@@ -1069,7 +1069,10 @@ document.addEventListener('keydown', e => { if (e.key === 'Escape') closeService
 
   /* -- Wire up cards -- */
   document.querySelectorAll('.portfolio-card[data-slides]').forEach(function (card) {
-    card.addEventListener('click', function () { openModal(card); });
+    card.addEventListener('click', function (e) {
+      if (e.target.closest('.portfolio-live-btn')) return;
+      openModal(card);
+    });
   });
 }());
 
