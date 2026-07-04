@@ -31,7 +31,7 @@
   <nav class="navbar" id="navbar">
     <div class="nav-container">
       <a href="index.html" class="nav-logo" aria-label="PixelBorough home">
-        <img src="images/logo/pixelborough_full_transparent_2.png" alt="Pixel Borough logo" class="logo-full" /><img src="images/logo/pixelborough_pb_transparent_2.png" alt="Pixel Borough logo" class="logo-mark" />
+        <img src="images/logo/pixelborough_white_full_transparent_.png" alt="Pixel Borough logo" class="nav-logo-img nav-logo-full" /><img src="images/logo/pixelborough_white_transparent.png" alt="" class="nav-logo-img nav-logo-mark" aria-hidden="true" /><img src="images/logo/pixelborough_full_transparent_2.png" alt="" class="nav-logo-img nav-logo-scrolled" aria-hidden="true" />
       </a>
       <button class="nav-toggle" id="navToggle" aria-label="Toggle navigation menu">
         <span></span><span></span><span></span>
@@ -72,6 +72,10 @@
       <div class="hero-info">
         <div class="hero-info-inner" id="heroInfo"><span id="infoText">Exploring our work</span></div>
       </div>
+      <div class="reel-stage">
+      <button class="reel-arrow reel-arrow--prev" id="reelPrev" aria-label="Previous website">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="15 18 9 12 15 6"/></svg>
+      </button>
       <div class="reel-wrap" id="reelWrap">
         <div class="reel-track" id="reelTrack">
 
@@ -239,75 +243,83 @@
 
         </div><!-- /.reel-track -->
       </div><!-- /.reel-wrap -->
+      <button class="reel-arrow reel-arrow--next" id="reelNext" aria-label="Next website">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="9 18 15 12 9 6"/></svg>
+      </button>
+      </div><!-- /.reel-stage -->
       <div class="progress" id="progress"></div>
       <div class="reel-hint" id="reelHint">Click a card to find out more</div>
     </div><!-- /.hero-reel -->
   </section>
 
   <!-- HERO INTRO -->
-  <section class="hero-intro" id="hero-intro">
-    <div class="container">
-      <p class="section-label hero-intro-label">Website Design for Small Businesses &mdash; UK</p>
-      <h1 class="hero-title hero-intro-title">Clean, affordable websites<br>for <span>small businesses</span></h1>
-      <p class="hero-subtitle hero-intro-sub">PixelBorough builds professional websites for small businesses, tradespeople, tutors, and local brands across the UK. Simple process, honest pricing, no jargon.</p>
-      <div class="hero-actions hero-intro-actions">
-        <a href="register.html" class="btn btn-primary hero-btn-main">Get a Website Quote</a>
-        <a href="services.html" class="btn btn-outline">View Services</a>
-      </div>
-    </div>
-  </section>
-
   <!-- HOW IT WORKS -->
   <section class="how-it-works" id="how-it-works">
     <div class="container">
       <div class="hiw-header">
-        <p class="section-label hiw-label">How it works?</p>
-        <h2 class="hiw-title">3 Simple Steps</h2>                               
-        <p class="hiw-subtitle">No stress, no confusion. Here's how we get your website live.</p>
+        <p class="section-label hiw-label">How It Works</p>
+        <h1 class="hiw-title">We Design It, We Build It, <em>You Experience It.</em></h1>
+        <p class="hiw-subtitle">From the first conversation to the day your site goes live, every step is handled by us &mdash; clean design, solid build, no jargon. Here&rsquo;s the process.</p>
       </div>
 
       <div class="hiw-steps">
 
-        <div class="hiw-step-card">
-          <div class="hiw-icon-box" aria-hidden="true">
-            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-              <polygon points="12 2 22 8.5 12 15 2 8.5 12 2"/>
-              <polyline points="2 8.5 12 15 22 8.5"/>
-              <polyline points="2 14.5 12 21 22 14.5"/>
-            </svg>
+        <div class="hiw-step-card hiw-portrait-card">
+          <img src="images/communication-card.png" alt="" class="hiw-card-bg" loading="lazy">
+          <canvas class="hiw-pixel-canvas" aria-hidden="true"></canvas>
+          <div class="hiw-card-front">
+            <span class="hiw-card-tag">communication is everything</span>
+            <span class="hiw-ghost-num">01</span>
+            <div class="hiw-card-bottom">
+              <h3 class="hiw-front-title">Consultation</h3>
+              <p class="hiw-front-desc">We start by understanding your business and goals &mdash; no jargon, just a clear plan.</p>
+            </div>
           </div>
-          <h3 class="hiw-card-title">Main Design</h3>
-          <p class="hiw-card-desc">Choose a design from our templates, show us some inspiration you love, or browse our portfolio for ideas. Want something fully custom? That works too.</p>
-          <span class="hiw-card-foot">Step 01</span>
         </div>
 
-        <div class="hiw-step-card">
-          <div class="hiw-icon-box" aria-hidden="true">
-            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
-            </svg>
+        <div class="hiw-step-card hiw-portrait-card">
+          <img src="images/web-design-card.png" alt="" class="hiw-card-bg" loading="lazy">
+          <canvas class="hiw-pixel-canvas" aria-hidden="true"></canvas>
+          <div class="hiw-card-front">
+            <span class="hiw-card-tag">small details matter</span>
+            <span class="hiw-ghost-num">02</span>
+            <div class="hiw-card-bottom">
+              <h3 class="hiw-front-title">Design</h3>
+              <p class="hiw-front-desc">We craft a clean, modern design around your brand &mdash; template, inspiration, or fully custom.</p>
+            </div>
           </div>
-          <h3 class="hiw-card-title">Build &amp; Communication</h3>
-          <p class="hiw-card-desc">We build your website with you, step by step. Get new ideas along the way? We are more than happy to add them in and keep improving it together.</p>
-          <span class="hiw-card-foot">Step 02</span>
         </div>
 
-        <div class="hiw-step-card">
-          <div class="hiw-icon-box" aria-hidden="true">
-            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z"/>
-              <path d="m3.29 15 1.5-1.5c.87-.87 2.28-1.05 3.5-.6L21 3l-9.9 13.71c-.45 1.22-.63 2.63-.6 3.5L9 21.71 3.29 15z"/>
-            </svg>
+        <div class="hiw-step-card hiw-portrait-card">
+          <img src="images/Web-developerment-card.png" alt="" class="hiw-card-bg" loading="lazy">
+          <canvas class="hiw-pixel-canvas" aria-hidden="true"></canvas>
+          <div class="hiw-card-front">
+            <span class="hiw-card-tag">it's your creation</span>
+            <span class="hiw-ghost-num">03</span>
+            <div class="hiw-card-bottom">
+              <h3 class="hiw-front-title">Build</h3>
+              <p class="hiw-front-desc">We build it fast and fully responsive, tested on every device until it&rsquo;s exactly right.</p>
+            </div>
           </div>
-          <h3 class="hiw-card-title">Go Live!</h3>
-          <p class="hiw-card-desc">Once everything is fully tested, approved, and working perfectly we launch. No domain yet? We can help with that too. <a href="how-it-works.html" class="hiw-inline-link">Learn more →</a></p>
-          <span class="hiw-card-foot">Step 03</span>
+        </div>
+
+        <div class="hiw-step-card hiw-portrait-card">
+          <img src="images/live-card.png" alt="" class="hiw-card-bg" loading="lazy">
+          <canvas class="hiw-pixel-canvas" aria-hidden="true"></canvas>
+          <div class="hiw-card-front">
+            <span class="hiw-card-tag">ready for the world</span>
+            <span class="hiw-ghost-num">04</span>
+            <div class="hiw-card-bottom">
+              <h3 class="hiw-front-title">Launch</h3>
+              <p class="hiw-front-desc">Once approved we go live &mdash; domain, hosting, the lot. Your site is live to the world.</p>
+            </div>
+          </div>
         </div>
 
       </div>
 
       <div class="hiw-cta">
-        <a href="register.html" class="btn hiw-btn">Get Started — It's Free to Enquire</a>
+        <a href="register.html" class="btn hiw-btn">Book Consultation</a>
         <a href="how-it-works.html" class="btn btn-outline hiw-btn-secondary">See the Full Process</a>
       </div>
     </div>
@@ -315,28 +327,52 @@
 
   <!-- ABOUT -->
   <section class="about" id="about">
+    <div class="about-atmosphere" aria-hidden="true">
+      <span class="about-aurora about-aurora--a"></span>
+      <span class="about-aurora about-aurora--b"></span>
+      <span class="about-aurora about-aurora--c"></span>
+    </div>
     <div class="container">
-      <div class="about-grid">
-        <div class="about-text" data-about-reveal>
-          <p class="section-label">Which website type?</p>
-          <h2 class="section-title about-title">Static or<br><em>Dynamic?</em></h2>
-          <p class="about-subtitle">How do you know what you need?</p>
-          <p class="about-body">Simple. There are two options. At Pixel Borough we help you pick the right one — no jargon, no confusion.</p>
-        </div>
-        <div class="about-types" data-about-reveal data-reveal-delay="true">
-          <div class="about-type">
-            <span class="about-type-tag about-type-tag--static">Most popular</span>
-            <h3 class="about-type-name">Static Website</h3>
-            <p class="about-type-desc">For businesses who need a great online presence — services, contact, location. Fast, affordable, and easy to manage.</p>
+
+      <!-- Typewriter stage — centered, triggers the reveal below -->
+      <div class="about-tw-stage">
+        <p class="section-label">About Us</p>
+        <h2 class="section-title about-title tw-heading" data-tw="To Create, We Must Understand."><span class="tw-text"></span><span class="tw-cursor">|</span></h2>
+      </div>
+
+      <!-- Rest of section — hidden until typing completes -->
+      <div class="about-body-content">
+        <div class="about-grid">
+          <div class="about-text">
+            <p class="about-subtitle">Who we are</p>
+            <p class="about-body">Good websites don&rsquo;t start with design &mdash; they start with questions. What do your customers need to see? What makes your business stand out? What does success look like six months after launch? We ask those questions first. Then we build.</p>
           </div>
-          <div class="about-type">
-            <span class="about-type-tag about-type-tag--dynamic">More powerful</span>
-            <h3 class="about-type-name about-type-name--dynamic">Dynamic Website</h3>
-            <p class="about-type-desc">When you need user accounts, e-commerce, bookings, or custom functionality built around your business.</p>
+          <div class="about-principles">
+            <div class="about-principle">
+              <span class="about-principle-num">01</span>
+              <div>
+                <h4 class="about-principle-title">We listen first</h4>
+                <p class="about-principle-desc">Every project starts with a conversation, not a quote. We need to understand you before we can represent you.</p>
+              </div>
+            </div>
+            <div class="about-principle">
+              <span class="about-principle-num">02</span>
+              <div>
+                <h4 class="about-principle-title">We keep it simple</h4>
+                <p class="about-principle-desc">No jargon, no upselling, no confusion. Honest advice and clean work, delivered on time.</p>
+              </div>
+            </div>
+            <div class="about-principle">
+              <span class="about-principle-num">03</span>
+              <div>
+                <h4 class="about-principle-title">We stay involved</h4>
+                <p class="about-principle-desc">One point of contact from brief to launch. You always know where things stand.</p>
+              </div>
+            </div>
           </div>
-          <a href="how-it-works.html#faq" class="btn btn-outline about-read-more">Read More</a>
         </div>
       </div>
+
     </div>
   </section>
 
@@ -475,7 +511,7 @@
     <div class="container">
       <div class="footer-grid">
         <div class="footer-brand">
-          <a href="index.html" class="footer-logo-link"><img src="images/logo/pixelborough_full_transparent_2.png" alt="Pixel Borough logo" class="footer-logo-img" /></a>
+          <a href="index.html" class="footer-logo-link"><img src="images/logo/pixelborough_white_full_transparent_.png" alt="Pixel Borough logo" class="footer-logo-img" /></a>
           <p>Websites built for small businesses that want to look professional and get more enquiries.</p>
           <div class="social-links">
             <a href="https://wa.me/447960269978" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 32 32" fill="currentColor" aria-hidden="true"><path d="M16 3C9.373 3 4 8.373 4 15c0 2.385.663 4.617 1.817 6.528L4 29l7.698-1.793A12.94 12.94 0 0 0 16 28c6.627 0 12-5.373 12-12S22.627 3 16 3zm0 2c5.514 0 10 4.486 10 10s-4.486 10-10 10a10.94 10.94 0 0 1-5.39-1.418l-.38-.22-3.94.917.95-3.822-.237-.386A9.953 9.953 0 0 1 6 15c0-5.514 4.486-10 10-10zm-3.3 5.5c-.2 0-.52.074-.793.37-.272.297-1.04 1.016-1.04 2.477s1.065 2.873 1.213 3.072c.149.198 2.066 3.292 5.1 4.484.713.274 1.27.438 1.703.561.716.203 1.368.174 1.883.105.574-.077 1.768-.723 2.018-1.42.25-.698.25-1.296.175-1.42-.074-.124-.273-.198-.572-.347-.298-.148-1.768-.872-2.04-.97-.273-.1-.472-.148-.67.149-.199.297-.77.97-.944 1.168-.173.199-.347.224-.645.075-.298-.149-1.257-.463-2.394-1.477-.885-.788-1.482-1.762-1.655-2.06-.173-.298-.018-.459.13-.607.132-.133.298-.347.447-.52.148-.174.198-.298.297-.497.1-.198.05-.372-.025-.52-.074-.149-.67-1.613-.918-2.208-.241-.578-.486-.5-.67-.51a12.7 12.7 0 0 0-.57-.01z"/></svg></a>

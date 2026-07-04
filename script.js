@@ -8,8 +8,20 @@ const navMenu   = document.getElementById('navMenu');
 // Set correct state immediately on page load
 navbar.classList.toggle('scrolled', window.scrollY > 60);
 
+// Hide on scroll down, reveal on scroll up (like most professional sites)
+let lastScrollY = window.scrollY;
 window.addEventListener('scroll', () => {
-  navbar.classList.toggle('scrolled', window.scrollY > 60);
+  const y = window.scrollY;
+  navbar.classList.toggle('scrolled', y > 60);
+
+  // Don't hide while the mobile menu is open or near the very top of the page
+  const menuOpen = navMenu && navMenu.classList.contains('open');
+  if (!menuOpen && y > 140 && y > lastScrollY + 4) {
+    navbar.classList.add('nav-hidden');      // scrolling down
+  } else if (y < lastScrollY - 4 || y <= 140) {
+    navbar.classList.remove('nav-hidden');   // scrolling up (or back near top)
+  }
+  lastScrollY = y;
 }, { passive: true });
 
 if (navToggle) {
@@ -131,19 +143,165 @@ fadeEls.forEach(el => io.observe(el));
   els.forEach(function (el) { obs.observe(el); });
 })();
 
+/* ---- Portrait card pixel-grid reveal animation ----
+   Default: canvas pre-filled with deep-slate (covers image, ghost number shows above).
+   Hover:   a soft diagonal wavefront sweeps top-left → bottom-right, fading each
+            tile out (revealing the clean image) as it passes through.
+   Leave:   the wavefront recedes bottom-right → top-left, fading tiles back in. */
+function attachCardPixelFill(card) {
+  if (PREFERS_REDUCED) return;
+  var canvas = card.querySelector('.hiw-pixel-canvas');
+  if (!canvas) return;
+
+  var ctx      = canvas.getContext('2d');
+  var TILE     = 18;
+  var BG       = '#1B2630'; // must match --deep-slate card background
+  var DURATION = 800;       // ms for the full sweep
+  var BAND     = 0.32;      // softness of the diagonal wavefront (fraction of diagonal)
+  var dpr      = Math.max(1, Math.min(window.devicePixelRatio || 1, 2));
+
+  var tiles  = [];   // { x, y, w, h, d }  d = normalised diagonal position 0..1
+  var w = 0, h = 0;
+  var built  = false;
+  var sweep  = 0;    // 0 = fully covered (dark); 1 = fully revealed (image)
+  var target = 0;
+  var rafId  = null;
+  var lastT  = 0;
+
+  function easeInOut(t) {
+    return t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2;
+  }
+
+  function build() {
+    w = card.clientWidth; h = card.clientHeight;
+    if (!w || !h) return false;
+    canvas.width  = Math.floor(w * dpr);
+    canvas.height = Math.floor(h * dpr);
+    canvas.style.width  = w + 'px';
+    canvas.style.height = h + 'px';
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+
+    // Use actual last-tile positions so d never exceeds 1
+    var lastX = Math.floor((w - 1) / TILE) * TILE;
+    var lastY = Math.floor((h - 1) / TILE) * TILE;
+    var maxD  = lastX + lastY || 1;
+    tiles = [];
+    for (var x = 0; x < w; x += TILE) {
+      for (var y = 0; y < h; y += TILE) {
+        tiles.push({
+          x: x, y: y,
+          w: Math.min(TILE, w - x),
+          h: Math.min(TILE, h - y),
+          d: (x + y) / maxD   // 0 at top-left, 1 at bottom-right
+        });
+      }
+    }
+    return true;
+  }
+
+  function draw() {
+    ctx.clearRect(0, 0, w, h);
+    ctx.fillStyle = BG;
+    var s = easeInOut(sweep);
+    for (var i = 0; i < tiles.length; i++) {
+      var t = tiles[i];
+      // reveal amount: 0 = covered (dark), 1 = cleared (image visible)
+      var r = (s * (1 + BAND) - t.d) / BAND;
+      var alpha = 1 - (r < 0 ? 0 : r > 1 ? 1 : r);
+      if (alpha <= 0) continue;
+      ctx.globalAlpha = alpha;
+      ctx.fillRect(t.x, t.y, t.w, t.h);
+    }
+    ctx.globalAlpha = 1;
+  }
+
+  function tick(now) {
+    if (!lastT) lastT = now;
+    var step = (now - lastT) / DURATION;
+    lastT = now;
+    if (sweep < target)      sweep = Math.min(target, sweep + step);
+    else if (sweep > target) sweep = Math.max(target, sweep - step);
+    draw();
+    if (sweep !== target) {
+      rafId = requestAnimationFrame(tick);
+    } else {
+      rafId = null;
+      lastT = 0;
+    }
+  }
+
+  function animateTo(tg) {
+    if (!built) { built = build(); if (!built) return; }
+    target = tg;
+    lastT = 0;
+    if (!rafId) rafId = requestAnimationFrame(tick);
+  }
+
+  card._pixelBuild = function () {
+    if (!built) { built = build(); if (built) draw(); }
+  };
+
+  card.addEventListener('mouseenter', function () { animateTo(1); });
+  card.addEventListener('mouseleave', function () { animateTo(0); });
+}
+
 /* ---- How It Works — staggered card entrance ---- */
 const hiwCards = document.querySelectorAll('.hiw-step-card');
 if (hiwCards.length) {
+  hiwCards.forEach(card => {
+    if (card.classList.contains('hiw-portrait-card')) attachCardPixelFill(card);
+  });
+
   const hiwIO = new IntersectionObserver(entries => {
     entries.forEach(e => {
       if (e.isIntersecting) {
         e.target.classList.add('hiw-visible');
+        // Build (pre-fill) canvas now that the card has real dimensions
+        if (e.target._pixelBuild) e.target._pixelBuild();
         hiwIO.unobserve(e.target);
       }
     });
   }, { threshold: 0.12 });
   hiwCards.forEach(card => hiwIO.observe(card));
 }
+
+/* ---- Typewriter heading ---- */
+(function () {
+  var el      = document.querySelector('.tw-heading');
+  var content = document.querySelector('.about-body-content');
+  if (!el) return;
+  var textEl   = el.querySelector('.tw-text');
+  var cursor   = el.querySelector('.tw-cursor');
+  var fullText = el.dataset.tw || '';
+  var fired    = false;
+
+  function type(i) {
+    if (i > fullText.length) {
+      cursor.classList.add('tw-done');
+      // reveal the body content once typing is complete
+      if (content) {
+        setTimeout(function () { content.classList.add('visible'); }, 300);
+      }
+      return;
+    }
+    textEl.textContent = fullText.slice(0, i);
+    var delay = 42 + Math.random() * 28;
+    if (fullText[i - 1] === ',') delay += 160;
+    setTimeout(function () { type(i + 1); }, delay);
+  }
+
+  var io = new IntersectionObserver(function (entries) {
+    entries.forEach(function (e) {
+      if (e.isIntersecting && !fired) {
+        fired = true;
+        io.disconnect();
+        setTimeout(function () { type(0); }, 200);
+      }
+    });
+  }, { threshold: 0.4 });
+
+  io.observe(el);
+})();
 
 /* ---- Portfolio filters ---- */
 const portfolioFilterBtns = document.querySelectorAll('.portfolio-filter-btn');
@@ -504,6 +662,110 @@ document.addEventListener('keydown', e => { if (e.key === 'Escape') closeService
   goTo(0);
 })();
 
+/* ---- Pixel-grid hover effect (shared) ---- */
+var PREFERS_REDUCED = window.matchMedia &&
+  window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+function hexToRgba(hex, a) {
+  var h = hex.replace('#', '');
+  if (h.length === 3) h = h[0] + h[0] + h[1] + h[1] + h[2] + h[2];
+  var n = parseInt(h, 16);
+  return 'rgba(' + ((n >> 16) & 255) + ',' + ((n >> 8) & 255) + ',' + (n & 255) + ',' + a + ')';
+}
+
+function attachPixelHover(card, body, accent) {
+  if (PREFERS_REDUCED || !body) return;
+
+  var canvas = document.createElement('canvas');
+  canvas.className = 'reel-pixels';
+  canvas.setAttribute('aria-hidden', 'true');
+  body.appendChild(canvas);
+  var ctx = canvas.getContext('2d');
+
+  var GAP = 7;
+  var dpr = Math.max(1, Math.min(window.devicePixelRatio || 1, 2));
+  var colors = [
+    'rgba(95,233,226,0.85)',
+    'rgba(22,199,192,0.80)',
+    'rgba(127,227,228,0.85)',
+    'rgba(255,255,255,0.80)'
+  ];
+  if (accent && /^#/.test(accent)) colors[0] = hexToRgba(accent, 0.85);
+
+  var pixels = [];
+  var built = false;
+  var raf = null;
+  var mode = 'appear';
+
+  function rand(min, max) { return Math.random() * (max - min) + min; }
+
+  function build() {
+    var w = body.clientWidth, h = body.clientHeight;
+    if (!w || !h) return false;
+    canvas.width = Math.floor(w * dpr);
+    canvas.height = Math.floor(h * dpr);
+    canvas.style.width = w + 'px';
+    canvas.style.height = h + 'px';
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    pixels = [];
+    for (var x = 0; x < w; x += GAP) {
+      for (var y = 0; y < h; y += GAP) {
+        var dx = x, dy = h - y;
+        pixels.push({
+          x: x, y: y,
+          color: colors[(Math.random() * colors.length) | 0],
+          size: 0,
+          sizeStep: rand(0.2, 0.6),
+          maxSize: rand(GAP * 0.5, GAP - 1),
+          delay: Math.sqrt(dx * dx + dy * dy) * 0.5,
+          counter: 0,
+          counterStep: rand(3, 7)
+        });
+      }
+    }
+    return true;
+  }
+
+  function frame() {
+    raf = requestAnimationFrame(frame);
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    var active = false;
+    for (var i = 0; i < pixels.length; i++) {
+      var p = pixels[i];
+      if (mode === 'appear') {
+        if (p.counter <= p.delay) { p.counter += p.counterStep; active = true; }
+        else if (p.size < p.maxSize) {
+          p.size += p.sizeStep;
+          if (p.size > p.maxSize) p.size = p.maxSize;
+          active = true;
+        }
+      } else {
+        p.counter = 0;
+        if (p.size > 0) { p.size -= 0.22; if (p.size < 0) p.size = 0; active = true; }
+      }
+      if (p.size > 0) {
+        var off = (GAP - p.size) * 0.5;
+        ctx.fillStyle = p.color;
+        ctx.fillRect(p.x + off, p.y + off, p.size, p.size);
+      }
+    }
+    if (!active) {
+      cancelAnimationFrame(raf);
+      raf = null;
+      if (mode === 'disappear') ctx.clearRect(0, 0, canvas.width, canvas.height);
+    }
+  }
+
+  function start(m) {
+    mode = m;
+    if (!built) { built = build(); if (!built) return; }
+    if (!raf) raf = requestAnimationFrame(frame);
+  }
+
+  card.addEventListener('mouseenter', function () { start('appear'); });
+  card.addEventListener('mouseleave', function () { start('disappear'); });
+}
+
 /* ---- Hero Reel — auto-advancing interactive card carousel ---- */
 (function () {
   var track      = document.getElementById('reelTrack');
@@ -521,15 +783,15 @@ document.addEventListener('keydown', e => { if (e.key === 'Escape') closeService
   var hint       = document.getElementById('reelHint');
 
   var heroCards = [
-    {url:'razaacademy.co.uk',      img:'https://pub-6d3ae22e684b4feaab4ea4d3b9f86c86.r2.dev/screenshots/Raza/raza-academy-banner.JPG', video:'https://pub-6d3ae22e684b4feaab4ea4d3b9f86c86.r2.dev/screenshots/Raza/raza-academy-video.mp4', imgPos:'center 12%', icon:'\ud83c\udfeb', tag:'Redesign', ind:'Education',   pages:'8 pages',   name:'Raza Academy',         desc:'A full redesign for a UK tutoring and home-schooling academy. We rebuilt their site from scratch — cleaner layout, better navigation, and a modern look that reflects the quality of their teaching.',     bg:'linear-gradient(135deg,#0d1a3c,#1e3a8a)', wash:'rgba(30,58,138,0.28)',  orb1:'rgba(249,115,22,0.35)', orb2:'rgba(234,88,12,0.18)',  accent:'#fdba74'},
-    {url:'topone.co.uk',           img:'https://pub-6d3ae22e684b4feaab4ea4d3b9f86c86.r2.dev/screenshots/TopOne/top-one-banner.JPG', video:'https://pub-6d3ae22e684b4feaab4ea4d3b9f86c86.r2.dev/screenshots/TopOne/top-one-video.mp4',       imgPos:'center top',  icon:'\u2702\ufe0f', tag:'Custom',   ind:'Beauty & Hair', pages:'40+ pages', name:'Top One Salon',        desc:'A premium custom build for one of London\'s top hair and beauty salons. Multi-page, fully responsive, with dedicated sections for services, team, gallery, and bookings.',                                   bg:'linear-gradient(135deg,#111111,#2a2a2a)', wash:'rgba(180,150,50,0.2)',  orb1:'rgba(212,175,55,0.32)', orb2:'rgba(160,130,40,0.15)', accent:'#d4af37'},
-    {url:'smithsplumbing.co.uk',  icon:'\ud83d\udd27', tag:'Static',  ind:'Trades',      name:"Smith's Plumbing",     desc:'A clean, fast static website for a local plumbing business. Clear contact details, service areas, and a no-fuss design that gets the phone ringing.',                                                           bg:'linear-gradient(135deg,#0d1f3c,#1a3c6e)', wash:'rgba(29,78,216,0.25)',  orb1:'rgba(59,130,246,0.3)',  orb2:'rgba(29,78,216,0.15)',  accent:'#93c5fd'},
-    {url:'bloomflorist.co.uk',    icon:'\ud83d\uded2', tag:'Dynamic', ind:'E-commerce',  name:'Bloom Florist',        desc:'A dynamic e-commerce site for an independent florist — complete with a product catalogue, seasonal collections, and a smooth checkout experience built to drive online orders.',                                    bg:'linear-gradient(135deg,#1a0d3c,#4c1d95)', wash:'rgba(124,58,237,0.25)', orb1:'rgba(139,92,246,0.3)', orb2:'rgba(124,58,237,0.15)', accent:'#c4b5fd'},
+    {url:'razaacademy.co.uk',      img:'https://pub-6d3ae22e684b4feaab4ea4d3b9f86c86.r2.dev/screenshots/Raza/raza-academy-banner.JPG', video:'https://pub-6d3ae22e684b4feaab4ea4d3b9f86c86.r2.dev/screenshots/Raza/raza-academy-video.mp4', imgPos:'center 12%', icon:'\ud83c\udfeb', tag:'Redesign', ind:'Education',   pages:'8 pages',   name:'Raza Academy',         desc:'A full redesign for a UK tutoring and home-schooling academy. We rebuilt their site from scratch — cleaner layout, better navigation, and a modern look that reflects the quality of their teaching.',     bg:'linear-gradient(135deg,#06121c,#0a4a4f)', wash:'rgba(22,199,192,0.24)',  orb1:'rgba(95,233,226,0.32)', orb2:'rgba(22,199,192,0.16)',  accent:'#5FE9E2'},
+    {url:'topone.co.uk',           img:'https://pub-6d3ae22e684b4feaab4ea4d3b9f86c86.r2.dev/screenshots/TopOne/top-one-banner.JPG', video:'https://pub-6d3ae22e684b4feaab4ea4d3b9f86c86.r2.dev/screenshots/TopOne/top-one-video.mp4',       imgPos:'center top',  icon:'\u2702\ufe0f', tag:'Custom',   ind:'Beauty & Hair', pages:'40+ pages', name:'Top One Salon',        desc:'A premium custom build for one of London\'s top hair and beauty salons. Multi-page, fully responsive, with dedicated sections for services, team, gallery, and bookings.',                                   bg:'linear-gradient(135deg,#0d0f10,#243033)', wash:'rgba(199,204,208,0.18)',  orb1:'rgba(199,204,208,0.30)', orb2:'rgba(22,199,192,0.16)', accent:'#C7CDD2'},
+    {url:'smithsplumbing.co.uk',  icon:'\ud83d\udd27', tag:'Static',  ind:'Trades',      name:"Smith's Plumbing",     desc:'A clean, fast static website for a local plumbing business. Clear contact details, service areas, and a no-fuss design that gets the phone ringing.',                                                           bg:'linear-gradient(135deg,#04141a,#075055)', wash:'rgba(22,199,192,0.24)',  orb1:'rgba(95,233,226,0.30)',  orb2:'rgba(22,199,192,0.15)',  accent:'#5FE9E2'},
+    {url:'bloomflorist.co.uk',    icon:'\ud83d\uded2', tag:'Dynamic', ind:'E-commerce',  name:'Bloom Florist',        desc:'A dynamic e-commerce site for an independent florist — complete with a product catalogue, seasonal collections, and a smooth checkout experience built to drive online orders.',                                    bg:'linear-gradient(135deg,#051a1c,#0a5a5e)', wash:'rgba(22,199,192,0.22)', orb1:'rgba(127,227,228,0.30)', orb2:'rgba(22,199,192,0.15)', accent:'#7FE3E4'},
   ];
 
   var N         = heroCards.length;
-  var CARD_W    = 240;
-  var GAP       = 14;
+  var CARD_W    = 190;
+  var GAP       = -28; // cards overlap (negative margins) for a tight coverflow
   var CARD_STEP = CARD_W + GAP;
   var SETS      = 3;
   var trackIdx  = N; // start at middle set, card 0
@@ -627,7 +889,9 @@ document.addEventListener('keydown', e => { if (e.key === 'Escape') closeService
 
   function getX(ti) {
     var W = wrap.offsetWidth;
-    return W / 2 - ti * CARD_STEP - CARD_W / 2;
+    // GAP is negative (cards overlap via margins); the leading card's left margin
+    // (GAP/2) shifts the whole track, so compensate to keep the active card centred.
+    return W / 2 - ti * CARD_STEP - CARD_W / 2 - GAP / 2;
   }
 
   function setPos(ti, instant) {
@@ -642,6 +906,7 @@ document.addEventListener('keydown', e => { if (e.key === 'Escape') closeService
   }
 
   setPos(trackIdx, true);
+  markActive(trackIdx);
 
   function applyTheme(ri) {
     var c = heroCards[ri];
@@ -681,30 +946,63 @@ document.addEventListener('keydown', e => { if (e.key === 'Escape') closeService
       d.style.setProperty('--dot-accent', c.accent);
     });
     progress.style.setProperty('--dot-accent', c.accent);
+    if (infoText) infoText.textContent = c.name;
+  }
+
+  /* Mark exactly one card active (by its unique global index) so the coverflow
+     neighbour selectors resolve cleanly and the 3D states animate correctly. */
+  function markActive(gi) {
+    var ri = ((gi % N) + N) % N;
+    var accent = heroCards[ri].accent;
     track.querySelectorAll('.reel-card').forEach(function (el) {
-      var same = parseInt(el.dataset.real) === ri;
-      el.classList.toggle('active', same);
-      if (same) el.style.setProperty('--accent', c.accent);
+      var on = parseInt(el.dataset.global) === gi;
+      el.classList.toggle('active', on);
+      if (on) el.style.setProperty('--accent', accent);
     });
-    if (infoText) infoText.textContent = 'Now viewing \u2014 ' + c.name;
+  }
+
+  /* Re-centre into the middle buffer set with no visible animation (cards + track
+     frozen) once we've drifted to either edge of the 3-set buffer. */
+  function resetToMiddle() {
+    if (trackIdx >= N * 2) trackIdx -= N;
+    else if (trackIdx < N) trackIdx += N;
+    else return;
+    track.classList.add('instant');
+    track.style.transform = 'translateX(' + getX(trackIdx) + 'px)';
+    markActive(trackIdx);
+    track.offsetHeight; // force reflow so the jump applies instantly
+    track.classList.remove('instant');
+  }
+
+  /* Manual one-card move (arrows / swipe). Pauses the autoplay, then resumes. */
+  function step(dir) {
+    clearTimeout(timer);
+    isHeld = true;
+    trackIdx += dir;
+    realIdx   = ((trackIdx % N) + N) % N;
+    setPos(trackIdx, false);
+    markActive(trackIdx);
+    applyTheme(realIdx);
+    timer = setTimeout(function () {
+      resetToMiddle();
+      timer = setTimeout(function () {
+        isHeld = false;
+        if (infoText) infoText.textContent = heroCards[realIdx].name;
+        timer = setTimeout(advance, 400);
+      }, 4000);
+    }, 1150);
   }
 
   function advance() {
     if (isHeld) return;
-    var nextTrack = trackIdx + 1;
-    var nextReal  = (realIdx + 1) % N;
-    setPos(nextTrack, false);
+    trackIdx += 1;
+    realIdx   = ((trackIdx % N) + N) % N;
+    // Slide and switch the active/coverflow state together so they animate as one.
+    setPos(trackIdx, false);
+    markActive(trackIdx);
+    applyTheme(realIdx);
     timer = setTimeout(function () {
-      trackIdx = nextTrack;
-      realIdx  = nextReal;
-      applyTheme(realIdx);
-      if (trackIdx >= N * 2) {
-        trackIdx -= N;
-        setPos(trackIdx, true);
-        track.querySelectorAll('.reel-card').forEach(function (el) {
-          el.classList.toggle('active', parseInt(el.dataset.real) === realIdx);
-        });
-      }
+      if (trackIdx >= N * 2) resetToMiddle();
       if (!isHeld) timer = setTimeout(advance, 8000);
     }, 1150);
   }
@@ -720,17 +1018,19 @@ document.addEventListener('keydown', e => { if (e.key === 'Escape') closeService
       if (copies[k] >= trackIdx) { targetTrack = copies[k]; break; }
     }
 
+    trackIdx = targetTrack;
+    realIdx  = ri;
+    // Slide and switch the active/coverflow state together.
     setPos(targetTrack, false);
+    markActive(targetTrack);
+    applyTheme(ri);
     setTimeout(function () {
-      trackIdx = targetTrack;
-      realIdx  = ri;
-      applyTheme(ri);
       // Normalise back to middle set so the loop stays seamless
-      if (trackIdx >= N * 2) { trackIdx -= N; setPos(trackIdx, true); }
+      if (trackIdx >= N * 2) resetToMiddle();
       // Auto-resume after 4 s
       timer = setTimeout(function () {
         isHeld = false;
-        if (infoText) infoText.textContent = 'Exploring our work';
+        if (infoText) infoText.textContent = heroCards[realIdx].name;
         timer = setTimeout(advance, 400);
       }, 4000);
     }, 1150);
@@ -739,9 +1039,28 @@ document.addEventListener('keydown', e => { if (e.key === 'Escape') closeService
   // Recalculate position on resize
   window.addEventListener('resize', function () { setPos(trackIdx, true); }, { passive: true });
 
+  // Prev / next arrows
+  var reelPrev = document.getElementById('reelPrev');
+  var reelNext = document.getElementById('reelNext');
+  if (reelPrev) reelPrev.addEventListener('click', function () { step(-1); });
+  if (reelNext) reelNext.addEventListener('click', function () { step(1); });
+
+  // Touch swipe (tablet & phone) — drag the reel to move it
+  var swipeX = null;
+  wrap.addEventListener('touchstart', function (e) {
+    swipeX = e.touches[0].clientX;
+  }, { passive: true });
+  wrap.addEventListener('touchend', function (e) {
+    if (swipeX === null) return;
+    var dx = e.changedTouches[0].clientX - swipeX;
+    swipeX = null;
+    if (Math.abs(dx) > 40) step(dx < 0 ? 1 : -1); // swipe left = next, right = prev
+  }, { passive: true });
+
   // Kick off
   timer = setTimeout(function () {
-    applyTheme(0);
+    markActive(trackIdx);
+    applyTheme(realIdx);
     timer = setTimeout(advance, 8000);
   }, 600);
 }());
@@ -1286,4 +1605,36 @@ document.addEventListener('keydown', e => { if (e.key === 'Escape') closeService
   handleSubmit(document.getElementById('formNewInner'),      'successNew');
   handleSubmit(document.getElementById('formExistingInner'), 'successExisting');
 
+}());
+
+/* ---- About section — ambient atmosphere (aurora glow + drifting light motes) ---- */
+(function () {
+  var host = document.querySelector('.about-atmosphere');
+  if (!host || PREFERS_REDUCED) return;
+
+  var MOTE_COUNT = 16;
+  for (var i = 0; i < MOTE_COUNT; i++) {
+    var mote = document.createElement('span');
+    mote.className = 'about-mote';
+    mote.style.setProperty('--x',     (Math.random() * 100).toFixed(1) + '%');
+    mote.style.setProperty('--y',     (20 + Math.random() * 70).toFixed(1) + '%');
+    mote.style.setProperty('--size',  (3 + Math.random() * 5).toFixed(1) + 'px');
+    mote.style.setProperty('--rise',  (60 + Math.random() * 120).toFixed(0) + 'px');
+    mote.style.setProperty('--dur',   (10 + Math.random() * 12).toFixed(1) + 's');
+    mote.style.setProperty('--delay', (-Math.random() * 20).toFixed(1) + 's');
+    host.appendChild(mote);
+  }
+}());
+
+/* ---- How It Works header scroll animation ---- */
+(function () {
+  var hiwHeader = document.querySelector('.hiw-header');
+  if (!hiwHeader) return;
+  var obs = new IntersectionObserver(function (entries) {
+    if (entries[0].isIntersecting) {
+      hiwHeader.classList.add('hiw-header--visible');
+      obs.disconnect();
+    }
+  }, { threshold: 0.25 });
+  obs.observe(hiwHeader);
 }());
