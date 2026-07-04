@@ -62,6 +62,22 @@
     <div class="hero-grid-overlay"></div>
     <div class="hero-orb hero-orb--1" id="orb1"></div>
     <div class="hero-orb hero-orb--2" id="orb2"></div>
+
+    <div class="hero-text-scrim" aria-hidden="true"></div>
+    <div class="hero-content">
+      <div class="hero-content-inner">
+        <h1 class="hero-title tw-heading" data-tw="Small Budget. Big-Agency Results."><span class="tw-text"></span><span class="tw-cursor">|</span></h1>
+        <div class="hero-tagline-wrap" data-tw-reveal>
+          <span class="hero-underline" aria-hidden="true"></span>
+          <p class="hero-tagline">&ldquo;Every card below is proof.&rdquo;</p>
+        </div>
+      </div>
+      <button class="hero-reveal-btn" id="heroRevealBtn" type="button" aria-pressed="false">
+        <span class="hero-reveal-icon" aria-hidden="true">👁</span>
+        <span class="hero-reveal-label">Peek at the real thing</span>
+      </button>
+    </div>
+
     <a href="#hero-intro" class="hero-scroll" aria-label="Scroll down">
       <span>Scroll</span>
       <div class="scroll-line"></div>
@@ -341,7 +357,7 @@
       </div>
 
       <!-- Rest of section — hidden until typing completes -->
-      <div class="about-body-content">
+      <div class="about-body-content" data-tw-reveal>
         <div class="about-grid">
           <div class="about-text">
             <p class="about-subtitle">Who we are</p>

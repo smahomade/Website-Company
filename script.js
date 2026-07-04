@@ -265,43 +265,66 @@ if (hiwCards.length) {
   hiwCards.forEach(card => hiwIO.observe(card));
 }
 
-/* ---- Typewriter heading ---- */
-(function () {
-  var el      = document.querySelector('.tw-heading');
-  var content = document.querySelector('.about-body-content');
-  if (!el) return;
+/* ---- Typewriter headings ----
+   Each heading gets a reusable, cancellable animateTo(targetLength) that types
+   forward or erases backward from wherever it currently sits — exposed via
+   el._twAnimateTo so other UI (e.g. the hero reveal toggle) can reverse it. */
+document.querySelectorAll('.tw-heading').forEach(function (el) {
+  var section  = el.closest('section');
+  var reveals  = section ? section.querySelectorAll('[data-tw-reveal]') : [];
   var textEl   = el.querySelector('.tw-text');
   var cursor   = el.querySelector('.tw-cursor');
   var fullText = el.dataset.tw || '';
   var fired    = false;
+  var gen      = 0;
 
-  function type(i) {
-    if (i > fullText.length) {
-      cursor.classList.add('tw-done');
-      // reveal the body content once typing is complete
-      if (content) {
-        setTimeout(function () { content.classList.add('visible'); }, 300);
+  function animateTo(target, onDone) {
+    gen += 1;
+    var myGen = gen;
+    cursor.classList.remove('tw-done');
+
+    function step(len) {
+      if (gen !== myGen) return;
+      textEl.textContent = fullText.slice(0, len);
+      if (len === target) {
+        if (target === fullText.length) cursor.classList.add('tw-done');
+        if (onDone) onDone();
+        return;
       }
-      return;
+      var forward = target > len;
+      var delay;
+      if (forward) {
+        delay = 42 + Math.random() * 28;
+        if (fullText[len - 1] === ',') delay += 160;
+      } else {
+        delay = 22;
+      }
+      setTimeout(function () { step(len + (forward ? 1 : -1)); }, delay);
     }
-    textEl.textContent = fullText.slice(0, i);
-    var delay = 42 + Math.random() * 28;
-    if (fullText[i - 1] === ',') delay += 160;
-    setTimeout(function () { type(i + 1); }, delay);
+    step(textEl.textContent.length);
   }
+
+  el._twAnimateTo = animateTo;
 
   var io = new IntersectionObserver(function (entries) {
     entries.forEach(function (e) {
       if (e.isIntersecting && !fired) {
         fired = true;
         io.disconnect();
-        setTimeout(function () { type(0); }, 200);
+        setTimeout(function () {
+          animateTo(fullText.length, function () {
+            // reveal any marked content once typing is complete
+            reveals.forEach(function (r) {
+              setTimeout(function () { r.classList.add('visible'); }, 300);
+            });
+          });
+        }, 200);
       }
     });
   }, { threshold: 0.4 });
 
   io.observe(el);
-})();
+});
 
 /* ---- Portfolio filters ---- */
 const portfolioFilterBtns = document.querySelectorAll('.portfolio-filter-btn');
@@ -1607,6 +1630,46 @@ function attachPixelHover(card, body, accent) {
 
 }());
 
+/* ---- Hero reveal toggle — un-blurs the live site, un-types the headline
+   (reverse of the typewriter effect), and slides the button itself down to
+   sit just above the carousel — then reverses all three when toggled off ---- */
+(function () {
+  var hero    = document.querySelector('.hero');
+  var btn     = document.getElementById('heroRevealBtn');
+  if (!hero || !btn) return;
+
+  var label   = btn.querySelector('.hero-reveal-label');
+  var icon    = btn.querySelector('.hero-reveal-icon');
+  var heading = hero.querySelector('.tw-heading');
+  var stage   = hero.querySelector('.hero-info');
+  var shift   = 0; // px currently applied via --reveal-shift
+
+  btn.addEventListener('click', function () {
+    var revealed = hero.classList.toggle('hero-revealed');
+    btn.setAttribute('aria-pressed', revealed ? 'true' : 'false');
+    if (label) label.textContent = revealed ? 'Blur it again' : 'Peek at the real thing';
+    if (icon)  icon.textContent  = revealed ? '✕' : '👁';
+
+    if (heading && heading._twAnimateTo) {
+      var fullLen = (heading.dataset.tw || '').length;
+      heading._twAnimateTo(revealed ? 0 : fullLen);
+    }
+
+    if (stage) {
+      var btnRect   = btn.getBoundingClientRect();
+      var naturalTop = btnRect.top - shift; // undo any shift already applied
+      if (revealed) {
+        var gap      = 20;
+        var stageTop = stage.getBoundingClientRect().top;
+        shift = (stageTop - btnRect.height - gap) - naturalTop;
+      } else {
+        shift = 0;
+      }
+      btn.style.setProperty('--reveal-shift', shift + 'px');
+    }
+  });
+}());
+
 /* ---- About section — ambient atmosphere (aurora glow + drifting light motes) ---- */
 (function () {
   var host = document.querySelector('.about-atmosphere');
@@ -1628,13 +1691,15 @@ function attachPixelHover(card, body, accent) {
 
 /* ---- How It Works header scroll animation ---- */
 (function () {
-  var hiwHeader = document.querySelector('.hiw-header');
-  if (!hiwHeader) return;
+  var headers = document.querySelectorAll('.hiw-header');
+  if (!headers.length) return;
   var obs = new IntersectionObserver(function (entries) {
-    if (entries[0].isIntersecting) {
-      hiwHeader.classList.add('hiw-header--visible');
-      obs.disconnect();
-    }
+    entries.forEach(function (e) {
+      if (e.isIntersecting) {
+        e.target.classList.add('hiw-header--visible');
+        obs.unobserve(e.target);
+      }
+    });
   }, { threshold: 0.25 });
-  obs.observe(hiwHeader);
+  headers.forEach(function (h) { obs.observe(h); });
 }());

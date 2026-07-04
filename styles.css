@@ -354,10 +354,10 @@ h1, h2, h3, h4 {
   background-size: cover;
   background-repeat: no-repeat;
   background-position: center top;
-  filter: blur(2px) brightness(0.52);
-  transform: scale(1.06);
+  filter: blur(36px) brightness(0.5) saturate(1.2);
+  transform: scale(1.16);
   opacity: 0;
-  transition: opacity 0.6s ease;
+  transition: opacity 0.6s ease, filter 0.6s ease, transform 0.6s ease;
   z-index: 0;
   pointer-events: none;
 }
@@ -420,10 +420,10 @@ h1, h2, h3, h4 {
   inset: 0;
   width: 100%; height: 100%;
   object-fit: cover;
-  filter: blur(0px) brightness(0.9);
-  transform: scale(1.06);
+  filter: blur(36px) brightness(0.5) saturate(1.2);
+  transform: scale(1.16);
   opacity: 0;
-  transition: opacity 0.6s ease;
+  transition: opacity 0.6s ease, filter 0.6s ease, transform 0.6s ease;
   z-index: 0;
   pointer-events: none;
 }
@@ -531,12 +531,88 @@ h1, h2, h3, h4 {
 }
 
 .hero-content {
-  position: relative;
+  position: absolute;
+  top: 44%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 3;
+  text-align: center;
+  max-width: 640px;
+  width: 100%;
+  padding: 0 24px;
+}
+
+/* Soft cinematic vignette — moods the shot without hiding the video/screenshot */
+.hero-text-scrim {
+  position: absolute;
+  inset: 0;
   z-index: 2;
-  text-align: left;
-  max-width: 560px;
-  padding: 130px 24px 100px;
-  margin-left: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse 75% 65% at 50% 38%, transparent 45%, rgba(6, 10, 16, 0.38) 100%),
+    linear-gradient(180deg, rgba(6, 10, 16, 0.35) 0%, transparent 22%, transparent 78%, rgba(6, 10, 16, 0.30) 100%);
+  transition: opacity 0.6s ease;
+}
+.hero.hero-revealed .hero-text-scrim { opacity: 0; }
+
+/* No card behind the hero copy — text sits directly on the blurred backdrop,
+   with a soft shadow for contrast. Fades out (not collapses) when the live
+   site is revealed, so the toggle button below never jumps position. */
+.hero-content-inner {
+  animation: heroPanelFloat 7s ease-in-out infinite;
+  opacity: 1;
+  margin-bottom: 22px;
+  transition: opacity 0.4s ease;
+}
+@keyframes heroPanelFloat {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(-8px); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .hero-content-inner { animation: none; }
+}
+
+.hero.hero-revealed .hero-content-inner {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.hero-reveal-btn {
+  --reveal-shift: 0px;
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  padding: 11px 22px;
+  border-radius: 100px;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  color: rgba(255, 255, 255, 0.9);
+  font-family: var(--font-body);
+  font-size: 0.82rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  cursor: pointer;
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+  /* translate carries the big "travel down to the carousel" move; transform
+     stays free for the small hover lift so the two never fight over one property */
+  translate: 0 var(--reveal-shift);
+  transition: background 0.25s ease, border-color 0.25s ease, transform 0.25s ease,
+              translate 0.65s cubic-bezier(.16, .84, .44, 1);
+}
+.hero-reveal-btn:hover {
+  background: rgba(255, 255, 255, 0.16);
+  border-color: rgba(255, 255, 255, 0.4);
+  transform: translateY(-2px);
+}
+.hero-reveal-btn .hero-reveal-icon { font-size: 0.95rem; }
+
+/* Full clarity on reveal — no blur, and no leftover overscan from the
+   default state's blur-edge compensation, so it's actually sharp */
+.hero.hero-revealed .hero-img-bg,
+.hero.hero-revealed .hero-vid-bg {
+  filter: blur(0px) brightness(0.92) saturate(1.05);
+  transform: scale(1.0);
 }
 
 /* ── Hero Intro — the H1/subtitle/CTA block that sits below the banner ── */
@@ -607,19 +683,51 @@ h1, h2, h3, h4 {
 
 .hero-title {
   font-family: var(--font-display);
-  font-size: clamp(3.6rem, 10vw, 7.8rem);
-  font-weight: 900;
+  font-size: clamp(2.1rem, 4vw, 3.4rem);
+  font-weight: 700;
   color: var(--white);
-  line-height: 1.02;
-  margin-bottom: 28px;
+  line-height: 1.16;
+  margin-bottom: 0;
   letter-spacing: -0.02em;
+  text-shadow: 0 2px 28px rgba(0, 0, 0, 0.55), 0 1px 4px rgba(0, 0, 0, 0.7);
   animation: fadeUp 0.8s ease 0.5s both;
 }
-.hero-title span {
-  background: linear-gradient(90deg, #5FE9E2, #C7CDD2);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+
+/* Tagline block — drawn-in underline + a short quote, revealed together
+   once the title finishes typing (see el._twAnimateTo's onDone callback) */
+.hero-tagline-wrap {
+  margin-top: 22px;
+  opacity: 0;
+  transform: translateY(8px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+.hero-tagline-wrap.visible {
+  opacity: 1;
+  transform: none;
+}
+.hero-underline {
+  display: block;
+  width: 64px;
+  height: 3px;
+  margin: 0 auto 18px;
+  border-radius: 2px;
+  background: linear-gradient(90deg, var(--teal-glow), #C7CDD2);
+  transform: scaleX(0);
+  transition: transform 0.7s cubic-bezier(.16, .84, .44, 1) 0.1s;
+}
+.hero-tagline-wrap.visible .hero-underline {
+  transform: scaleX(1);
+}
+.hero-tagline {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-weight: 400;
+  font-size: clamp(1rem, 1.6vw, 1.15rem);
+  color: rgba(255, 255, 255, 0.62);
+  text-shadow: 0 2px 16px rgba(0, 0, 0, 0.5);
+}
+@media (prefers-reduced-motion: reduce) {
+  .hero-underline { transition: none; }
 }
 
 .hero-subtitle {
@@ -634,7 +742,7 @@ h1, h2, h3, h4 {
 .hero-actions {
   display: flex;
   align-items: center;
-  justify-content: flex-start;
+  justify-content: center;
   gap: 14px;
   flex-wrap: wrap;
   margin-bottom: 64px;
@@ -3179,6 +3287,7 @@ h1, h2, h3, h4 {
   .menu-grid     { grid-template-columns: repeat(2, 1fr); }
   .footer-grid   { grid-template-columns: 1fr 1fr; }
   .about-grid    { gap: 48px; }
+  .hero-content  { max-width: 560px; }
 }
 
 @media (max-width: 900px) {
@@ -3223,7 +3332,6 @@ h1, h2, h3, h4 {
 
   .hero-badges { flex-direction: column; gap: 12px; }
   .hero-badge-divider { width: 40px; height: 1px; }
-  .hero-content { padding: 130px 24px 90px; }
   .hero-pizza-emoji { font-size: 10rem; opacity: 0.15; }
   .hero-decor { right: -100px; }
 }
@@ -3231,8 +3339,8 @@ h1, h2, h3, h4 {
 @media (max-width: 560px) {
   .features-grid { grid-template-columns: 1fr; }
   .footer-grid   { grid-template-columns: 1fr; }
-  .hero-actions  { flex-direction: column; align-items: center; }
-  .hero-actions .btn { width: 100%; max-width: 280px; }
+  .hero-content  { padding: 0 16px; }
+  .hero-title    { font-size: 1.7rem; margin-bottom: 12px; }
   .hero-decor    { display: none; }
 }
 
