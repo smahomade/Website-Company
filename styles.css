@@ -867,6 +867,24 @@ h1, h2, h3, h4 {
 .about-title { font-family: var(--font-display); font-size: clamp(2rem, 4vw, 3rem); font-weight: 800; color: var(--dark); line-height: 1.18; margin-bottom: 10px; }
 .about-title em { font-style: italic; font-weight: 400; color: var(--primary); }
 
+/* Word-by-word blur reveal — each word fades up and sharpens into focus,
+   staggered via inline transition-delay set in JS */
+.about-word-reveal .word {
+  display: inline-block;
+  opacity: 0;
+  filter: blur(12px);
+  transform: translateY(16px);
+  transition: opacity 0.65s ease, filter 0.65s ease, transform 0.65s ease;
+}
+.about-word-reveal.in-view .word {
+  opacity: 1;
+  filter: blur(0);
+  transform: none;
+}
+@media (prefers-reduced-motion: reduce) {
+  .about-word-reveal .word { transition: none; filter: none; }
+}
+
 /* Typewriter heading */
 .tw-cursor {
   display: inline-block;
@@ -2543,7 +2561,7 @@ h1, h2, h3, h4 {
    FOOTER
    ==================================================== */
 .footer {
-  background: linear-gradient(135deg, #0C6F6B 0%, #064B49 100%);
+  background: linear-gradient(135deg, #1B2630 0%, #0B1117 100%);
   color: rgba(255,255,255,0.74);
   padding: 80px 0 0;
 }
@@ -5868,6 +5886,12 @@ body {
     radial-gradient(700px 500px at 8% 90%, rgba(77, 124, 254, 0.06), transparent 60%)
     !important;
   border-top: none !important;
+}
+/* Why PixelBorough shares .how-it-works with the actual How It Works section
+   above, and sits directly under Pricing's colour wash below — flatten it to
+   plain ice-grey so it doesn't blend into either neighbour */
+#why-us.how-it-works {
+  background: linear-gradient(180deg, var(--teal-tint) 0%, var(--ice-grey) 100%) !important;
 }
 .features {
   background:

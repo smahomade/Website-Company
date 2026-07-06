@@ -1670,6 +1670,42 @@ function attachPixelHover(card, body, accent) {
   });
 }());
 
+/* ---- About heading — word-by-word blur reveal (distinct from the hero's
+   typewriter, so the two headline animations on the page don't repeat) ---- */
+(function () {
+  var heading = document.querySelector('.about-word-reveal');
+  if (!heading) return;
+
+  var words   = heading.querySelectorAll('.word');
+  var section = heading.closest('section');
+  var reveals = section ? section.querySelectorAll('[data-tw-reveal]') : [];
+
+  if (PREFERS_REDUCED) {
+    heading.classList.add('in-view');
+    reveals.forEach(function (r) { r.classList.add('visible'); });
+    return;
+  }
+
+  words.forEach(function (w, i) { w.style.transitionDelay = (i * 90) + 'ms'; });
+
+  var fired = false;
+  var io = new IntersectionObserver(function (entries) {
+    entries.forEach(function (e) {
+      if (e.isIntersecting && !fired) {
+        fired = true;
+        io.disconnect();
+        heading.classList.add('in-view');
+        var totalDelay = words.length * 90 + 650;
+        reveals.forEach(function (r) {
+          setTimeout(function () { r.classList.add('visible'); }, totalDelay);
+        });
+      }
+    });
+  }, { threshold: 0.4 });
+
+  io.observe(heading);
+}());
+
 /* ---- About section — ambient atmosphere (aurora glow + drifting light motes) ---- */
 (function () {
   var host = document.querySelector('.about-atmosphere');
