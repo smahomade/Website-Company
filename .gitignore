@@ -1,0 +1,3 @@
+# Local working assets — masters and staging for R2 uploads.
+# Kept out of git so multi-MB binaries never enter history.
+extras/

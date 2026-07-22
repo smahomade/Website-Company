@@ -415,13 +415,34 @@ h1, h2, h3, h4 {
   letter-spacing: 0.01em;
 }
 
+/* Default video backdrop. The 36px blur is baked into the source file rather
+   than applied here: a CSS blur on a playing video is a full-viewport Gaussian
+   convolution recomputed every frame, and the result can never be cached
+   because the source pixels change 24x a second. brightness/saturate stay in
+   CSS — those are cheap per-pixel ops and keep the look tunable. */
 .hero-vid-bg {
   position: absolute;
   inset: 0;
   width: 100%; height: 100%;
   object-fit: cover;
-  filter: blur(36px) brightness(0.5) saturate(1.2);
+  filter: brightness(0.5) saturate(1.2);
   transform: scale(1.16);
+  opacity: 0;
+  transition: opacity 0.6s ease, filter 0.6s ease, transform 0.6s ease;
+  z-index: 0;
+  pointer-events: none;
+}
+
+/* Sharp original, crossfaded in on reveal. Starts at a small blur so the
+   handover still reads as a focus pull rather than a hard cut; opacity is
+   driven from script.js, which only loads this once Peek is first clicked. */
+.hero-vid-sharp {
+  position: absolute;
+  inset: 0;
+  width: 100%; height: 100%;
+  object-fit: cover;
+  filter: blur(8px) brightness(0.92) saturate(1.05);
+  transform: scale(1.06);
   opacity: 0;
   transition: opacity 0.6s ease, filter 0.6s ease, transform 0.6s ease;
   z-index: 0;
@@ -608,9 +629,15 @@ h1, h2, h3, h4 {
 .hero-reveal-btn .hero-reveal-icon { font-size: 0.95rem; }
 
 /* Full clarity on reveal — no blur, and no leftover overscan from the
-   default state's blur-edge compensation, so it's actually sharp */
-.hero.hero-revealed .hero-img-bg,
-.hero.hero-revealed .hero-vid-bg {
+   default state's blur-edge compensation, so it's actually sharp.
+   Images un-blur in place (a static blur is cached, so it's cheap). Video
+   can't: its blur is baked into the file, so .hero-vid-sharp is crossfaded
+   over the top instead — see the hero:reveal handler in script.js. */
+.hero.hero-revealed .hero-img-bg {
+  filter: blur(0px) brightness(0.92) saturate(1.05);
+  transform: scale(1.0);
+}
+.hero.hero-revealed .hero-vid-sharp {
   filter: blur(0px) brightness(0.92) saturate(1.05);
   transform: scale(1.0);
 }
@@ -963,30 +990,47 @@ h1, h2, h3, h4 {
   pointer-events: none;
   z-index: 0;
 }
+/* Softness comes from the gradient falloff, not filter: blur().
+   These are already smooth radial blobs, so a 100px blur added little but cost
+   a lot: combined with the scale() in the keyframes it forced a full
+   re-rasterise + re-blur every frame, three times over, for as long as the
+   section was on screen. Multi-stop gradients give the same diffuse look for
+   free, and with the filter gone the GPU can just scale a cached texture. */
 .about-aurora {
   position: absolute;
   border-radius: 50%;
-  filter: blur(100px);
   opacity: 0.65;
   will-change: transform;
 }
 .about-aurora--a {
-  width: 620px; height: 620px;
-  top: -220px; left: -160px;
-  background: radial-gradient(circle, rgba(79, 201, 195, 0.55), transparent 70%);
+  width: 820px; height: 820px;
+  top: -320px; left: -260px;
+  background: radial-gradient(circle,
+    rgba(79, 201, 195, 0.40) 0%,
+    rgba(79, 201, 195, 0.22) 32%,
+    rgba(79, 201, 195, 0.07) 58%,
+    transparent 78%);
   animation: auroraDriftA 24s ease-in-out infinite alternate;
 }
 .about-aurora--b {
-  width: 560px; height: 560px;
-  bottom: -220px; right: -140px;
-  background: radial-gradient(circle, rgba(77, 124, 254, 0.28), transparent 72%);
+  width: 760px; height: 760px;
+  bottom: -320px; right: -240px;
+  background: radial-gradient(circle,
+    rgba(77, 124, 254, 0.21) 0%,
+    rgba(77, 124, 254, 0.12) 34%,
+    rgba(77, 124, 254, 0.04) 60%,
+    transparent 80%);
   animation: auroraDriftB 28s ease-in-out infinite alternate;
 }
 .about-aurora--c {
-  width: 460px; height: 460px;
+  width: 660px; height: 660px;
   top: 38%; left: 55%;
   transform: translate(-50%, -50%);
-  background: radial-gradient(circle, rgba(142, 221, 217, 0.20), transparent 74%);
+  background: radial-gradient(circle,
+    rgba(142, 221, 217, 0.15) 0%,
+    rgba(142, 221, 217, 0.08) 36%,
+    rgba(142, 221, 217, 0.03) 62%,
+    transparent 80%);
   animation: auroraDriftC 32s ease-in-out infinite alternate;
 }
 @keyframes auroraDriftA { from { transform: translate(0, 0) scale(1); } to { transform: translate(70px, 50px) scale(1.12); } }
@@ -5927,6 +5971,14 @@ body {
   border: 1px solid rgba(18, 140, 135, 0.20);
   backdrop-filter: blur(4px);
 }
+/* In About the label sits over the drifting auroras, and a backdrop-filter
+   has to re-blur its backdrop every frame the background moves. At 4px behind
+   an 8% tint it isn't doing visible work, so it's dropped there. */
+.about .section-label {
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+}
+
 /* Italic emphasis → teal gradient text everywhere */
 .section-title em,
 .about-title em,

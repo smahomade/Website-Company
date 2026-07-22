@@ -51,7 +51,12 @@
   <section class="hero" id="home">
     <div class="hero-bg"></div>
     <div class="hero-img-bg" id="heroImgBg"></div>
+    <!-- Default backdrop: tiny pre-blurred loop. The blur is baked into the file
+         so the browser never runs a per-frame blur convolution on live video. -->
     <video class="hero-vid-bg" id="heroVidBg" autoplay muted loop playsinline></video>
+    <!-- Sharp original, only fetched the first time someone hits "Peek at the
+         real thing" — hence preload="none" and no autoplay. -->
+    <video class="hero-vid-sharp" id="heroVidSharp" muted loop playsinline preload="none"></video>
     <div class="hero-logo-bg" id="heroLogoBg">
       <img src="images/logo/pixelborough_pb_transparent_2.png" alt="">
       <div class="hero-logo-text" id="heroLogoText">
@@ -282,7 +287,7 @@
       <div class="hiw-steps">
 
         <div class="hiw-step-card hiw-portrait-card">
-          <img src="https://pub-6d3ae22e684b4feaab4ea4d3b9f86c86.r2.dev/communication-card.jpg" alt="" class="hiw-card-bg" loading="lazy">
+          <img src="https://pub-6d3ae22e684b4feaab4ea4d3b9f86c86.r2.dev/images/communication-card.jpg" alt="" class="hiw-card-bg" loading="lazy">
           <canvas class="hiw-pixel-canvas" aria-hidden="true"></canvas>
           <div class="hiw-card-front">
             <span class="hiw-card-tag">communication is everything</span>
@@ -295,7 +300,7 @@
         </div>
 
         <div class="hiw-step-card hiw-portrait-card">
-          <img src="https://pub-6d3ae22e684b4feaab4ea4d3b9f86c86.r2.dev/web-design-card.jpg" alt="" class="hiw-card-bg" loading="lazy">
+          <img src="https://pub-6d3ae22e684b4feaab4ea4d3b9f86c86.r2.dev/images/web-design-card.jpg" alt="" class="hiw-card-bg" loading="lazy">
           <canvas class="hiw-pixel-canvas" aria-hidden="true"></canvas>
           <div class="hiw-card-front">
             <span class="hiw-card-tag">small details matter</span>
@@ -308,7 +313,7 @@
         </div>
 
         <div class="hiw-step-card hiw-portrait-card">
-          <img src="https://pub-6d3ae22e684b4feaab4ea4d3b9f86c86.r2.dev/Web-developerment-card.jpg" alt="" class="hiw-card-bg" loading="lazy">
+          <img src="https://pub-6d3ae22e684b4feaab4ea4d3b9f86c86.r2.dev/images/Web-developerment-card.jpg" alt="" class="hiw-card-bg" loading="lazy">
           <canvas class="hiw-pixel-canvas" aria-hidden="true"></canvas>
           <div class="hiw-card-front">
             <span class="hiw-card-tag">it's your creation</span>
@@ -321,7 +326,7 @@
         </div>
 
         <div class="hiw-step-card hiw-portrait-card">
-          <img src="https://pub-6d3ae22e684b4feaab4ea4d3b9f86c86.r2.dev/live-card.jpg" alt="" class="hiw-card-bg" loading="lazy">
+          <img src="https://pub-6d3ae22e684b4feaab4ea4d3b9f86c86.r2.dev/images/live-card.jpg" alt="" class="hiw-card-bg" loading="lazy">
           <canvas class="hiw-pixel-canvas" aria-hidden="true"></canvas>
           <div class="hiw-card-front">
             <span class="hiw-card-tag">ready for the world</span>

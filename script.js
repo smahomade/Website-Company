@@ -798,6 +798,8 @@ function attachPixelHover(card, body, accent) {
   var wash       = document.getElementById('heroWash');
   var imgBg      = document.getElementById('heroImgBg');
   var vidBg      = document.getElementById('heroVidBg');
+  var vidSharp   = document.getElementById('heroVidSharp');
+  var heroEl     = document.querySelector('.hero');
   var orb1       = document.getElementById('orb1');
   var orb2       = document.getElementById('orb2');
   var logoBg      = document.getElementById('heroLogoBg');
@@ -806,8 +808,9 @@ function attachPixelHover(card, body, accent) {
   var hint       = document.getElementById('reelHint');
 
   var heroCards = [
-    {url:'razaacademy.co.uk',      img:'https://pub-6d3ae22e684b4feaab4ea4d3b9f86c86.r2.dev/screenshots/Raza/raza-academy-banner.JPG', video:'https://pub-6d3ae22e684b4feaab4ea4d3b9f86c86.r2.dev/screenshots/Raza/raza-academy-video.mp4', imgPos:'center 12%', icon:'\ud83c\udfeb', tag:'Redesign', ind:'Education',   pages:'8 pages',   name:'Raza Academy',         desc:'A full redesign for a UK tutoring and home-schooling academy. We rebuilt their site from scratch — cleaner layout, better navigation, and a modern look that reflects the quality of their teaching.',     bg:'linear-gradient(135deg,#06121c,#0a4a4f)', wash:'rgba(22,199,192,0.24)',  orb1:'rgba(95,233,226,0.32)', orb2:'rgba(22,199,192,0.16)',  accent:'#5FE9E2'},
-    {url:'topone.co.uk',           img:'https://pub-6d3ae22e684b4feaab4ea4d3b9f86c86.r2.dev/screenshots/TopOne/top-one-banner.JPG', video:'https://pub-6d3ae22e684b4feaab4ea4d3b9f86c86.r2.dev/screenshots/TopOne/top-one-video.mp4',       imgPos:'center top',  icon:'\u2702\ufe0f', tag:'Custom',   ind:'Beauty & Hair', pages:'40+ pages', name:'Top One Salon',        desc:'A premium custom build for one of London\'s top hair and beauty salons. Multi-page, fully responsive, with dedicated sections for services, team, gallery, and bookings.',                                   bg:'linear-gradient(135deg,#0d0f10,#243033)', wash:'rgba(199,204,208,0.18)',  orb1:'rgba(199,204,208,0.30)', orb2:'rgba(22,199,192,0.16)', accent:'#C7CDD2'},
+    {url:'razaacademy.co.uk',      img:'https://pub-6d3ae22e684b4feaab4ea4d3b9f86c86.r2.dev/screenshots/Raza/raza-academy-banner.JPG', video:'https://pub-6d3ae22e684b4feaab4ea4d3b9f86c86.r2.dev/videos/raza-academy-video.mp4', videoBlur:'https://pub-6d3ae22e684b4feaab4ea4d3b9f86c86.r2.dev/videos/raza-academy-video-blur.mp4', imgPos:'center 12%', icon:'\ud83c\udfeb', tag:'Redesign', ind:'Education',   pages:'8 pages',   name:'Raza Academy',         desc:'A full redesign for a UK tutoring and home-schooling academy. We rebuilt their site from scratch — cleaner layout, better navigation, and a modern look that reflects the quality of their teaching.',     bg:'linear-gradient(135deg,#06121c,#0a4a4f)', wash:'rgba(22,199,192,0.24)',  orb1:'rgba(95,233,226,0.32)', orb2:'rgba(22,199,192,0.16)',  accent:'#5FE9E2'},
+    {url:'topone.co.uk',           img:'https://pub-6d3ae22e684b4feaab4ea4d3b9f86c86.r2.dev/screenshots/TopOne/top-one-banner.JPG', video:'https://pub-6d3ae22e684b4feaab4ea4d3b9f86c86.r2.dev/videos/top-one-video.mp4', videoBlur:'https://pub-6d3ae22e684b4feaab4ea4d3b9f86c86.r2.dev/videos/top-one-video-blur.mp4',       imgPos:'center top',  icon:'\u2702\ufe0f', tag:'Custom',   ind:'Beauty & Hair', pages:'40+ pages', name:'Top One Salon',        desc:'A premium custom build for one of London\'s top hair and beauty salons. Multi-page, fully responsive, with dedicated sections for services, team, gallery, and bookings.',                                   bg:'linear-gradient(135deg,#0d0f10,#243033)', wash:'rgba(199,204,208,0.18)',  orb1:'rgba(199,204,208,0.30)', orb2:'rgba(22,199,192,0.16)', accent:'#C7CDD2'},
+    {url:'changeworktherapies.com',  img:'https://pub-6d3ae22e684b4feaab4ea4d3b9f86c86.r2.dev/screenshots/ChangeWorkTherapies/changeworktherapies-banner.JPG', video:'https://pub-6d3ae22e684b4feaab4ea4d3b9f86c86.r2.dev/videos/changeworktherapies-video.mp4', videoBlur:'https://pub-6d3ae22e684b4feaab4ea4d3b9f86c86.r2.dev/videos/changeworktherapies-video-blur.mp4', imgPos:'center top', icon:'🌿', tag:'Custom',   ind:'Therapy & Wellbeing', pages:'7 pages',   name:'Change Work Therapies', desc:'A custom seven-page site for a therapy practice — treatments, clinic details, testimonials and online session booking, wrapped in a calm, trust-led design.',                                              bg:'linear-gradient(135deg,#08160f,#0f4034)', wash:'rgba(58,160,124,0.22)',  orb1:'rgba(126,220,182,0.30)', orb2:'rgba(58,160,124,0.16)', accent:'#7EDCB6'},
     {url:'smithsplumbing.co.uk',  icon:'\ud83d\udd27', tag:'Static',  ind:'Trades',      name:"Smith's Plumbing",     desc:'A clean, fast static website for a local plumbing business. Clear contact details, service areas, and a no-fuss design that gets the phone ringing.',                                                           bg:'linear-gradient(135deg,#04141a,#075055)', wash:'rgba(22,199,192,0.24)',  orb1:'rgba(95,233,226,0.30)',  orb2:'rgba(22,199,192,0.15)',  accent:'#5FE9E2'},
     {url:'bloomflorist.co.uk',    icon:'\ud83d\uded2', tag:'Dynamic', ind:'E-commerce',  name:'Bloom Florist',        desc:'A dynamic e-commerce site for an independent florist — complete with a product catalogue, seasonal collections, and a smooth checkout experience built to drive online orders.',                                    bg:'linear-gradient(135deg,#051a1c,#0a5a5e)', wash:'rgba(22,199,192,0.22)', orb1:'rgba(127,227,228,0.30)', orb2:'rgba(22,199,192,0.15)', accent:'#7FE3E4'},
   ];
@@ -931,18 +934,71 @@ function attachPixelHover(card, body, accent) {
   setPos(trackIdx, true);
   markActive(trackIdx);
 
+  /* ---- Sharp-video layer, used only by the "Peek at the real thing" reveal.
+     The default backdrop is a pre-blurred file, so it can't simply un-blur;
+     the untouched original is crossfaded over it instead. It is fetched
+     lazily, so visitors who never hit the toggle never pay for it. ---- */
+  var currentCard = null;
+
+  function resetSharp() {
+    if (!vidSharp) return;
+    vidSharp.style.opacity = '0';
+    vidSharp.pause();
+  }
+
+  function syncSharp() {
+    if (!vidSharp || !vidBg || !heroEl) return;
+    var revealed = heroEl.classList.contains('hero-revealed');
+    var src      = currentCard && currentCard.video;
+
+    if (!revealed || !src) {
+      resetSharp();
+      // Bring the blurred layer back, but only for cards that actually have one
+      if (vidBg) vidBg.style.opacity = src ? '1' : '0';
+      return;
+    }
+
+    if (vidSharp.getAttribute('data-src') !== src) {
+      vidSharp.setAttribute('data-src', src);
+      vidSharp.src = src;
+      vidSharp.load();
+    }
+
+    function start() {
+      // Line the two up so the handover doesn't jump mid-loop
+      try { vidSharp.currentTime = vidBg.currentTime || 0; } catch (err) {}
+      var p = vidSharp.play();
+      if (p && p.catch) p.catch(function () {});
+      vidSharp.style.opacity = '1';
+      vidBg.style.opacity    = '0';
+    }
+
+    if (vidSharp.readyState >= 1) start();
+    else vidSharp.addEventListener('loadedmetadata', start, { once: true });
+  }
+
+  document.addEventListener('hero:reveal', syncSharp);
+
   function applyTheme(ri) {
     var c = heroCards[ri];
+    currentCard = c;
     if (logoBg) logoBg.style.opacity = '0';
+    // Clear the sharp layer on every card change — it's re-synced below if the
+    // incoming card has a video and the hero is still revealed. Covers the
+    // image and logo branches too, which have no sharp layer of their own.
+    resetSharp();
     if (c.video && vidBg) {
       imgBg.style.opacity = '0';
       vidBg.style.opacity = '0';
       clearTimeout(vidBg._swapTimer);
       vidBg._swapTimer = setTimeout(function () {
-        vidBg.src = c.video;
+        // Pre-blurred loop by default; falls back to the original if a card
+        // hasn't got a blurred encode yet.
+        vidBg.src = c.videoBlur || c.video;
         vidBg.load();
         vidBg.play();
         vidBg.style.opacity = '1';
+        syncSharp();
       }, 300);
     } else if (c.img && imgBg) {
       vidBg.style.opacity = '0';
@@ -1649,6 +1705,10 @@ function attachPixelHover(card, body, accent) {
     btn.setAttribute('aria-pressed', revealed ? 'true' : 'false');
     if (label) label.textContent = revealed ? 'Blur it again' : 'Peek at the real thing';
     if (icon)  icon.textContent  = revealed ? '✕' : '👁';
+
+    /* The carousel owns the video layers, so it listens for this rather than
+       us reaching into its closure. Images un-blur via CSS alone. */
+    document.dispatchEvent(new CustomEvent('hero:reveal', { detail: { revealed: revealed } }));
 
     if (heading && heading._twAnimateTo) {
       var fullLen = (heading.dataset.tw || '').length;
