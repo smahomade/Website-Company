@@ -39,8 +39,8 @@ export const STORY_CHAPTERS = [
     side: 'right',
     eyebrow: 'Build',
     title: 'Built properly,',
-    accent: 'layer by layer.',
-    body: 'Hand-built, fast-loading and fully responsive. We test on real phones, tablets and desktops until every layer is right.',
+    accent: 'pixel by pixel.',
+    body: 'Hand-built, fast-loading and fully responsive. We test on real phones, tablets and desktops until every piece is right.',
     points: ['Mobile-first', 'Basic SEO built in', 'Tested on real devices'],
   },
   {
@@ -51,7 +51,7 @@ export const STORY_CHAPTERS = [
     eyebrow: 'Launch',
     title: 'Live, and',
     accent: 'fully yours.',
-    body: 'Domain, hosting and SSL handled. Then we walk you through everything, so you’re never left in the dark. Most sites go live in 1–2 weeks.',
+    body: 'Domain, hosting and SSL handled. Then we walk you through everything, so you’re never left in the dark. Most sites go live in 1\u2060–\u20602\u00a0weeks.', /* word joiners + nbsp keep "1–2 weeks" on one line */
   },
   {
     id: 'work',

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { FolderIcon } from './BrandIcons.jsx';
 
@@ -6,6 +6,11 @@ import { FolderIcon } from './BrandIcons.jsx';
 function FeatCard({ id, variant, active, inactive, onPick, tabLabel, kind, tag, title, desc, points, extraLabel, extraPoints, popular }) {
   const cls =
     'feat-card feat-card--' + variant + (active ? ' feat-active' : '') + (inactive ? ' feat-inactive' : '');
+  const toggleRef = useRef(null);
+  const extraId = id + '-extra';
+  /* The whole card still toggles on click; the title and side tab are real
+     buttons so keyboard and screen-reader users can open it too. Their clicks
+     bubble up to the card's onClick. */
   return (
     <div className={cls} id={id} onClick={() => onPick(id)}>
       {popular ? (
@@ -13,22 +18,33 @@ function FeatCard({ id, variant, active, inactive, onPick, tabLabel, kind, tag, 
       ) : (
         <div className="feat-pop-strip" style={{ visibility: 'hidden' }} aria-hidden="true">placeholder</div>
       )}
-      <div className="feat-tab">
+      <button
+        type="button"
+        className="feat-tab"
+        aria-label={title}
+        aria-expanded={false}
+        aria-controls={extraId}
+        onClick={() => requestAnimationFrame(() => toggleRef.current && toggleRef.current.focus())}
+      >
         {popular && <span className="feat-pop-side">⭐ Most popular</span>}
-        <div className={'feat-tab-icon feat-icon--' + variant}><FolderIcon kind={kind} size={28} /></div>
+        <span className={'feat-tab-icon feat-icon--' + variant}><FolderIcon kind={kind} size={28} /></span>
         <span className="feat-tab-label">{tabLabel}</span>
-        <span className="feat-tab-arr">↑</span>
-      </div>
+        <span className="feat-tab-arr" aria-hidden="true">↑</span>
+      </button>
       <div className="feat-full">
         <div className={'feat-icon-wrap feat-icon--' + variant}><FolderIcon kind={kind} size={44} /></div>
         <span className={'feat-tag feat-tag--' + variant}>{tag}</span>
-        <h3 className="feat-title">{title}</h3>
+        <h3 className="feat-title">
+          <button type="button" ref={toggleRef} className="feat-toggle" aria-expanded={!!active} aria-controls={extraId}>
+            {title}
+          </button>
+        </h3>
         <p className="feat-desc">{desc}</p>
         <ul className="feat-pts">
           {points.map((p) => <li key={p}>{p}</li>)}
         </ul>
-        <div className="feat-click-prompt"><span className="feat-prompt-icon">↓</span> Click to find out more</div>
-        <div className="feat-extra">
+        <div className="feat-click-prompt" aria-hidden="true"><span className="feat-prompt-icon">↓</span> Click to find out more</div>
+        <div className="feat-extra" id={extraId} inert={!active}>
           <div className="feat-extra-inner">
             <p className="feat-extra-label">{extraLabel}</p>
             <ul className="feat-extra-pts">

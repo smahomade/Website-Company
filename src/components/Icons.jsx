@@ -58,6 +58,23 @@ export function CloseIcon({ size = 16 }) {
   );
 }
 
+export function PlayIcon({ size = 14 }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+      <path d="M8 5.5v13a1 1 0 001.5.86l11-6.5a1 1 0 000-1.72l-11-6.5A1 1 0 008 5.5z" />
+    </svg>
+  );
+}
+
+export function PauseIcon({ size = 14 }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+      <rect x="5.5" y="4.5" width="4.5" height="15" rx="1.2" />
+      <rect x="14" y="4.5" width="4.5" height="15" rx="1.2" />
+    </svg>
+  );
+}
+
 export function ExternalLinkIcon() {
   return (
     <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" aria-hidden="true">

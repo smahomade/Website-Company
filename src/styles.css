@@ -3761,7 +3761,7 @@ h1, h2, h3, h4 {
 }
 .reel-popup {
   position: relative;
-  background: #0e1a2e;
+  background: #181716;
   border: 1px solid rgba(255,255,255,0.08);
   border-radius: 16px;
   width: 90%;
@@ -3801,6 +3801,43 @@ h1, h2, h3, h4 {
   object-position: top;
   display: block;
 }
+/* A card with a video: wider, the clip keeps its 16:9 shape, and the buttons
+   over it get a dark backing so they read on a light site. */
+.reel-popup {
+  max-height: calc(100vh - 32px);
+  max-height: calc(100dvh - 32px);
+  overflow-x: hidden;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+.reel-popup--video { max-width: 620px; }
+.reel-popup--video .reel-popup-img-wrap { height: auto; aspect-ratio: 16 / 9; max-height: 56vh; } /* short screens: leave room for the text */
+.reel-popup-img-wrap video {
+  width: 100%; height: 100%;
+  object-fit: cover;
+  object-position: top;
+  display: block;
+}
+.reel-popup-play,
+.reel-popup--video .reel-popup-close {
+  background: rgba(17, 17, 17, 0.62);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  -webkit-backdrop-filter: blur(6px);
+  backdrop-filter: blur(6px);
+}
+.reel-popup-play {
+  position: absolute;
+  right: 12px; bottom: 12px;
+  width: 34px; height: 34px;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  color: #fff;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.reel-popup-play:hover,
+.reel-popup--video .reel-popup-close:hover { background: rgba(17, 17, 17, 0.85); }
+.reel-popup-play:focus-visible { outline: 2px solid #FF6A00; outline-offset: 2px; }
 .reel-popup-img-fallback {
   position: absolute;
   inset: 0;
@@ -7909,9 +7946,31 @@ input:focus, select:focus, textarea:focus { box-shadow: 0 0 0 3px rgba(255, 106,
    3D STORY LAYER — home page scroll story
    (components/story/ScrollStory.jsx + storyScene.js)
    ==================================================== */
+
+/* Reduced motion: no smooth scrolling anywhere (explicit JS scrolls are gated too) */
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+}
+
+/* Visually hidden, still read by screen readers */
+.sr-only {
+  position: absolute !important;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+
 .story {
   position: relative;
-  height: calc((var(--story-n) - 1) * 120vh + 100vh);
+  /* 5 chapters of 120vh, the pinned stage, and the finale's hold */
+  height: calc((var(--story-n) - 1) * 120vh + (1 + var(--story-hold, 0)) * 100vh);
+  height: calc((var(--story-n) - 1) * 120svh + (1 + var(--story-hold, 0)) * 100svh);
   background: var(--charcoal);
   color: var(--cream);
 }
@@ -7943,15 +8002,7 @@ input:focus, select:focus, textarea:focus { box-shadow: 0 0 0 3px rgba(255, 106,
   transition: opacity 1.4s ease;
 }
 .story.is-ready .story-canvas { opacity: 1; }
-.story-grain {
-  position: absolute;
-  inset: 0;
-  z-index: 2;
-  pointer-events: none;
-  opacity: 0.07;
-  mix-blend-mode: overlay;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
-}
+.story-stage.is-over-hit { cursor: pointer; } /* over the cat or a client site */
 .story-stage::after {
   content: '';
   position: absolute;
@@ -7960,6 +8011,18 @@ input:focus, select:focus, textarea:focus { box-shadow: 0 0 0 3px rgba(255, 106,
   pointer-events: none;
   background: radial-gradient(120% 85% at 50% 50%, transparent 55%, rgba(0, 0, 0, 0.55) 100%);
 }
+
+/* Charcoal dip used when jumping more than a chapter */
+.story-veil {
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+  background: var(--charcoal);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.32s ease;
+}
+.story-stage.is-cut .story-veil { opacity: 1; transition-duration: 0.18s; }
 
 /* Chapter copy */
 .story-chapters { position: absolute; inset: 0; z-index: 3; pointer-events: none; }
@@ -7973,9 +8036,12 @@ input:focus, select:focus, textarea:focus { box-shadow: 0 0 0 3px rgba(255, 106,
   opacity: 0;
   will-change: opacity, transform;
 }
-.story-ch--left { left: max(24px, 7vw); }
-.story-ch--right { right: max(120px, 9vw); }
+/* the height-based inset only kicks in on very wide screens, keeping copy and scene together */
+.story-ch--left { left: max(24px, 7vw, calc(50vw - 82vh)); }
+.story-ch--right { right: max(120px, 9vw, calc(50vw - 82vh)); }
 .story-ch--intro { width: min(700px, 48vw); }
+.story-ch--work { width: min(500px, 36vw); }
+.story-ch--work .story-body { text-wrap: pretty; }
 .story-ch-inner { padding-top: 48px; pointer-events: none; }
 .story-ch.is-active .story-ch-inner { pointer-events: auto; }
 
@@ -8005,7 +8071,7 @@ input:focus, select:focus, textarea:focus { box-shadow: 0 0 0 3px rgba(255, 106,
   margin: 0 0 20px;
   font-family: var(--font-display);
   font-weight: 800;
-  font-size: clamp(34px, 4.4vw, 66px);
+  font-size: clamp(34px, 4.4vw, 62px); /* 62 cap keeps "around your brand." on one line */
   line-height: 1.02;
   letter-spacing: -0.035em;
   color: var(--cream);
@@ -8016,6 +8082,7 @@ input:focus, select:focus, textarea:focus { box-shadow: 0 0 0 3px rgba(255, 106,
   font-style: normal;
   color: var(--orange);
 }
+.story-title[tabindex="-1"]:focus { outline: none; }
 .story-title--hero {
   font-size: clamp(52px, 7.2vw, 118px);
   line-height: 0.95;
@@ -8058,7 +8125,20 @@ input:focus, select:focus, textarea:focus { box-shadow: 0 0 0 3px rgba(255, 106,
   border-bottom: 2px solid var(--orange);
   transform: translateY(-70%) rotate(-45deg);
 }
+/* not ticked yet: the scene ticks each one as the site assembles */
+.story-points li { transition: color 0.6s ease, border-color 0.6s ease, background-color 0.6s ease; }
+.story-points li.is-pending { color: rgba(255, 253, 248, 0.45); border-color: rgba(255, 255, 255, 0.09); background: transparent; }
+.story-points li.is-pending::before {
+  width: 7px;
+  height: 7px;
+  border: 1.5px solid rgba(255, 253, 248, 0.35);
+  border-radius: 50%;
+  transform: translateY(-50%);
+}
 .story-actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 32px; }
+/* outline CTA on dark: invert to cream/charcoal on hover (orange-on-cream fails contrast) */
+.story .btn-outline:hover,
+.story .btn-outline:focus-visible { background: var(--cream); color: var(--charcoal); border-color: var(--cream); }
 .story-note {
   margin: 18px 0 0;
   font: 500 13px/1.4 var(--font-display);
@@ -8088,7 +8168,7 @@ input:focus, select:focus, textarea:focus { box-shadow: 0 0 0 3px rgba(255, 106,
 .story-work a:hover, .story-work a:focus-visible { padding-left: 12px; color: #FFB27A; }
 .story-work a:hover .story-work-arrow, .story-work a:focus-visible .story-work-arrow { transform: translate(3px, -3px); }
 
-/* Chapter rail, progress, cue, skip */
+/* Chapter rail (sits inside .story-chapters, so it re-enables pointer events) */
 .story-rail {
   position: absolute;
   z-index: 4;
@@ -8098,6 +8178,7 @@ input:focus, select:focus, textarea:focus { box-shadow: 0 0 0 3px rgba(255, 106,
   flex-direction: column;
   gap: 4px;
   transform: translateY(-50%);
+  pointer-events: auto;
 }
 .story-rail button {
   display: flex;
@@ -8126,6 +8207,7 @@ input:focus, select:focus, textarea:focus { box-shadow: 0 0 0 3px rgba(255, 106,
 }
 .story-rail button.is-active { color: var(--cream); }
 .story-rail button.is-active .story-rail-dot { height: 22px; background: var(--orange); }
+
 .story-progress {
   position: absolute;
   z-index: 4;
@@ -8170,10 +8252,28 @@ input:focus, select:focus, textarea:focus { box-shadow: 0 0 0 3px rgba(255, 106,
   30% { opacity: 1; }
   100% { transform: scaleY(1); opacity: 0; }
 }
+
+/* Skip: first in the tab order; fades out once it stops being useful */
 .story-skip {
   position: absolute;
   z-index: 4;
-  left: max(24px, 7vw);
+  left: max(24px, 7vw, calc(50vw - 82vh));
+  bottom: 26px;
+  padding: 6px 0;
+  border: 0;
+  background: none;
+  cursor: pointer;
+  font: 600 12px/1 var(--font-display);
+  letter-spacing: 0.08em;
+  color: rgba(255, 253, 248, 0.5);
+  transition: color 0.3s ease, opacity 0.4s ease;
+}
+.story-skip:hover, .story-skip:focus-visible { color: var(--cream); }
+/* Reduce motion / Play the animated story: the visitor's own switch */
+.story-motion {
+  position: absolute;
+  z-index: 4;
+  left: calc(max(24px, 7vw, calc(50vw - 82vh)) + 148px);
   bottom: 26px;
   padding: 6px 0;
   border: 0;
@@ -8184,7 +8284,25 @@ input:focus, select:focus, textarea:focus { box-shadow: 0 0 0 3px rgba(255, 106,
   color: rgba(255, 253, 248, 0.5);
   transition: color 0.3s ease;
 }
-.story-skip:hover, .story-skip:focus-visible { color: var(--cream); }
+.story-motion:hover, .story-motion:focus-visible { color: var(--cream); }
+.story-motion--play {
+  position: static;
+  display: block;
+  margin-top: 22px;
+  padding: 6px 0;
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+.story-skip.is-done:not(:focus-visible) { opacity: 0; pointer-events: none; }
+
+/* Touch screens that show the rail/skip (tablets, phone landscape): 44px targets */
+@media (pointer: coarse) {
+  .story-rail { gap: 0; }
+  .story-rail button { min-height: 44px; padding: 0; }
+  .story-skip { padding: 16px 0; bottom: 16px; }
+  .story-motion { padding: 16px 0; bottom: 16px; }
+  .story-motion--play { padding: 14px 0; margin-top: 10px; }
+}
 
 /* Short landscape screens */
 @media (max-height: 620px) and (min-aspect-ratio: 19/20) {
@@ -8195,11 +8313,41 @@ input:focus, select:focus, textarea:focus { box-shadow: 0 0 0 3px rgba(255, 106,
   .story-work a { padding: 10px 4px; }
 }
 
+/* Phone landscape / very short screens */
+@media (max-height: 500px) and (min-aspect-ratio: 19/20) {
+  .story-ch-inner { padding-top: 24px; }
+  .story-ch--intro { width: min(700px, max(320px, 42vw)); } /* keeps the hero copy off the folder */
+  .story-eyebrow { margin-bottom: 10px; }
+  .story-title { font-size: clamp(24px, 3.4vw, 34px); margin-bottom: 10px; }
+  .story-title--hero { font-size: clamp(34px, 5.2vw, 50px); margin-bottom: 12px; }
+  .story-body { font-size: 14px; line-height: 1.5; }
+  .story-actions { margin-top: 14px; }
+  .story-actions .btn { padding: 11px 20px; }
+  .story-points { margin-top: 12px; gap: 8px; }
+  .story-points li { padding: 6px 12px 6px 28px; }
+  .story-work { margin-top: 10px; }
+  .story-work a { padding: 8px 2px; }
+  .story-work-name { font-size: 15px; }
+  /* only the pinned story needs trimming; the static fallback scrolls normally */
+  .story--story .story-note,
+  .story--story .story-ch--work .story-body,
+  .story--story .story-ch--work .story-work-meta,
+  .story--story .story-ch--work .btn-outline,
+  .story-cue { display: none; }
+  /* rail clear of the navbar that returns on scroll-up; Skip stays keyboard-only */
+  .story-rail { top: calc(50% + 24px); }
+  .story-rail button { min-height: 40px; }
+  .story-skip { width: 1px; height: 1px; padding: 0; overflow: hidden; clip: rect(0 0 0 0); }
+  .story-skip:focus-visible { width: auto; height: auto; padding: 6px 0; clip: auto; top: 64px; bottom: auto; }
+  .story-motion:not(.story-motion--play) { left: max(24px, 7vw, calc(50vw - 82vh)); bottom: 6px; padding: 10px 0; }
+}
+
 /* Portrait (phones, tablets upright): 3D up top, copy at the bottom.
    Matches the scene's portrait switch (aspect < 0.95). */
 @media (max-aspect-ratio: 19/20) {
   .story-ch,
-  .story-ch--intro {
+  .story-ch--intro,
+  .story-ch--work {
     left: 0;
     right: 0;
     top: auto;
@@ -8218,8 +8366,8 @@ input:focus, select:focus, textarea:focus { box-shadow: 0 0 0 3px rgba(255, 106,
   .story-title { font-size: clamp(30px, 8.6vw, 46px); margin-bottom: 14px; }
   .story-title--hero { font-size: clamp(46px, 13.5vw, 72px); }
   .story-body { font-size: 15.5px; line-height: 1.6; }
-  .story-actions { margin-top: 22px; }
-  .story-actions .btn { padding: 13px 24px; }
+  .story-actions { margin-top: 22px; gap: 10px; }
+  .story-actions .btn { padding: 13px 20px; }
   .story-points { margin-top: 18px; }
   .story-ch--work .story-body { display: none; }
   .story-ch--work .story-actions .btn-outline { display: none; }
@@ -8228,19 +8376,28 @@ input:focus, select:focus, textarea:focus { box-shadow: 0 0 0 3px rgba(255, 106,
   .story-work a { padding: 11px 2px; gap: 10px; }
   .story-work-name { font-size: 16px; }
   .story-rail, .story-cue { display: none; }
+  /* a small pill on the intro only (it fades out once the story moves) */
   .story-skip {
-    width: 1px;
-    height: 1px;
-    overflow: hidden;
-    clip: rect(0 0 0 0);
-  }
-  .story-skip:focus-visible {
-    width: auto;
-    height: auto;
-    clip: auto;
-    top: 84px;
+    top: calc(88px + env(safe-area-inset-top));
     bottom: auto;
-    left: 20px;
+    left: auto;
+    right: 16px;
+    padding: 9px 14px;
+    border: 1px solid rgba(255, 253, 248, 0.18);
+    border-radius: 999px;
+    background: rgba(17, 17, 17, 0.55);
+    -webkit-backdrop-filter: blur(8px);
+    backdrop-filter: blur(8px);
+    color: rgba(255, 253, 248, 0.8);
+  }
+  /* the motion switch: small print in the corner under the copy, there all the
+     way through (the scene fills the top of a phone screen, so nothing sits on it) */
+  .story-motion:not(.story-motion--play) {
+    left: auto;
+    right: 20px;
+    bottom: env(safe-area-inset-bottom);
+    padding: 14px 0 10px 16px;
+    font-size: 11px;
   }
 }
 
@@ -8249,7 +8406,8 @@ input:focus, select:focus, textarea:focus { box-shadow: 0 0 0 3px rgba(255, 106,
 .story--static .story-stage { position: relative; height: auto; overflow: visible; padding: 140px 0 40px; }
 .story--static .story-chapters { position: relative; inset: auto; pointer-events: auto; }
 .story--static .story-ch,
-.story--static .story-ch--intro {
+.story--static .story-ch--intro,
+.story--static .story-ch--work {
   position: relative;
   inset: auto;
   display: block;
@@ -8258,20 +8416,23 @@ input:focus, select:focus, textarea:focus { box-shadow: 0 0 0 3px rgba(255, 106,
   margin: 0 auto 96px;
   padding: 0 20px;
   opacity: 1;
-  visibility: visible;
   transform: none;
+  scroll-margin-top: 96px; /* room for the navbar that reappears on scroll-up */
 }
 .story--static .story-ch::before { display: none; }
 .story--static .story-ch-inner { padding-top: 0; pointer-events: auto; }
 .story--static .story-still {
   position: relative;
-  height: min(62vh, 560px);
   max-width: 1100px;
+  aspect-ratio: 1100 / 559;
   margin: 0 auto 96px;
   -webkit-mask-image: radial-gradient(closest-side, #000 72%, transparent);
   mask-image: radial-gradient(closest-side, #000 72%, transparent);
 }
-.story--static .story-still .story-canvas { transition: none; }
+.story--static .story-still img { width: 100%; height: 100%; object-fit: cover; }
+@media (max-width: 700px) {
+  .story--static .story-still { aspect-ratio: 4 / 3; margin-bottom: 64px; }
+}
 
 /* Hand-off to the cream sections: a folder tab rising into the story */
 .home-after { position: relative; z-index: 1; }
@@ -8284,4 +8445,22 @@ input:focus, select:focus, textarea:focus { box-shadow: 0 0 0 3px rgba(255, 106,
   height: 27px;
   border-radius: 16px 16px 0 0;
   background: var(--cream);
+}
+
+/* Pricing cards: title and side tab are real buttons (keyboard + screen readers) */
+.feat-toggle {
+  font: inherit;
+  color: inherit;
+  background: none;
+  border: 0;
+  padding: 0;
+  margin: 0;
+  text-align: inherit;
+  cursor: pointer;
+  border-radius: 6px;
+}
+.feat-tab { font: inherit; color: inherit; background: none; border: 0; width: 100%; cursor: pointer; }
+.feat-toggle:focus-visible, .feat-tab:focus-visible { outline: 2px solid var(--orange); outline-offset: 3px; }
+@media (min-width: 769px) {
+  .feat-card.feat-inactive .feat-full { visibility: hidden; transition: opacity 0.2s ease, visibility 0s linear 0.2s; }
 }

@@ -67,6 +67,7 @@ export default function Navbar() {
 
   return (
     <nav
+      aria-label="Main"
       className={'navbar' + (scrolled || solid ? ' scrolled' : '') + (hidden ? ' nav-hidden' : '')}
       id="navbar"
       style={open ? { zIndex: 1001 } : undefined}

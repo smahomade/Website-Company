@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { R2 } from '../lib/site.js';
 
 const DEFAULT_SHOTS = [
-  { src: R2 + '/screenshots/TopOne/top-one-banner.JPG', url: 'topone.co.uk', href: 'https://top-one-salon-website.vercel.app', pos: 'center top', name: 'Top One Salon' },
+  { src: R2 + '/screenshots/TopOne/top-one-banner.JPG', url: 'topone.co.uk', href: 'https://topone-salon-website.scmahomade.workers.dev', pos: 'center top', name: 'Top One Salon' },
   { src: R2 + '/screenshots/ChangeWorkTherapies/changeworktherapies-banner.JPG', url: 'changeworktherapies.com', href: 'https://changeworktherapies.com', pos: 'center top', name: 'Change Work Therapies' },
   { src: R2 + '/screenshots/Raza/raza-academy-banner.JPG', url: 'razaacademy.co.uk', href: 'https://razaacademy.co.uk', pos: 'center 12%', name: 'Raza Academy' },
 ];

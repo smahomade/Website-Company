@@ -4,7 +4,7 @@ import Seo from '../components/Seo.jsx';
 import PageHero from '../components/PageHero.jsx';
 import { CheckIcon } from '../components/Icons.jsx';
 import { useFadeIn } from '../hooks/useRevealOnScroll.js';
-import { CONTACT, EMAILJS } from '../lib/site.js';
+import { CONTACT, EMAILJS, PREFERS_REDUCED_MOTION } from '../lib/site.js';
 import Mascot from '../components/Mascot.jsx';
 import NextSteps from '../components/NextSteps.jsx';
 
@@ -360,7 +360,7 @@ export default function Register() {
       return undefined;
     }
     const id = setTimeout(() => {
-      document.getElementById(intent === 'new' ? 'formNew' : 'formExisting')?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      document.getElementById(intent === 'new' ? 'formNew' : 'formExisting')?.scrollIntoView({ behavior: PREFERS_REDUCED_MOTION ? 'instant' : 'smooth', block: 'nearest' });
     }, 60);
     return () => clearTimeout(id);
   }, [intent]);

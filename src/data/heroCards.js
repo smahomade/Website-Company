@@ -1,13 +1,18 @@
 import { R2 } from '../lib/site.js';
 
 /* Cards in the home-page hero reel. Cards without `img` render the
-   "Coming soon" placeholder and the logo backdrop. */
+   "Coming soon" placeholder and the logo backdrop. `video` is a scroll down
+   the home page (the old hero's backdrop); `tour` is a click-through of the
+   site's menu, page by page, which the project popup plays, and `tourPoster`
+   is that clip's own first frame (so the still and the video match). */
 export const HERO_CARDS = [
   {
     url: 'razaacademy.co.uk',
     img: R2 + '/screenshots/Raza/raza-academy-banner.JPG',
     video: R2 + '/videos/raza-academy-video.mp4',
     videoBlur: R2 + '/videos/raza-academy-video-blur.mp4',
+    tour: '/videos/raza-academy-tour.mp4',
+    tourPoster: '/videos/raza-academy-tour.webp',
     imgPos: 'center 12%',
     icon: '🏫',
     tag: 'Redesign',
@@ -26,6 +31,8 @@ export const HERO_CARDS = [
     img: R2 + '/screenshots/TopOne/top-one-banner.JPG',
     video: R2 + '/videos/top-one-video.mp4',
     videoBlur: R2 + '/videos/top-one-video-blur.mp4',
+    tour: '/videos/top-one-salon-tour.mp4',
+    tourPoster: '/videos/top-one-salon-tour.webp',
     imgPos: 'center top',
     icon: '✂️',
     tag: 'Custom',
@@ -44,6 +51,8 @@ export const HERO_CARDS = [
     img: R2 + '/screenshots/ChangeWorkTherapies/changeworktherapies-banner.JPG',
     video: R2 + '/videos/changeworktherapies-video.mp4',
     videoBlur: R2 + '/videos/changeworktherapies-video-blur.mp4',
+    tour: '/videos/change-work-therapies-tour.mp4',
+    tourPoster: '/videos/change-work-therapies-tour.webp',
     imgPos: 'center top',
     icon: '🌿',
     tag: 'Custom',

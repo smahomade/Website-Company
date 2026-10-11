@@ -41,7 +41,7 @@ export const PORTFOLIO = [
     desc: 'A fully bespoke website built from scratch — 24 core pages covering hair services, beauty treatments, collections, team profiles, pricing, offers, careers and more, plus an additional 10–15 SEO-optimised supporting pages. Fully built and delivered; the client chose to hold off going live to protect their existing search rankings.',
     preview: R2 + '/screenshots/TopOne/top-one-banner.JPG',
     status: 'delivered',
-    liveUrl: 'https://top-one-salon-website.vercel.app',
+    liveUrl: 'https://topone-salon-website.scmahomade.workers.dev',
     slides: [
       { before: TOP_OLD + 'topone.co.uk_.jpg', after: TOP_NEW + 'top-one-salon-website.vercel.app_home.jpg', label: 'Home' },
       { before: TOP_OLD + 'topone.co.uk_about-us_.jpg', after: TOP_NEW + 'top-one-salon-website.vercel.app_aboutus.jpg', label: 'About' },

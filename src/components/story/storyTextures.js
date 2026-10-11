@@ -5,13 +5,13 @@
 
 export const SHEET_W = 1024;
 export const SHEET_H = 693;
-export const DEMO_URL = 'yourbusiness.co.uk';
+const DEMO_URL = 'yourbusiness.co.uk';
 
 const CHROME_H = 62;
 const CARD_X = [64, 378, 692];
 const CARD_TITLES = ['Friendly service', 'Local & trusted', 'Book online'];
 
-export function rr(c, x, y, w, h, r) {
+function rr(c, x, y, w, h, r) {
   c.beginPath();
   c.moveTo(x + r, y);
   c.arcTo(x + w, y, x + w, y + h, r);
@@ -30,7 +30,7 @@ function glow(c, x, y, r, rgb, a) {
 }
 
 /* Small seeded PRNG so redraws (e.g. after web fonts load) are identical. */
-function rng(seed) {
+export function rng(seed) {
   let a = seed >>> 0;
   return () => {
     a = (a + 0x6d2b79f5) | 0;
@@ -136,6 +136,10 @@ export function drawDemoBase(c) {
   g.addColorStop(1, '#6A3A1E');
   c.fillStyle = g;
   c.fillRect(0, hy, SHEET_W, hh);
+  c.save();
+  c.beginPath();
+  c.rect(0, hy, SHEET_W, hh);
+  c.clip(); /* keep the glow and bokeh out of the browser bar and nav */
   glow(c, 820, 220, 320, '255,150,80', 0.55);
   glow(c, 640, 390, 220, '255,110,40', 0.25);
   const r = rng(7);
@@ -147,6 +151,7 @@ export function drawDemoBase(c) {
   g.addColorStop(1, 'rgba(17,12,10,0)');
   c.fillStyle = g;
   c.fillRect(0, hy, 640, hh);
+  c.restore();
   c.fillStyle = '#F7F4EF';
   c.fillRect(0, hy + hh, SHEET_W, 652 - (hy + hh));
   c.fillStyle = '#151515';
@@ -415,15 +420,25 @@ export function drawDemoSketch(c) {
   c.fillStyle = '#E35500';
   c.strokeStyle = '#E35500';
   c.lineWidth = 2.4;
-  c.font = '700 32px Caveat, "Segoe Print", cursive';
+  c.font = '700 36px Caveat, "Segoe Print", cursive';
   c.textAlign = 'left';
-  c.fillText('big, friendly headline!', 470, 214);
+  /* paper-coloured halo knocks the pencil lines out from under the notes */
+  const note = (txt, x, y) => {
+    c.save();
+    c.strokeStyle = '#FBF8F1';
+    c.lineWidth = 9;
+    c.lineJoin = 'round';
+    c.strokeText(txt, x, y);
+    c.restore();
+    c.fillText(txt, x, y);
+  };
+  note('big, friendly headline!', 470, 214);
   P.arrow(462, 206, 418, 222);
-  c.fillText('warm photo here', 690, 186);
-  c.fillText('orange CTA', 300, 456);
+  note('warm photo here', 690, 186);
+  note('orange CTA', 300, 456);
   P.arrow(296, 446, 220, 424);
-  c.fillText('reviews = trust', 712, 306);
-  c.fillText('3 reasons to pick them', 340, 664);
+  note('reviews = trust', 712, 306);
+  note('3 reasons to pick them', 340, 664);
   c.restore();
 }
 
@@ -627,52 +642,150 @@ export function drawClientStandIn(c, client) {
 }
 
 /* ─────────── Small decals ─────────── */
-export function drawWordmark(c) {
-  const W = c.canvas.width;
-  const H = c.canvas.height;
-  c.clearRect(0, 0, W, H);
-  c.font = '700 150px Fredoka, Outfit, sans-serif';
-  c.textBaseline = 'middle';
-  c.textAlign = 'left';
-  const a = c.measureText('PIXEL').width;
-  const b = c.measureText('FOLD').width;
-  const sq = 30;
-  const total = a + b + 26 + sq * 2 + 6;
-  const x = (W - total) / 2;
-  const y = H / 2 + 8;
-  c.fillStyle = '#FFFDF8';
-  c.fillText('PIXEL', x, y);
-  c.fillStyle = '#111111';
-  c.fillText('FOLD', x + a, y);
-  const sx = x + a + b + 26;
-  c.fillStyle = '#FFFDF8';
-  rr(c, sx, y - 52, sq, sq, 6);
+/* ─────────── Build chapter ─────────── */
+/* The plan the site is built from: the demo's layout as dashed outlines. */
+export function drawDemoPlan(c) {
+  begin(c);
+  c.fillStyle = '#231A15';
+  c.fillRect(0, 0, SHEET_W, SHEET_H);
+  c.strokeStyle = 'rgba(255,138,61,0.6)';
+  c.lineWidth = 3;
+  c.setLineDash([10, 8]);
+  [[0, CHROME_H, SHEET_W, 60, 0], [0, 122, SHEET_W, 318, 0], [64, 372, 168, 46, 23], [247, 373, 166, 44, 22], [676, 318, 284, 92, 18], [0, 652, SHEET_W, 41, 0]]
+    .concat(CARD_X.map((x) => [x, 462, 268, 168, 18]))
+    .forEach(([x, y, w, h, r]) => {
+      rr(c, x, y, w, h, r);
+      c.stroke();
+    });
+  c.setLineDash([]);
+  c.fillStyle = 'rgba(255,138,61,0.35)';
+  rr(c, 64, 196, 420, 40, 8);
   c.fill();
-  c.fillStyle = '#111111';
-  rr(c, sx + sq + 6, y - 52 + sq + 6, sq, sq, 6);
+  rr(c, 64, 256, 500, 40, 8);
   c.fill();
+  c.restore();
 }
 
-const LAYER_NAMES = ['Structure', 'Layout', 'Content', 'Interaction'];
-
-export function drawLayerLabel(c, i) {
+/* Editor window that types the page out while it builds. p: 0 → 1. */
+const CODE_LINES = [
+  ['<header ', 'class', '="nav">', 0.02],
+  ['  <a ', 'class', '="logo">yourbusiness</a>', 0.07],
+  ['<h1>', '', 'Your business, online.</h1>', 0.16],
+  ['<a ', 'class', '="btn">Get in touch</a>', 0.3],
+  ['<section ', 'class', '="cards">', 0.45],
+  ['  <article>', '', 'Friendly service</article>', 0.52],
+  ['  <article>', '', 'Book online</article>', 0.6],
+  ['<footer>', '', '© yourbusiness</footer>', 0.7],
+];
+const MONO = 'ui-monospace, Menlo, Consolas, monospace';
+export function drawCodeWindow(c, p) {
   const W = c.canvas.width;
   const H = c.canvas.height;
   c.clearRect(0, 0, W, H);
-  c.fillStyle = 'rgba(17,17,17,0.82)';
-  rr(c, 2, 2, W - 4, H - 4, (H - 4) / 2);
+  c.fillStyle = '#171412';
+  rr(c, 0, 0, W, H, 22);
   c.fill();
-  c.strokeStyle = 'rgba(255,122,26,0.7)';
-  c.lineWidth = 3;
+  c.strokeStyle = 'rgba(255,253,248,0.14)';
+  c.lineWidth = 2;
+  rr(c, 1, 1, W - 2, H - 2, 22);
   c.stroke();
-  c.textBaseline = 'middle';
+  ['#FF5F57', '#FEBC2E', '#28C840'].forEach((col, i) => {
+    c.fillStyle = col;
+    c.beginPath();
+    c.arc(30 + i * 22, 28, 7, 0, Math.PI * 2);
+    c.fill();
+  });
   c.textAlign = 'left';
-  c.font = '700 40px Outfit, sans-serif';
-  c.fillStyle = '#FF7A1A';
-  c.fillText('0' + (i + 1), 34, H / 2 + 2);
-  c.fillStyle = '#FFFDF8';
-  c.font = '600 40px Outfit, sans-serif';
-  c.fillText(LAYER_NAMES[i], 104, H / 2 + 2);
+  c.textBaseline = 'middle';
+  c.fillStyle = 'rgba(255,253,248,0.45)';
+  c.font = '500 17px ' + MONO;
+  c.fillText('index.html', 110, 29);
+  c.font = '500 23px ' + MONO;
+  CODE_LINES.forEach(([tag, attr, rest, at], i) => {
+    const k = Math.min(1, Math.max(0, (p - at) / 0.1));
+    if (k <= 0) return;
+    const shown = Math.ceil((tag + attr + rest).length * k);
+    const y = 84 + i * 37;
+    c.fillStyle = 'rgba(255,253,248,0.22)';
+    c.fillText(String(i + 1).padStart(2, ' '), 22, y);
+    let x = 66;
+    let used = 0;
+    [[tag, '#E8905A'], [attr, '#E2BC62'], [rest, '#D9D3CA']].forEach(([text, col]) => {
+      const part = text.slice(0, Math.max(0, shown - used));
+      c.fillStyle = col;
+      c.fillText(part, x, y);
+      x += c.measureText(part).width;
+      used += text.length;
+    });
+  });
+  if (p >= 0.92) {
+    c.fillStyle = '#58B985';
+    c.fillText('✓ built in 1.9s', 66, 84 + CODE_LINES.length * 37);
+  }
+  c.textBaseline = 'alphabetic';
+}
+
+/* ─────────── Launch chapter: what the live site brings in ─────────── */
+function resultCard(c) {
+  const W = c.canvas.width;
+  const H = c.canvas.height;
+  c.clearRect(0, 0, W, H);
+  c.save();
+  c.shadowColor = 'rgba(0,0,0,0.4)';
+  c.shadowBlur = 26;
+  c.shadowOffsetY = 12;
+  c.fillStyle = '#F4EFE7';
+  rr(c, 28, 20, W - 56, H - 60, 26);
+  c.fill();
+  c.restore();
+  c.textAlign = 'left';
+  c.textBaseline = 'alphabetic';
+}
+export function drawEnquiryCard(c) {
+  resultCard(c);
+  c.fillStyle = '#1B1714';
+  c.font = '700 36px Outfit, sans-serif';
+  c.fillText('New enquiry', 58, 74);
+  c.font = '400 30px Outfit, sans-serif';
+  c.fillText('Sarah wants to book for Friday', 58, 116);
+  c.fillStyle = '#7A726A';
+  c.font = '400 25px Outfit, sans-serif';
+  c.fillText('just now', 58, 152);
+}
+export function drawReviewCard(c) {
+  resultCard(c);
+  c.fillStyle = '#FF6A00';
+  for (let i = 0; i < 5; i++) star(c, 74 + i * 38, 60, 16);
+  c.fillStyle = '#1B1714';
+  c.font = '400 30px Outfit, sans-serif';
+  c.fillText('“Exactly what we wanted.”', 58, 116);
+  c.fillStyle = '#7A726A';
+  c.font = '400 25px Outfit, sans-serif';
+  c.fillText('New Google review', 58, 152);
+}
+export function drawVisitorsCard(c, n) {
+  resultCard(c);
+  c.fillStyle = '#7A726A';
+  c.font = '400 25px Outfit, sans-serif';
+  c.fillText('Visitors today', 58, 66);
+  c.fillStyle = '#1B1714';
+  c.font = '700 60px Outfit, sans-serif';
+  c.fillText(String(n), 56, 132);
+}
+/* A visitor's pointer. */
+export function drawPointer(c, fill) {
+  const W = c.canvas.width;
+  c.clearRect(0, 0, W, W);
+  c.save();
+  c.scale(W / 24, W / 24);
+  const p = new Path2D('M4.2 3.4l15 7.3-6.3 1.6 3.6 6.6-2.6 1.4-3.6-6.7-4.4 4.6z');
+  c.lineJoin = 'round';
+  c.lineWidth = 1.6;
+  c.strokeStyle = '#111111';
+  c.stroke(p);
+  c.fillStyle = fill;
+  c.fill(p);
+  c.restore();
 }
 
 export function drawLiveBadge(c) {
@@ -702,10 +815,9 @@ export function drawLiveBadge(c) {
 
 export function drawRadial(c) {
   const W = c.canvas.width;
+  c.clearRect(0, 0, W, W);
   const g = c.createRadialGradient(W / 2, W / 2, 0, W / 2, W / 2, W / 2);
-  g.addColorStop(0, 'rgba(255,255,255,1)');
-  g.addColorStop(0.35, 'rgba(255,255,255,0.45)');
-  g.addColorStop(1, 'rgba(255,255,255,0)');
+  [[0, 1], [0.175, 0.92], [0.35, 0.7], [0.5, 0.57], [0.675, 0.4], [0.85, 0.2], [1, 0]].forEach(([o, a]) => g.addColorStop(o, 'rgba(255,255,255,' + a + ')'));
   c.fillStyle = g;
   c.fillRect(0, 0, W, W);
 }
@@ -713,10 +825,139 @@ export function drawRadial(c) {
 export function drawScanGlow(c) {
   const W = c.canvas.width;
   const H = c.canvas.height;
-  const g = c.createLinearGradient(0, 0, 0, H);
+  c.clearRect(0, 0, W, H);
+  let g = c.createLinearGradient(0, 0, 0, H);
+  [[0, 0], [0.125, 0.44], [0.25, 0.75], [0.375, 0.94], [0.5, 1], [0.625, 0.94], [0.75, 0.75], [0.875, 0.44], [1, 0]].forEach(([o, a]) => g.addColorStop(o, 'rgba(255,255,255,' + a + ')'));
+  c.fillStyle = g;
+  c.fillRect(0, 0, W, H);
+  c.globalCompositeOperation = 'destination-in'; /* fade out at both ends too */
+  g = c.createLinearGradient(0, 0, W, 0);
   g.addColorStop(0, 'rgba(255,255,255,0)');
-  g.addColorStop(0.5, 'rgba(255,255,255,1)');
+  g.addColorStop(0.06, 'rgba(255,255,255,1)');
+  g.addColorStop(0.94, 'rgba(255,255,255,1)');
   g.addColorStop(1, 'rgba(255,255,255,0)');
   c.fillStyle = g;
   c.fillRect(0, 0, W, H);
+  c.globalCompositeOperation = 'source-over';
+}
+
+/* ─────────── The folder: orange card stock ─────────── */
+function cardWordmark(c, cx, cy, size, pixel, fold = pixel) {
+  c.font = '700 ' + size + 'px Fredoka, Outfit, sans-serif';
+  c.textBaseline = 'middle';
+  c.textAlign = 'left';
+  const a = c.measureText('PIXEL').width;
+  const b = c.measureText('FOLD').width;
+  const s = size * 0.2;
+  const x = cx - (a + b + s * 2.9) / 2;
+  c.fillStyle = pixel;
+  c.fillText('PIXEL', x, cy);
+  c.fillStyle = fold;
+  c.fillText('FOLD', x + a, cy);
+  const sx = x + a + b + s * 0.7;
+  c.fillStyle = pixel;
+  rr(c, sx, cy - s * 1.7, s, s, s * 0.2);
+  c.fill();
+  c.fillStyle = fold;
+  rr(c, sx + s * 1.2, cy - s * 0.5, s, s, s * 0.2);
+  c.fill();
+}
+
+/* Paper grain for bump maps: soft noise plus faint fibres (tiles). */
+export function drawGrain(c) {
+  const W = c.canvas.width;
+  const H = c.canvas.height;
+  const r = rng(3);
+  const img = c.createImageData(W, H);
+  for (let i = 0; i < W * H; i++) {
+    const v = 128 + (r() - 0.5) * 34;
+    img.data[i * 4] = img.data[i * 4 + 1] = img.data[i * 4 + 2] = v;
+    img.data[i * 4 + 3] = 255;
+  }
+  c.putImageData(img, 0, 0);
+  c.globalAlpha = 0.18;
+  c.strokeStyle = '#000';
+  c.lineWidth = 0.6;
+  for (let i = 0; i < 260; i++) {
+    const x = r() * W;
+    const y = r() * H;
+    const l = 6 + r() * 18;
+    const an = r() * Math.PI;
+    c.beginPath();
+    c.moveTo(x, y);
+    c.lineTo(x + Math.cos(an) * l, y + Math.sin(an) * l);
+    c.stroke();
+  }
+  c.globalAlpha = 1;
+}
+
+/* Front flap: warm orange card, wordmark letterpressed (pressed in and inked). */
+export function drawCardFace(c) {
+  const W = c.canvas.width;
+  const H = c.canvas.height;
+  const g = c.createLinearGradient(0, 0, 0, H);
+  g.addColorStop(0, '#F7782A');
+  g.addColorStop(1, '#E8600F');
+  c.fillStyle = g;
+  c.fillRect(0, 0, W, H);
+  /* a faint shadow on the upper rim of each letter sells the press */
+  c.save();
+  c.translate(0, -3);
+  c.globalAlpha = 0.35;
+  cardWordmark(c, W / 2, H * 0.72, 128, '#B8460A');
+  c.restore();
+  cardWordmark(c, W / 2, H * 0.72, 128, '#FFF4E6', '#1E1A17');
+}
+
+/* Bump for the front: grain, with the wordmark pressed into it. */
+export function drawCardBump(c) {
+  const W = c.canvas.width;
+  const H = c.canvas.height;
+  const tile = document.createElement('canvas');
+  tile.width = tile.height = 512;
+  drawGrain(tile.getContext('2d'));
+  c.drawImage(tile, 0, 0, W, H);
+  c.filter = 'blur(2.5px)';
+  cardWordmark(c, W / 2, H * 0.72, 128, '#5a5a5a');
+  c.filter = 'none';
+}
+
+/* Back panel: a touch darker, light falling off towards the fold. */
+export function drawCardBack(c) {
+  const g = c.createLinearGradient(0, 0, 0, c.canvas.height);
+  g.addColorStop(0, '#EC6A1E');
+  g.addColorStop(1, '#D65810');
+  c.fillStyle = g;
+  c.fillRect(0, 0, c.canvas.width, c.canvas.height);
+}
+
+/* The cat's face, wrapped round its head: the white blaze from the forehead
+   down over the muzzle. The front of a three.js sphere is u = 0.25. */
+export function drawCatFace(c) {
+  const W = c.canvas.width;
+  const H = c.canvas.height;
+  c.fillStyle = '#1F1F23';
+  c.fillRect(0, 0, W, H);
+  c.save();
+  c.scale(W / 1024, H / 512);
+  c.fillStyle = '#FFFDF8';
+  const x = 256;
+  c.beginPath();
+  c.moveTo(x, 130);
+  c.bezierCurveTo(x - 16, 195, x - 54, 245, x - 68, 300);
+  c.bezierCurveTo(x - 88, 385, x - 62, 475, x, 485);
+  c.bezierCurveTo(x + 62, 475, x + 88, 385, x + 68, 300);
+  c.bezierCurveTo(x + 54, 245, x + 16, 195, x, 130);
+  c.fill();
+  c.restore();
+}
+
+/* Soft contact shadow under the folder. */
+export function drawShadowBlob(c) {
+  const W = c.canvas.width;
+  c.clearRect(0, 0, W, W);
+  const g = c.createRadialGradient(W / 2, W / 2, 0, W / 2, W / 2, W / 2);
+  [[0, 0.84], [0.25, 0.7], [0.5, 0.51], [0.75, 0.28], [1, 0]].forEach(([o, a]) => g.addColorStop(o, 'rgba(0,0,0,' + a + ')'));
+  c.fillStyle = g;
+  c.fillRect(0, 0, W, W);
 }
