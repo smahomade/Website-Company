@@ -175,6 +175,14 @@ const BUILD_S = 3.2; /* …and takes this many seconds */
 const PRESS = [3.12, 3.3]; /* the cat is on the launch button */
 const RESULTS = [3.84, 4.3]; /* visitors, an enquiry and a review arrive… */
 const RESULTS_S = 2.8; /* …over this many seconds */
+/* The cat's three little acts, each while the story rests on that chapter. */
+const PRESENT = [0.9, 1.08]; /* up on its hind legs, pointing out the brief's notes */
+const NOTE_S = 3; /* seconds the pointer spends on each note */
+const DRAW = [1.94, 2.14]; /* pencil out, drawing on the design */
+const DRAW_S = 11.5; /* one round: a star, a check of its work, an underline */
+const NAP = [3.9, 4.03]; /* once the results are in: a yawn, then asleep */
+const DOODLE_W = 0.44; /* the pencil doodle's size on the page (page units) */
+const DOODLE_H = (DOODLE_W * TX.DOODLE.h) / TX.DOODLE.w;
 /* When it stops to watch the page instead of the visitor. */
 const catWatch = (t) =>
   clamp(
@@ -192,12 +200,15 @@ const pageHolds = (S) => ({ x: [S * 0.92, -S, S * 0.9], s: [1.12, 1.15, 1.12] })
    nothing, the editor window, the result cards. */
 const PAGE_OVER = [[0, 0], [0.45, 0], [0.43, 0.3]];
 
-/* Where the cat stops in each chapter (intro … launch): x, and the floor it stands on. */
+/* Where the cat stops in each chapter (intro … launch): x, and the floor it stands on.
+   In design it stands up beside the page's bottom corner (the page holds at
+   y = 1.5), where its pencil can reach. */
 function catStops(S, portrait, page = pageHolds(S)) {
   const floor = portrait ? -1.1 : -0.72;
+  const drawFloor = 1.5 - (SH / 2) * page.s[0] - 0.92 * (portrait ? 0.58 : 0.62);
   return {
-    x: portrait ? [1.9, -1.9, 1.5, -1.5, 0.6] : [S + 1.95, -S - 1.95, page.x[0] + 1.3, page.x[1] + 1.3, page.x[2] + 0.1],
-    y: [0.2, -0.5, floor, floor, floor],
+    x: portrait ? [1.9, -1.9, 1.5, -1.5, 0.6] : [S + 1.95, -S - 1.95, page.x[0] + 1.625 * page.s[0] + 0.03, page.x[1] + 1.3, page.x[2] + 0.1],
+    y: [0.2, -0.5, drawFloor, floor, floor],
   };
 }
 
@@ -575,6 +586,26 @@ export async function createStoryScene(container, { clients = [], still = false,
     sketch.castShadow = true;
     page.add(sketch);
     pageMats.push(sketchMat);
+    /* brief: a highlighter stroke over each handwritten note as the cat points it out */
+    const noteMarks = TX.SKETCH_NOTES.map(([x, y, w, h]) => {
+      const m = new THREE.Mesh(
+        keep(new THREE.PlaneGeometry((w / TX.SHEET_W) * SW, (h / TX.SHEET_H) * SH)),
+        keep(new THREE.MeshBasicMaterial({ color: 0xff6a00, transparent: true, opacity: 0, depthWrite: false, toneMapped: false }))
+      );
+      m.position.set(((x + w / 2) / TX.SHEET_W - 0.5) * SW, (0.5 - (y + h / 2) / TX.SHEET_H) * SH, 0.008);
+      m.renderOrder = 7;
+      m.visible = false;
+      page.add(m);
+      return m;
+    });
+    /* design: what its pencil leaves on the page */
+    const ink = { star: 0, line: 0 };
+    const doodleTex = canvasTex(TX.DOODLE.w, TX.DOODLE.h, (c) => TX.drawDoodle(c, ink.star, ink.line));
+    const doodleMat = keep(new THREE.MeshBasicMaterial({ map: doodleTex.tex, transparent: true, opacity: 0, depthWrite: false, toneMapped: false }));
+    const doodle = new THREE.Mesh(keep(new THREE.PlaneGeometry(DOODLE_W, DOODLE_H)), doodleMat);
+    doodle.renderOrder = 9;
+    doodle.visible = false;
+    page.add(doodle);
 
     /* Scan line for the wipe: kept inside the sheet's width, glow fades at both ends.
        Plain blending and low opacity: a soft line, never a bright flash. */
@@ -801,6 +832,9 @@ export async function createStoryScene(container, { clients = [], still = false,
       phase: 0, walk: 0, lean: 0, tail: 0, yaw: 0, /* the walk */
       lookYaw: 0, lookPitch: 0, eyeX: 0, eyeY: 0, /* the gaze */
       typing: 0, btnK: 0, inK: 0, upK: 0, /* at the laptop, on the button, into the folder, up over its edge (each 0..1) */
+      tool: 0, hand: 1, stand: 0, arm: 0, toolK: 0, /* its act: 1 pointer / 2 pencil, which front leg holds it, then how far it is up, reaching, holding (0..1) */
+      actT: 0, spot: 0, /* seconds into the act; frames since the doodle's place on the page was found */
+      sleep: 0, restT: 0, yawnAt: -10, /* the nap: how far down it is, seconds rested at launch, when it yawned */
       px: 0, pz: 0, tWas: 0, snap: true, away: true, inFolder: false,
       hopU: null, /* dev hook: pin the hop at this point of its arc */
     };
@@ -1026,6 +1060,32 @@ export async function createStoryScene(container, { clients = [], still = false,
     const catPos = new THREE.Vector3();
     const catQuat = new THREE.Quaternion();
     const catScale = new THREE.Vector3();
+    const vSh = new THREE.Vector3(); /* its working shoulder (world) */
+    const vTip = new THREE.Vector3();
+    const vArm = new THREE.Vector3(); /* where the working arm points, in the cat's own frame */
+    const vTool = new THREE.Vector3(); /* …and the tool in its paw */
+    /* a world direction → the cat's own frame (it is turned by yaw) */
+    const toCat = (v, yaw) => {
+      const c = Math.cos(yaw);
+      const s = Math.sin(yaw);
+      const x = v.x * c - v.z * s;
+      v.z = v.x * s + v.z * c;
+      v.x = x;
+      return v;
+    };
+    /* Puts the pencil's tip over a world point as the camera sees it: sets the
+       arm's direction (vArm) and the pencil's (vTool). The pencil is cocked at
+       the wrist by `bend`, so the arm aims a little the other way. */
+    function tipOver(target, bend, reach, yaw) {
+      v3a.copy(camera.position).sub(target).normalize(); /* the line of sight */
+      v3b.copy(vSh).sub(target);
+      const along = v3b.dot(v3a);
+      const back = Math.sqrt(Math.max(0, reach * reach - (v3b.lengthSq() - along * along)));
+      v3b.copy(target).addScaledVector(v3a, Math.max(0, along - back)).sub(vSh).normalize(); /* shoulder → where the tip sits */
+      const turned = (out, a) => out.set(v3b.x * Math.cos(a) - v3b.y * Math.sin(a), v3b.x * Math.sin(a) + v3b.y * Math.cos(a), v3b.z);
+      toCat(turned(vTool, bend), yaw);
+      toCat(turned(vArm, -bend * 1.6), yaw);
+    }
 
     function folderRelative(local, localScale, outPos, outQuat, src = folder) {
       outPos.copy(local).applyMatrix4(src.matrix);
@@ -1246,10 +1306,84 @@ export async function createStoryScene(container, { clients = [], still = false,
       cat.shadow.visible = shade > 0.01;
       const lift = Math.min(1, air + hopV.air * 0.6 + btnArc * 0.5);
       cat.shadow.position.set(catPos.x, catAt.y + 0.006, catPos.z);
-      cat.shadow.scale.set(cw * (1 - 0.3 * lift), cw * 0.62 * (1 - 0.3 * lift), 1);
+      const sl = kin > 0 ? 0 : eio(cst.sleep); /* curled up asleep */
+      cat.shadow.scale.set(cw * (1 - 0.3 * lift) * (1 + 0.25 * sl), cw * 0.62 * (1 - 0.3 * lift) * (1 + 0.25 * sl), 1);
       cat.shadow.material.opacity = 0.38 * shade * (1 - 0.5 * lift);
       const jumping = kin > 0 && kin < 1;
       const typing = kin > 0 ? 0 : soft(cst.typing);
+
+      /* its working arm: the pointer on the brief's notes, or the pencil on the design */
+      const armK = kin > 0 ? 0 : soft(cst.arm);
+      const toolK = kin > 0 ? 0 : soft(cst.toolK);
+      let check = 0; /* design: stepping back to check its work */
+      let cocked = false; /* the tool has its own direction, not the arm's */
+      noteMarks.forEach((m) => {
+        m.visible = false;
+      });
+      doodle.visible = false;
+      if (toolK > 0 && cst.tool === 1) {
+        /* one note after another: the pointer swings across, the note lights up */
+        const n = noteMarks.length;
+        const first = cst.actT < NOTE_S;
+        const i = Math.floor(cst.actT / NOTE_S) % n;
+        const prev = (i + n - 1) % n;
+        const u = (cst.actT % NOTE_S) / NOTE_S;
+        page.updateMatrixWorld();
+        noteMarks[prev].getWorldPosition(v3a);
+        noteMarks[i].getWorldPosition(v3b);
+        v3a.lerp(v3b, first ? 1 : eio(seg(u, 0, 0.3)));
+        cat.shoulder(cst.hand, vSh);
+        toCat(vArm.copy(v3a).sub(vSh).normalize(), yaw);
+        noteMarks.forEach((m, j) => {
+          const a = (j === i ? soft(seg(u, 0.22, 0.46)) : j === prev && !first ? 1 - soft(seg(u, 0, 0.24)) : 0) * armK * alpha;
+          m.visible = a > 0.01;
+          m.material.opacity = 0.3 * a;
+        });
+      } else if (toolK > 0 && cst.tool === 2) {
+        /* a star, a look at it with the pencil held up, an underline, and again */
+        const dt2 = cst.actT % DRAW_S;
+        const star = eio(seg(dt2, 0.5, 4.4)) * 0.25 + seg(dt2, 0.5, 4.4) * 0.75;
+        const line = seg(dt2, 8.4, 9.9);
+        if (Math.abs(star - ink.star) > 0.004 || Math.abs(line - ink.line) > 0.004) {
+          ink.star = star;
+          ink.line = line;
+          doodleTex.redraw();
+        }
+        check = soft(seg(dt2, 4.8, 5.6)) * (1 - soft(seg(dt2, 7.6, 8.4))) * armK;
+        page.updateMatrixWorld();
+        cat.shoulder(cst.hand, vSh);
+        if (cst.spot < 4 && cst.stand >= 1) {
+          /* once it is standing there: the patch of page just up and across from its drawing arm */
+          cst.spot += 1;
+          vTip.set(vSh.x + cst.hand * 0.58 * cw, vSh.y + 0.4 * cw, vSh.z);
+          page.worldToLocal(v3a.copy(camera.position));
+          page.worldToLocal(v3b.copy(vTip));
+          const kz = v3a.z / (v3a.z - v3b.z);
+          doodle.position.set(clamp(lerp(v3a.x, v3b.x, kz), -SW / 2 + 0.3, SW / 2 - 0.3), clamp(lerp(v3a.y, v3b.y, kz), -SH / 2 + 0.25, SH / 2 - 0.25), 0.015);
+        }
+        if (cst.spot > 0) {
+          doodle.visible = true;
+          doodleMat.opacity = (1 - soft(seg(dt2, 10.5, 11.3))) * armK * alpha * (1 - planK); /* gone before the page turns into the plan */
+          doodle.updateMatrixWorld();
+          const pts = line > 0 && line < 1 ? TX.DOODLE.line : TX.DOODLE.star;
+          const at = (pts.length - 1) * (line > 0 && line < 1 ? line : star);
+          const i = Math.min(pts.length - 2, Math.floor(at));
+          vTip
+            .set(
+              (lerp(pts[i][0], pts[i + 1][0], at - i) / TX.DOODLE.w - 0.5) * DOODLE_W + Math.sin(time * 5.2) * 0.012 * (1 - check), /* the hand is never dead still */
+              (0.5 - lerp(pts[i][1], pts[i + 1][1], at - i) / TX.DOODLE.h) * DOODLE_H + Math.cos(time * 4.1) * 0.012 * (1 - check),
+              0.02
+            )
+            .applyMatrix4(doodle.matrixWorld);
+          tipOver(vTip, -cst.hand * 0.42, 0.84 * cw, yaw);
+          cocked = true;
+          if (check > 0) {
+            /* arm out to the side, pencil upright, one eye shut */
+            vArm.lerp(toCat(v3a.set(cst.hand, 0.2, 0.3).normalize(), yaw), check);
+            vTool.lerp(toCat(v3b.set(-cst.hand * 0.06, 1, -0.04).normalize(), yaw), check);
+          }
+        }
+      }
       const glance = soft(Math.sin(time * 0.7) * 2.2 - 0.9); /* now and then it looks up from the laptop at the site */
       const turnMax = lerp(1.05, 0.8, cst.walk);
       const pk = time - pokeAt;
@@ -1257,22 +1391,36 @@ export async function createStoryScene(container, { clients = [], still = false,
       cat.pose({
         phase: cst.phase,
         walk: kin > 0 ? 0 : cst.walk,
-        lean: kin > 0 ? 0 : cst.lean,
+        lean: kin > 0 ? 0 : cst.lean - 0.1 * check,
         tail: cst.tail,
         time,
-        yaw,
+        yaw: yaw - cst.hand * 0.12 * check,
         squash,
         tuck: Math.max(hopV.air, btnArc),
         leap: air,
         typing,
         press: soft(seg(cst.btnK, 0.8, 1)),
-        lookYaw: jumping ? 0 : lerp(clamp(wrap(cst.lookYaw - yaw), -turnMax, turnMax), 0, typing),
-        lookPitch: jumping ? 0 : lerp(cst.lookPitch, lerp(0.24, -0.2, glance), typing),
-        eyeX: cst.eyeX,
-        eyeY: lerp(cst.eyeY, lerp(-0.03, 0.03, glance), typing),
+        lookYaw: jumping ? 0 : lerp(lerp(clamp(wrap(cst.lookYaw - yaw), -turnMax, turnMax), 0, typing), -0.8, sl), /* asleep: its face turned back to the visitor */
+        lookPitch: jumping ? 0 : lerp(cst.lookPitch, lerp(0.24, -0.2, glance), typing) * (1 - sl),
+        eyeX: cst.eyeX * (1 - sl),
+        eyeY: lerp(cst.eyeY, lerp(-0.03, 0.03, glance), typing) * (1 - sl),
         blink: pk >= 0 && pk < 0.22 ? Math.sin((Math.PI * pk) / 0.22) : bt < 0.16 ? Math.sin((Math.PI * bt) / 0.16) : 0,
         marks: Math.max(kin >= 1 ? soft(cst.upK) : 0, bell((time - marksAt) / 0.9, 0, 0.22, 1)),
         paw: pawK,
+        stand: kin > 0 ? 0 : soft(cst.stand),
+        hand: cst.hand,
+        arm: armK,
+        armX: vArm.x,
+        armY: vArm.y,
+        armZ: vArm.z,
+        tool: cst.tool,
+        toolK,
+        toolX: cocked ? vTool.x : undefined,
+        toolY: vTool.y,
+        toolZ: vTool.z,
+        wink: soft(seg(check, 0.6, 1)),
+        yawn: bell((time - cst.yawnAt) / 1.7, 0, 0.47, 1),
+        sleep: sl,
       });
 
       /* pointer parallax (smoothing runs in tick, so update stays a function of t) */
@@ -1356,7 +1504,9 @@ export async function createStoryScene(container, { clients = [], still = false,
       const building = t >= BUILD_AT;
       const resulting = t >= RESULTS[0] && t < RESULTS[1];
       const pressing = t >= PRESS[0] && t < PRESS[1];
-      const inTo = t >= CAT_IN;
+      const inTo = t >= CAT_IN && (cst.snap || cst.sleep < 0.02); /* it wakes before it jumps */
+      const act = t > PRESENT[0] && t < PRESENT[1] ? 1 : t > DRAW[0] && t < DRAW[1] ? 2 : 0;
+      const toRight = track(T.glowX, t) > x; /* which side its subject is on */
       if (cst.snap) {
         /* a cut, a resize or the first frame: everything is simply where t says */
         cst.snap = false;
@@ -1372,6 +1522,15 @@ export async function createStoryScene(container, { clients = [], still = false,
         cst.upK = t >= CAT_UP ? 1 : 0;
         prog.build = building ? 1 : 0;
         prog.results = resulting ? 1 : 0;
+        cst.tool = act;
+        cst.hand = toRight ? 1 : -1;
+        cst.stand = act ? 1 : 0;
+        cst.arm = cst.stand;
+        cst.toolK = cst.stand;
+        cst.actT = 0;
+        cst.spot = 0;
+        cst.sleep = 0;
+        cst.restT = 0;
       }
       const tWas = cst.tWas;
       cst.tWas = t;
@@ -1405,20 +1564,50 @@ export async function createStoryScene(container, { clients = [], still = false,
       if (inTo || cst.upK <= 0) cst.inK = ramp(cst.inK, inTo, 0.85); /* it ducks before it jumps back out */
       cst.away = inTo; /* into the folder back first, out of it face first */
 
+      /* brief and design: it picks its tool up while it is down on all fours, stands,
+         reaches out, and then the act runs on its own clock */
+      if (act && cst.stand === 0 && cst.toolK === 0) {
+        cst.tool = act;
+        cst.hand = toRight ? 1 : -1;
+        cst.actT = 0;
+        cst.spot = 0;
+      }
+      const up = act !== 0 && act === cst.tool && cst.walk < 0.2;
+      cst.stand = ramp(cst.stand, up, 0.5);
+      cst.toolK = ramp(cst.toolK, up && cst.stand > 0.6, 0.3);
+      cst.arm = ramp(cst.arm, up && cst.stand >= 1, 0.45);
+      if (cst.arm >= 1) cst.actT += dt;
+
+      /* launch: once the results are in and the story rests there, a yawn, then a nap.
+         Scrolling on, or a poke, wakes it. */
+      const resting = t > NAP[0] && t < NAP[1] && prog.results >= 1 && cst.walk < 0.1 && time - hop.at > hop.dur;
+      const rested = resting ? cst.restT + dt : 0;
+      if (cst.restT <= 1.6 && rested > 1.6) cst.yawnAt = time;
+      cst.restT = rested;
+      cst.sleep = ramp(cst.sleep, rested > 3.4, rested > 3.4 ? 1.7 : 0.35);
+
       /* what it reacts to */
       if (dt > 0) {
         if (built < 1 && prog.build >= 1 && t < PRESS[1]) cheer(0.42); /* the site is finished */
         if (results < 0.36 && prog.results >= 0.36) cheer(0.4); /* an enquiry */
-        if (tWas < CAT_LEAP && t >= CAT_LEAP) startHop(0.7, 0.74); /* the page takes off */
+        if (tWas < CAT_LEAP && t >= CAT_LEAP && cst.sleep < 0.3) startHop(0.7, 0.74); /* the page takes off */
       }
 
       /* facing: the way it walks, the action when it stands, the site when it types */
       let want = jumping ? (cst.away ? Math.PI : 0) : walking ? Math.atan2(dx, dz) : catIdleYaw(t, x);
-      if (!jumping && !walking) want = lerp(want, (track(T.glowX, t) < x ? -1 : 1) * 0.75, soft(cst.typing));
+      if (!jumping && !walking) {
+        want = lerp(want, (toRight ? 1 : -1) * 0.75, soft(cst.typing));
+        want = lerp(want, cst.hand * 0.28, soft(cst.stand)); /* standing: mostly to the visitor, its working arm on the subject's side */
+        want = lerp(want, 0.95, soft(cst.sleep)); /* asleep: side on */
+      }
       cst.yaw += wrap(want - cst.yaw) * ease(jumping ? 10 : 5);
 
       /* gaze: the visitor (pointer), or the page while something is happening on it */
-      const w = t < CAT_IN ? catWatch(t) * (1 - cst.walk) : 0;
+      let w = t < CAT_IN ? catWatch(t) * (1 - cst.walk) : 0;
+      /* presenting: a glance at the sheet as the pointer moves on, then back to the
+         visitor; drawing: eyes on its work */
+      if (cst.tool === 1) w = lerp(w, bell((cst.actT % NOTE_S) / NOTE_S, 0, 0.16, 0.5), soft(cst.arm));
+      else if (cst.tool === 2) w = lerp(w, 1, soft(cst.arm));
       const hx = page.position.x - x;
       const hy = page.position.y - (track(T.catY, t) + lay.catS);
       const k = ease(7);
@@ -1428,7 +1617,18 @@ export async function createStoryScene(container, { clients = [], still = false,
       cst.eyeY += (lerp(-ptr.sy * 0.16, 0.035, w) - cst.eyeY) * k;
 
       /* anything still on its way keeps the scene at full frame rate */
-      return (prog.build > 0 && prog.build < 1) || (prog.results > 0 && prog.results < 1) || jumping || cst.typing > 0 || (cst.btnK > 0 && cst.btnK < 1) || (cst.upK > 0 && cst.upK < 1) || time - hop.at < hop.dur;
+      return (
+        (prog.build > 0 && prog.build < 1) ||
+        (prog.results > 0 && prog.results < 1) ||
+        jumping ||
+        cst.typing > 0 ||
+        (cst.btnK > 0 && cst.btnK < 1) ||
+        (cst.upK > 0 && cst.upK < 1) ||
+        time - hop.at < hop.dur ||
+        (cst.stand > 0 && (!coarse || cst.stand < 1 || cst.arm < 1)) || /* its acts: full rate on desktops, the calmer idle rate on phones once it is settled */
+        (cst.sleep > 0 && cst.sleep < 1) ||
+        time - cst.yawnAt < 1.8
+      );
     }
 
     let last = performance.now();
@@ -1543,7 +1743,10 @@ export async function createStoryScene(container, { clients = [], still = false,
         lastInput = performance.now();
       },
       pokeCat(nx, ny) {
-        if (!hitCat(nx, ny) || !startHop(0.5)) return false;
+        if (!hitCat(nx, ny)) return false;
+        const asleep = cst.sleep > 0;
+        cst.restT = 0; /* a poke wakes it; it nods off again if it is left alone */
+        if (!asleep && !startHop(0.5)) return false;
         pokeAt = time;
         marksAt = time;
         lastInput = performance.now();

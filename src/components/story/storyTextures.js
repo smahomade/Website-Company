@@ -442,6 +442,49 @@ export function drawDemoSketch(c) {
   c.restore();
 }
 
+/* Where the sketch's handwritten notes sit (x, y, w, h on the sheet), in the
+   order the cat points them out when it presents the brief. */
+export const SKETCH_NOTES = [
+  [470, 178, 330, 48], /* big, friendly headline! */
+  [286, 422, 190, 48], /* orange CTA */
+  [700, 270, 240, 48], /* reviews = trust */
+  [326, 630, 350, 48], /* 3 reasons to pick them */
+];
+
+/* What the cat's pencil leaves on the design: a star, then an underline
+   (points on a w × h canvas, in the order they are drawn). */
+export const DOODLE = {
+  w: 256,
+  h: 224,
+  star: Array.from({ length: 11 }, (_, i) => {
+    const a = -Math.PI / 2 + (i * 4 * Math.PI) / 5;
+    return [128 + Math.cos(a) * 62, 96 + Math.sin(a) * 62];
+  }),
+  line: Array.from({ length: 13 }, (_, i) => [40 + i * 15, 186 + Math.sin(i * 1.1) * 7]),
+};
+/* the first k (0..1) of a path */
+function partPath(c, pts, k) {
+  if (k <= 0) return;
+  const n = (pts.length - 1) * Math.min(1, k);
+  c.beginPath();
+  c.moveTo(pts[0][0], pts[0][1]);
+  for (let i = 1; i <= Math.ceil(n); i++) {
+    const f = Math.min(1, n - (i - 1));
+    c.lineTo(pts[i - 1][0] + (pts[i][0] - pts[i - 1][0]) * f, pts[i - 1][1] + (pts[i][1] - pts[i - 1][1]) * f);
+  }
+  c.stroke();
+}
+/* star / line: how much of each is drawn so far (0..1) */
+export function drawDoodle(c, star, line) {
+  c.clearRect(0, 0, DOODLE.w, DOODLE.h);
+  c.strokeStyle = '#FF6A00';
+  c.lineWidth = 9;
+  c.lineCap = 'round';
+  c.lineJoin = 'round';
+  partPath(c, DOODLE.star, star);
+  partPath(c, DOODLE.line, line);
+}
+
 /* ─────────── Client sheets ─────────── */
 export function drawClientShot(c, img, url) {
   chrome(c, url, true);
