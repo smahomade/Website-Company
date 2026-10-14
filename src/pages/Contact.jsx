@@ -54,6 +54,8 @@ export default function Contact() {
         accent="Touch"
         sub="Need a website for your business? Contact PixelFold and we'll help you get online. Every conversation starts with a free, no-obligation chat."
         badges={['24 hr response', 'No obligation', 'Free consultation']}
+        art="plane"
+        tab="Contact"
         filed
       />
 

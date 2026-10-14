@@ -89,6 +89,8 @@ export default function Portfolio() {
         accent="Portfolio"
         sub="Example website builds across different industries. These show the kind of designs and quality you can expect from PixelFold."
         badges={['Custom built', 'Static/Dynamic', 'Mobile-friendly', 'UK-based team']}
+        art="sites"
+        tab="Portfolio"
       />
 
       {/* PORTFOLIO GRID */}

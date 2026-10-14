@@ -350,15 +350,14 @@ function FormCard({ id, show, children, header }) {
 export default function Register() {
   const pageRef = useRef(null);
   const [intent, setIntent] = useState('new');
-  const firstRender = useRef(true);
+  const shownIntent = useRef(intent);
   useFadeIn(pageRef);
 
-  /* Scroll the chosen form into view when the user switches (not on load). */
+  /* Scroll the chosen form into view when the user switches (not on load,
+     including React's development double run of effects). */
   useEffect(() => {
-    if (firstRender.current) {
-      firstRender.current = false;
-      return undefined;
-    }
+    if (shownIntent.current === intent) return undefined;
+    shownIntent.current = intent;
     const id = setTimeout(() => {
       document.getElementById(intent === 'new' ? 'formNew' : 'formExisting')?.scrollIntoView({ behavior: PREFERS_REDUCED_MOTION ? 'instant' : 'smooth', block: 'nearest' });
     }, 60);
@@ -379,6 +378,9 @@ export default function Register() {
         accent="your project."
         sub="Fill in the short brief below and we'll come back within 24 hours with a clear scope, timeline and quote. No obligation, no pressure, no jargon."
         badges={['100% free', 'Quoted per project', 'Reply within 24 hrs', 'No commitment']}
+        art="brief"
+        tab="Free quote"
+        sheet="#F6F4F0"
         filed
       />
 

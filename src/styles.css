@@ -8511,3 +8511,110 @@ input:focus, select:focus, textarea:focus { box-shadow: 0 0 0 3px rgba(255, 106,
 @media (min-width: 769px) {
   .feat-card.feat-inactive .feat-full { visibility: hidden; transition: opacity 0.2s ease, visibility 0s linear 0.2s; }
 }
+
+/* ====================================================
+   INNER-PAGE BANNER (PageHero): a short charcoal band in
+   the home story's style. Heading on the left, the page's
+   own 3D object on the right, and the content rising into
+   it as a cream sheet with a folder tab.
+   ==================================================== */
+.pb {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  min-height: clamp(380px, 50vh, 450px);
+  padding: 108px 0 64px; /* clears the navbar; room for the sheet */
+  color: var(--cream);
+  background:
+    radial-gradient(36% 66% at 74% 56%, rgba(255, 106, 0, 0.24), rgba(255, 106, 0, 0) 72%),
+    radial-gradient(70% 60% at 50% 0%, #1E1915 0%, rgba(17, 17, 17, 0) 70%),
+    var(--charcoal);
+}
+.pb-inner { position: relative; z-index: 3; width: 100%; }
+.pb-copy { max-width: min(600px, 52%); }
+.pb-label {
+  margin: 0 0 14px;
+  font: 600 12px/1 var(--font-display);
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: #FF8A3D;
+}
+.pb-title {
+  margin: 0 0 14px;
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: clamp(34px, 4.2vw, 56px);
+  line-height: 1.04;
+  letter-spacing: -0.02em;
+  color: var(--cream);
+  text-wrap: balance;
+}
+.pb-title em { font-style: normal; color: var(--orange); }
+.pb-sub { margin: 0; max-width: 520px; font-size: 16px; line-height: 1.65; color: rgba(255, 253, 248, 0.72); }
+.pb-badges { display: flex; flex-wrap: wrap; gap: 8px; margin: 20px 0 0; padding: 0; list-style: none; }
+.pb-badges li {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  border: 1px solid rgba(255, 253, 248, 0.16);
+  border-radius: 999px;
+  background: rgba(255, 253, 248, 0.04);
+  font-size: 13px;
+  font-weight: 600;
+  color: rgba(255, 253, 248, 0.82);
+}
+.pb-badges svg { color: var(--orange); }
+.pb-copy > .btn { margin-top: 24px; }
+/* the object, reaching a little over the sheet's edge */
+.pb-art {
+  position: absolute;
+  z-index: 2;
+  top: 84px;
+  bottom: -30px;
+  right: max(8px, calc(50vw - 620px));
+  width: min(50vw, 640px);
+  pointer-events: none;
+}
+.pb-canvas { display: block; width: 100%; height: 100%; }
+.pb-sheet {
+  position: absolute;
+  left: 0; right: 0;
+  bottom: -1px;
+  height: 26px;
+  background: var(--pb-sheet, var(--cream));
+  border-radius: 26px 26px 0 0;
+}
+.pb-sheet .container { position: relative; height: 100%; }
+.pb-tab {
+  position: absolute;
+  left: 24px;
+  bottom: 100%;
+  height: 30px;
+  padding: 0 18px;
+  border-radius: 12px 12px 0 0;
+  background: var(--pb-sheet, var(--cream));
+  font: 700 11px/32px var(--font-display);
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: #8A8279;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .pb-copy > * { animation: pbRise 0.7s cubic-bezier(0.22, 0.61, 0.36, 1) both; }
+  .pb-copy > :nth-child(2) { animation-delay: 0.06s; }
+  .pb-copy > :nth-child(3) { animation-delay: 0.12s; }
+  .pb-copy > :nth-child(4) { animation-delay: 0.18s; }
+  .pb-copy > :nth-child(5) { animation-delay: 0.24s; }
+  .pb-art { animation: pbFade 1.2s ease 0.15s both; }
+}
+@keyframes pbRise { from { opacity: 0; transform: translateY(14px); } }
+@keyframes pbFade { from { opacity: 0; } }
+/* narrow screens: the object sits above the heading */
+@media (max-width: 760px) {
+  .pb { display: block; min-height: 0; padding: 84px 0 58px; }
+  .pb-art { position: relative; top: auto; bottom: auto; right: auto; width: 100%; height: 170px; margin: 0 0 12px; }
+  .pb-copy { max-width: none; }
+  .pb-title { font-size: clamp(32px, 9vw, 42px); }
+  .pb-sub { font-size: 15px; }
+}

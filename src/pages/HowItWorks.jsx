@@ -6,6 +6,7 @@ import { FolderIcon } from '../components/BrandIcons.jsx';
 import CompareInline from '../components/CompareInline.jsx';
 import { FAQS } from '../data/faqs.jsx';
 import { R2 } from '../lib/site.js';
+import PageHero from '../components/PageHero.jsx';
 
 /* Keep the six questions people actually ask before booking. */
 const FAQ_KEEP = [
@@ -17,6 +18,9 @@ const FAQ_KEEP = [
   "What if I want changes after it's built?",
 ];
 const FAQ_SHORT = FAQS.filter((f) => FAQ_KEEP.includes(f.q));
+
+/* the banner's cards: one per step */
+const STEP_LABELS = ['Design', 'Build', 'Launch'];
 
 const STEPS = [
   {
@@ -142,24 +146,20 @@ export default function HowItWorks() {
         path="/how-it-works"
       />
 
-      {/* HERO */}
-      <section className="services-hero hiw-hero">
-        <div className="container hiw-hero-inner">
-          <div className="hero-folder-box">
-            <p className="section-label hiw-label-muted">How it works</p>
-            <h1 className="hiw-h1">
-              Three steps. <em className="hiw-gradient-em">No jargon.</em>
-            </h1>
-            <p className="hiw-hero-sub">
-              A conversation, a build you can watch take shape, and a handover that’s actually explained.
-            </p>
-          </div>
-          <Link to="/register" className="btn btn-primary hiw-hero-btn">
-            Book a free consultation
-            <ArrowRightIcon />
-          </Link>
-        </div>
-      </section>
+      <PageHero
+        label="How it works"
+        title="Three steps."
+        accent="No jargon."
+        sub="A conversation, a build you can watch take shape, and a handover that’s actually explained."
+        art="steps"
+        artLabels={STEP_LABELS}
+        tab="How it works"
+      >
+        <Link to="/register" className="btn btn-primary">
+          Book a free consultation
+          <ArrowRightIcon />
+        </Link>
+      </PageHero>
 
       {/* STEPS */}
       <section className="hiw-steps-section">

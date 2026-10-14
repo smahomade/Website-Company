@@ -152,6 +152,8 @@ export default function Services() {
         accent="Services"
         sub="Websites for small businesses across the UK. Every project is scoped and quoted around what you actually need, with clear timelines and no hidden fees."
         badges={['Quoted per project', 'Mobile-first design', 'UK-based', 'Fast turnaround']}
+        art="folders"
+        tab="Services"
       />
 
       {/* PACKAGES */}
