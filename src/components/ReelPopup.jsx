@@ -4,18 +4,22 @@ import { LOGO, PREFERS_REDUCED_MOTION } from '../lib/site.js';
 import { CloseIcon, PauseIcon, PlayIcon } from './Icons.jsx';
 import { useModalBehaviour } from '../hooks/useModal.js';
 
+/* the short clip a card plays, if any: its `tour`, or failing that its `video` */
+const clipOf = (k) => (!PREFERS_REDUCED_MOTION && k && (k.tour || k.video)) || null;
+
 /* Project preview opened by clicking a card in the hero reel, or a client
-   site in the home story. A card with a `tour` (or, failing that, a `video`)
-   plays that short clip of the site. The clip is fetched when the popup opens,
-   or earlier for `warm`: the card the visitor is hovering and looks about to
-   open, so it plays the moment they click. Until it plays, the clip's own
+   site in the home story. A card with a clip plays it, and it has to start
+   the moment the popup opens, so clips are loaded ahead of time and stay
+   loaded: every card in `keep` (the ones this page can open) gets its own
+   <video>, parked out of sight until it is the one showing, and so does
+   `warm` (the card the visitor is hovering). Until a clip plays, its own
    first frame stands in. Reduced-motion visitors get the screenshot instead. */
-export default function ReelPopup({ card, warm = null, onClose }) {
+export default function ReelPopup({ card, warm = null, keep = null, onClose }) {
   const last = useRef(card);
   if (card) last.current = card;
   const c = last.current;
   const open = !!card;
-  const videoRef = useRef(null);
+  const videos = useRef(new Map()); /* card → its <video> */
   const [paused, setPaused] = useState(false);
 
   useModalBehaviour(open, onClose);
@@ -24,32 +28,36 @@ export default function ReelPopup({ card, warm = null, onClose }) {
     if (open) return undefined;
     const id = setTimeout(() => {
       last.current = null;
-      if (videoRef.current) videoRef.current.currentTime = 0; /* next time it opens on its first frame, not mid-clip */
+      videos.current.forEach((v) => {
+        v.currentTime = 0; /* next time it opens on its first frame, not mid-clip */
+      });
     }, 400);
     return () => clearTimeout(id);
   }, [open]);
 
   const hasImg = !!c?.img;
-  const media = open ? c : warm || c; /* whose clip is in the <video> */
-  const video = (!PREFERS_REDUCED_MOTION && (media?.tour || media?.video)) || null;
-  const poster = media?.tour ? media.tourPoster || media.img : media?.img;
+  const media = open ? c : warm || c; /* whose clip is showing */
+  const video = clipOf(media);
+  const clips = [];
+  [...(keep || []), media].forEach((k) => {
+    if (clipOf(k) && !clips.includes(k)) clips.push(k);
+  });
 
   /* Play from the top each time it opens; stop when it closes. */
   useEffect(() => {
-    const v = videoRef.current;
-    if (!v) return;
-    if (!open) {
-      v.pause();
-      return;
-    }
+    videos.current.forEach((v, k) => {
+      if (!open || k !== media) v.pause();
+    });
+    const v = videos.current.get(media);
+    if (!v || !open) return;
     setPaused(false);
     v.currentTime = 0;
     const p = v.play();
-    if (p && p.catch) p.catch(() => setPaused(true)); /* autoplay refused: the poster and a play button remain */
-  }, [open, video]);
+    if (p && p.catch) p.catch(() => setPaused(true)); /* autoplay refused: the first frame and a play button remain */
+  }, [open, media]);
 
   const togglePlay = () => {
-    const v = videoRef.current;
+    const v = videos.current.get(media);
     if (!v) return;
     if (v.paused) {
       const p = v.play();
@@ -77,22 +85,28 @@ export default function ReelPopup({ card, warm = null, onClose }) {
           <CloseIcon />
         </button>
         <div className="reel-popup-img-wrap">
+          {clips.map((k) => (
+            <video
+              key={k.name}
+              ref={(el) => {
+                if (el) videos.current.set(k, el);
+                else videos.current.delete(k);
+              }}
+              className={k === media ? undefined : 'is-parked'}
+              src={clipOf(k)}
+              poster={k.tour ? k.tourPoster || k.img : k.img}
+              muted
+              loop
+              playsInline
+              preload={open || k === warm || (keep && keep.includes(k)) ? 'auto' : 'none'}
+              aria-hidden={k === media ? undefined : true}
+              aria-label={k.name + ' website, video preview'}
+            />
+          ))}
           {video ? (
-            <>
-              <video
-                ref={videoRef}
-                src={video}
-                poster={poster}
-                muted
-                loop
-                playsInline
-                preload={open || warm ? 'auto' : 'none'}
-                aria-label={media.name + ' website, video preview'}
-              />
-              <button type="button" className="reel-popup-play" aria-label={paused ? 'Play preview' : 'Pause preview'} onClick={togglePlay}>
-                {paused ? <PlayIcon /> : <PauseIcon />}
-              </button>
-            </>
+            <button type="button" className="reel-popup-play" aria-label={paused ? 'Play preview' : 'Pause preview'} onClick={togglePlay}>
+              {paused ? <PlayIcon /> : <PauseIcon />}
+            </button>
           ) : (
             <img
               id="reelPopupImg"

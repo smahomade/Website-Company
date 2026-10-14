@@ -3818,6 +3818,8 @@ h1, h2, h3, h4 {
   object-position: top;
   display: block;
 }
+/* clips kept loaded for the other cards wait out of sight */
+.reel-popup-img-wrap video.is-parked { position: absolute; inset: 0; visibility: hidden; pointer-events: none; }
 .reel-popup-play,
 .reel-popup--video .reel-popup-close {
   background: rgba(17, 17, 17, 0.62);
@@ -7796,9 +7798,54 @@ input:focus, select:focus, textarea:focus { box-shadow: 0 0 0 3px rgba(255, 106,
   overflow: hidden;
   box-shadow: var(--shadow-md);
 }
-.svc-example .pf-browser { border-radius: 0; box-shadow: none; height: 210px; }
+.svc-example .pf-browser { position: relative; border-radius: 0; box-shadow: none; height: 210px; }
 .svc-example .pf-browser img { height: calc(100% - 30px); transition: transform 1.2s cubic-bezier(0.22, 0.61, 0.36, 1); }
 .svc-example:hover .pf-browser img { transform: translateY(-8%); }
+/* a build with a tour: the clip sits over the still and fades in while it plays */
+.svc-example.has-clip:hover .pf-browser img { transform: none; }
+.svc-example .pf-browser video {
+  position: absolute;
+  left: 0; right: 0; bottom: 0;
+  width: 100%;
+  height: calc(100% - 30px);
+  object-fit: cover;
+  object-position: center top;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+}
+.svc-example.is-playing .pf-browser video { opacity: 1; }
+.svc-example-play {
+  position: absolute;
+  right: 10px; bottom: 10px;
+  width: 32px; height: 32px;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  color: #fff;
+  background: rgba(17, 17, 17, 0.62);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  -webkit-backdrop-filter: blur(6px);
+  backdrop-filter: blur(6px);
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.svc-example-play:hover { background: rgba(17, 17, 17, 0.85); }
+.svc-example-play:focus-visible { outline: 2px solid #FF6A00; outline-offset: 2px; }
+.svc-example-picks { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 12px; }
+.svc-example-picks button {
+  padding: 6px 12px;
+  border: 1.5px solid var(--cool-grey);
+  border-radius: 999px;
+  background: #fff;
+  color: var(--slate-muted);
+  font: 600 0.78rem/1 var(--font-display);
+  cursor: pointer;
+  transition: color 0.2s, border-color 0.2s, background-color 0.2s;
+}
+.svc-example-picks button:hover { color: var(--charcoal); border-color: var(--charcoal); }
+.svc-example-picks button.is-on { color: #fff; background: var(--charcoal); border-color: var(--charcoal); }
+.svc-example-picks button:focus-visible { outline: 2px solid #FF6A00; outline-offset: 2px; }
+@media (pointer: coarse) { .svc-example-picks button { padding: 11px 14px; } }
 .svc-example-body { padding: 16px 18px 18px; display: grid; gap: 4px; }
 .svc-example-body .section-label { margin-bottom: 4px; }
 .svc-example-body strong { color: var(--charcoal); font-family: var(--font-display); font-size: 1.05rem; }

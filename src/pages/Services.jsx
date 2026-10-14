@@ -1,22 +1,95 @@
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import Seo from '../components/Seo.jsx';
 import PageHero from '../components/PageHero.jsx';
 import ServiceModal from '../components/ServiceModal.jsx';
 import { useFadeIn } from '../hooks/useRevealOnScroll.js';
 import { SERVICES, SERVICE_TABS } from '../data/services.js';
-import { CONTACT, R2 } from '../lib/site.js';
+import { HERO_CARDS } from '../data/heroCards.js';
+import { CONTACT, PREFERS_REDUCED_MOTION } from '../lib/site.js';
 import { FolderIcon } from '../components/BrandIcons.jsx';
-import { Browser } from '../components/DeviceStack.jsx';
+import { PauseIcon, PlayIcon } from '../components/Icons.jsx';
 
 const FEATURE_CLASS = { bonus: 'feature-bonus', priority: 'feature-priority', backend: 'feature-backend' };
 
-/* One representative build per tab, shown once rather than on every card. */
-const EXAMPLES = {
-  starter: { src: R2 + '/screenshots/ChangeWorkTherapies/changeworktherapies-banner.JPG', url: 'changeworktherapies.com', pos: 'center top', name: 'Change Work Therapies', note: 'A calm, trust-led site for a therapy practice.' },
-  business: { src: R2 + '/screenshots/Raza/raza-academy-banner.JPG', url: 'razaacademy.co.uk', pos: 'center 12%', name: 'Raza Academy', note: 'An eight-page rebuild for an education provider.' },
-  custom: { src: R2 + '/screenshots/TopOne/top-one-banner.JPG', url: 'topone.co.uk', pos: 'center top', name: 'Top One Salon', note: 'A bespoke multi-page build with 24 core pages.' },
-};
+/* Recent builds, shown beside the packages. They are real client sites and all
+   of them run to several pages, so they sit beside every tab rather than
+   standing for one (none is a one-page starter). Hovering one plays its tour. */
+const EXAMPLES = [
+  { name: 'Raza Academy', short: 'Raza', note: 'An eight-page rebuild for an education provider.' },
+  { name: 'Top One Salon', short: 'Top One', note: 'A bespoke build of 40+ pages for a London salon.' },
+  { name: 'Change Work Therapies', short: 'Change Work', note: 'A seven-page site for a therapy practice, calm and trust-led.' },
+].map((e) => {
+  const card = HERO_CARDS.find((c) => c.name === e.name);
+  return { ...e, url: card.url, still: card.tourPoster || card.img, pos: card.tourPoster ? 'center top' : card.imgPos, tour: PREFERS_REDUCED_MOTION ? null : card.tour };
+});
+const CAN_HOVER = typeof window !== 'undefined' && window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+
+/* One build in a browser frame, with the others a click away. The mouse over
+   the frame plays its tour (a still otherwise); the button does the same for
+   touch and keyboard. */
+function ExampleBuild({ index, onPick }) {
+  const ex = EXAMPLES[index];
+  const videoRef = useRef(null);
+  const [playing, setPlaying] = useState(false);
+
+  useEffect(() => setPlaying(false), [index]);
+
+  const play = () => {
+    const v = videoRef.current;
+    if (!v) return;
+    const p = v.play();
+    if (p && p.catch) p.catch(() => setPlaying(false));
+    setPlaying(true);
+  };
+  const stop = () => {
+    const v = videoRef.current;
+    if (!v) return;
+    v.pause();
+    v.currentTime = 0; /* back to the frame the still shows */
+    setPlaying(false);
+  };
+
+  return (
+    <div className={'svc-example pf-folder' + (ex.tour ? ' has-clip' : '') + (playing ? ' is-playing' : '')}>
+      <div
+        className="pf-browser"
+        onPointerEnter={(e) => {
+          if (e.pointerType === 'mouse') play();
+        }}
+        onPointerLeave={(e) => {
+          if (e.pointerType === 'mouse') stop();
+        }}
+      >
+        <div className="pf-browser-bar">
+          <span className="pf-browser-dots"><i /><i /><i /></span>
+          <span className="pf-browser-url">{ex.url}</span>
+        </div>
+        <img src={ex.still} alt={ex.url + ' website'} loading="lazy" style={{ objectPosition: ex.pos }} />
+        {ex.tour && (
+          <>
+            <video key={ex.tour} ref={videoRef} src={ex.tour} muted loop playsInline preload={CAN_HOVER ? 'auto' : 'metadata'} aria-hidden="true" tabIndex={-1} />
+            <button type="button" className="svc-example-play" aria-label={(playing ? 'Stop the ' : 'Play the ') + ex.name + ' preview'} onClick={playing ? stop : play}>
+              {playing ? <PauseIcon /> : <PlayIcon />}
+            </button>
+          </>
+        )}
+      </div>
+      <div className="svc-example-body">
+        <p className="section-label">Recent builds</p>
+        <strong>{ex.name}</strong>
+        <span>{ex.note}</span>
+        <div className="svc-example-picks" role="group" aria-label="Choose a build">
+          {EXAMPLES.map((e, i) => (
+            <button key={e.name} type="button" className={i === index ? 'is-on' : undefined} aria-pressed={i === index} onClick={() => onPick(i)}>
+              {e.short}
+            </button>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
 
 const INCLUDED = ['Mobile-first design', 'Basic on-page SEO', 'Contact form', 'Handover explained in plain English'];
 
@@ -59,12 +132,11 @@ export default function Services() {
   const pageRef = useRef(null);
   const [tab, setTab] = useState('starter');
   const [modalKey, setModalKey] = useState(null);
+  const [build, setBuild] = useState(0); /* which recent build is showing */
   useFadeIn(pageRef);
 
   const modalSvc = modalKey ? SERVICES.find((s) => s.key === modalKey) : null;
   const modalService = modalSvc ? { ...modalSvc.modal, iconKind: modalSvc.iconKind } : null;
-  const example = EXAMPLES[tab];
-  const tabLabel = SERVICE_TABS.find((t) => t.id === tab).label.toLowerCase();
 
   return (
     <div ref={pageRef}>
@@ -96,16 +168,9 @@ export default function Services() {
           </div>
 
           <div className="svc-layout" key={tab}>
-            {/* Left: one example build + what every package includes */}
+            {/* Left: a recent build + what every package includes */}
             <aside className="svc-aside">
-              <div className="svc-example pf-folder">
-                <Browser src={example.src} url={example.url} pos={example.pos} />
-                <div className="svc-example-body">
-                  <p className="section-label">Recent {tabLabel} build</p>
-                  <strong>{example.name}</strong>
-                  <span>{example.note}</span>
-                </div>
-              </div>
+              <ExampleBuild index={build} onPick={setBuild} />
               <div className="svc-included">
                 <p className="section-label">Every package includes</p>
                 <ul>

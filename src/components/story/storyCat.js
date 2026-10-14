@@ -23,7 +23,7 @@ const lift = (a) => {
   return k * k;
 };
 
-export function createCat({ keep, canvasTex }) {
+export function createCat({ keep, canvasTex, padMap = null }) {
   /* outline widths in the cat's own units (the scene widens them on small screens) */
   const inkT = { value: 0.034 };
   const creamT = { value: 0.085 };
@@ -228,6 +228,48 @@ export function createCat({ keep, canvasTex }) {
     return m;
   });
 
+  /* The big tablet it designs on, up on easel legs (the scene stands it beside
+     the cat and paints its screen). Flat shapes get no outline from the hulls,
+     so its ink line and sticker border are drawn as two larger shapes behind it. */
+  const PAD = { w: 1.36, h: 1.08, up: 0.3 }; /* the slab, and how high its legs hold it */
+  const padSize = { w: PAD.w - 0.16, h: PAD.h - 0.16 }; /* the screen */
+  const rounded = (w, h, r) => {
+    const sh = new THREE.Shape();
+    sh.moveTo(-w / 2 + r, -h / 2);
+    sh.lineTo(w / 2 - r, -h / 2);
+    sh.quadraticCurveTo(w / 2, -h / 2, w / 2, -h / 2 + r);
+    sh.lineTo(w / 2, h / 2 - r);
+    sh.quadraticCurveTo(w / 2, h / 2, w / 2 - r, h / 2);
+    sh.lineTo(-w / 2 + r, h / 2);
+    sh.quadraticCurveTo(-w / 2, h / 2, -w / 2, h / 2 - r);
+    sh.lineTo(-w / 2, -h / 2 + r);
+    sh.quadraticCurveTo(-w / 2, -h / 2, -w / 2 + r, -h / 2);
+    return keep(new THREE.ShapeGeometry(sh, 6));
+  };
+  const plain = (color, extra = {}) => keep(new THREE.MeshBasicMaterial({ color, toneMapped: false, fog: false, ...extra }));
+  const rings = [[0.12, plain(CREAM), -0.02], [0.045, plain(INK), -0.01], [0, plain('#EDE7DE'), 0]]; /* sticker border, ink line, shell */
+  const tablet = new THREE.Group();
+  tablet.visible = false;
+  const slab = new THREE.Group();
+  slab.position.set(0, PAD.up + PAD.h / 2, 0);
+  slab.rotation.x = -0.1;
+  tablet.add(slab);
+  rings.forEach(([grow, mat, z]) => {
+    const m = new THREE.Mesh(rounded(PAD.w + grow * 2, PAD.h + grow * 2, 0.1 + grow), mat);
+    m.position.z = z;
+    slab.add(m);
+    /* the two legs, behind the slab */
+    [-1, 1].forEach((sx) => {
+      const leg = new THREE.Mesh(rounded(0.09 + grow * 2, 0.62 + grow * 2, 0.045 + grow), mat);
+      leg.position.set(sx * 0.42, -PAD.h / 2 - 0.02, z - 0.04);
+      leg.rotation.z = sx * 0.2;
+      slab.add(leg);
+    });
+  });
+  const padScreen = new THREE.Mesh(keep(new THREE.PlaneGeometry(padSize.w, padSize.h)), plain('#FFFFFF', { map: padMap }));
+  padScreen.position.z = 0.004;
+  slab.add(padScreen);
+
   /* The launch button it steps on (the scene places it on the floor). */
   const button = new THREE.Group();
   button.visible = false;
@@ -407,5 +449,5 @@ export function createCat({ keep, canvasTex }) {
   /* where a front leg joins the body, in world space (for aiming that arm at something) */
   const shoulder = (side, out) => legs[side < 0 ? 0 : 1].getWorldPosition(out);
 
-  return { root, paws, button, shadow, pose, shoulder, inkT, creamT, hitBody: [skull, torso, ...earCones], hitHead: [skull, ...earCones] };
+  return { root, paws, button, tablet, padScreen, padSize, shadow, pose, shoulder, inkT, creamT, hitBody: [skull, torso, ...earCones], hitHead: [skull, ...earCones] };
 }

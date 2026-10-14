@@ -451,38 +451,116 @@ export const SKETCH_NOTES = [
   [326, 630, 350, 48], /* 3 reasons to pick them */
 ];
 
-/* What the cat's pencil leaves on the design: a star, then an underline
-   (points on a w × h canvas, in the order they are drawn). */
-export const DOODLE = {
-  w: 256,
-  h: 224,
-  star: Array.from({ length: 11 }, (_, i) => {
-    const a = -Math.PI / 2 + (i * 4 * Math.PI) / 5;
-    return [128 + Math.cos(a) * 62, 96 + Math.sin(a) * 62];
-  }),
-  line: Array.from({ length: 13 }, (_, i) => [40 + i * 15, 186 + Math.sin(i * 1.1) * 7]),
-};
-/* the first k (0..1) of a path */
-function partPath(c, pts, k) {
-  if (k <= 0) return;
-  const n = (pts.length - 1) * Math.min(1, k);
-  c.beginPath();
-  c.moveTo(pts[0][0], pts[0][1]);
-  for (let i = 1; i <= Math.ceil(n); i++) {
-    const f = Math.min(1, n - (i - 1));
-    c.lineTo(pts[i - 1][0] + (pts[i][0] - pts[i - 1][0]) * f, pts[i - 1][1] + (pts[i][1] - pts[i - 1][1]) * f);
-  }
-  c.stroke();
+/* The tablet the cat designs on: the brand's colours along the top and, under
+   them, the page in miniature. It starts as the pencil sketch and the cat
+   colours it in the way you would with a fat marker: scribbling up and down
+   across one band, lifting, then back across the next, as k goes 0 → 1.
+   `sketch` and `design` are the two full-size sheet canvases. */
+export const PAD_W = 384;
+export const PAD_H = 300;
+const PAD_BAR = 40;
+const PAD_ROWS = 3;
+const PAD_ROW_H = (PAD_H - PAD_BAR) / PAD_ROWS;
+const PAD_SWINGS = 8; /* strokes up or down across each band */
+const PAD_LIFT = 0.1; /* the share of each band's time spent lifting the pencil to the next */
+const PAD_MARK = 82; /* how wide the marker lays colour down: enough for neighbouring strokes to meet */
+const PAD_INKS = ['#1C1411', '#6A3A1E', '#FF6A00', '#FFB27A', '#FFFDF8'];
+/* the pencil on band i, u (0..1) of the way across it: it runs a little past
+   the band's edges at each turn, as a hand does */
+function padStroke(i, u, out) {
+  out[0] = PAD_W * (i % 2 ? 1 - u : u);
+  out[1] = PAD_BAR + (i + 0.5) * PAD_ROW_H - Math.cos(u * PAD_SWINGS * Math.PI) * (PAD_ROW_H / 2 + 8);
+  return out;
 }
-/* star / line: how much of each is drawn so far (0..1) */
-export function drawDoodle(c, star, line) {
-  c.clearRect(0, 0, DOODLE.w, DOODLE.h);
-  c.strokeStyle = '#FF6A00';
-  c.lineWidth = 9;
-  c.lineCap = 'round';
-  c.lineJoin = 'round';
-  partPath(c, DOODLE.star, star);
-  partPath(c, DOODLE.line, line);
+const padAt = [0, 0, 0, 0];
+const padTo = [0, 0];
+let padMask = null;
+/* Where the pencil is at k: [x, y, swing, lift]. swing (-1..1) is which way the
+   stroke is going, for the wrist; lift (0..1) is the pencil off the glass
+   between bands. */
+export function padTip(k) {
+  const p = Math.min(1, Math.max(0, k)) * PAD_ROWS;
+  const i = Math.min(PAD_ROWS - 1, Math.floor(p));
+  const f = Math.min(1, p - i);
+  const u = Math.min(1, f / (1 - PAD_LIFT));
+  padStroke(i, u, padAt);
+  padAt[2] = u < 1 ? Math.sin(u * PAD_SWINGS * Math.PI) : 0;
+  padAt[3] = 0;
+  if (u >= 1 && i < PAD_ROWS - 1) {
+    /* across to the start of the next band */
+    const v = (f - (1 - PAD_LIFT)) / PAD_LIFT;
+    const e = v * v * (3 - 2 * v);
+    padStroke(i + 1, 0, padTo);
+    padAt[0] += (padTo[0] - padAt[0]) * e;
+    padAt[1] += (padTo[1] - padAt[1]) * e;
+    padAt[3] = Math.sin(Math.PI * v);
+  }
+  return padAt;
+}
+export function drawPad(c, sketch, design, k) {
+  const p = Math.min(1, Math.max(0, k)) * PAD_ROWS;
+  c.fillStyle = '#F4EFE7';
+  c.fillRect(0, 0, PAD_W, PAD_H);
+  PAD_INKS.forEach((ink, i) => {
+    const x = 26 + i * 30;
+    c.fillStyle = ink;
+    c.beginPath();
+    c.arc(x, PAD_BAR / 2, 9, 0, Math.PI * 2);
+    c.fill();
+    c.strokeStyle = 'rgba(38, 34, 30, 0.3)';
+    c.lineWidth = 1.5;
+    c.stroke();
+    if (k > 0 && k < 1 && i === Math.min(PAD_INKS.length - 1, Math.floor(k * PAD_INKS.length))) {
+      /* the colour in use */
+      c.strokeStyle = '#FF6A00';
+      c.lineWidth = 2.5;
+      c.beginPath();
+      c.arc(x, PAD_BAR / 2, 13, 0, Math.PI * 2);
+      c.stroke();
+    }
+  });
+  c.drawImage(sketch, 0, PAD_BAR, PAD_W, PAD_H - PAD_BAR);
+  if (p <= 0) return;
+  /* everything the marker has been over so far, then the design shown through it */
+  if (!padMask) {
+    padMask = document.createElement('canvas');
+    padMask.width = PAD_W;
+    padMask.height = PAD_H;
+  }
+  const m = padMask.getContext('2d');
+  m.globalCompositeOperation = 'source-over';
+  m.clearRect(0, 0, PAD_W, PAD_H);
+  m.fillStyle = '#000';
+  m.strokeStyle = '#000';
+  m.lineWidth = PAD_MARK;
+  m.lineCap = 'round';
+  m.lineJoin = 'round';
+  for (let i = 0; i < PAD_ROWS; i++) {
+    const f = Math.min(1, p - i);
+    if (f <= 0) break;
+    const u = Math.min(1, f / (1 - PAD_LIFT));
+    const y = PAD_BAR + i * PAD_ROW_H;
+    if (u >= 1) {
+      m.fillRect(0, y, PAD_W, PAD_ROW_H + 0.5);
+      continue;
+    }
+    m.save();
+    m.beginPath();
+    m.rect(0, y, PAD_W, PAD_ROW_H + 0.5);
+    m.clip();
+    m.beginPath();
+    for (let q = 0; q < u; q += 1 / 96) {
+      padStroke(i, q, padTo);
+      m.lineTo(padTo[0], padTo[1]);
+    }
+    padStroke(i, u, padTo);
+    m.lineTo(padTo[0], padTo[1]);
+    m.stroke();
+    m.restore();
+  }
+  m.globalCompositeOperation = 'source-in';
+  m.drawImage(design, 0, PAD_BAR, PAD_W, PAD_H - PAD_BAR);
+  c.drawImage(padMask, 0, 0);
 }
 
 /* ─────────── Client sheets ─────────── */

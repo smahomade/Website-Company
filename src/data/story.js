@@ -7,9 +7,9 @@ export const STORY_CHAPTERS = [
     id: 'intro',
     rail: 'Intro',
     side: 'left',
-    eyebrow: 'Web design & development studio',
-    title: 'Little files.',
-    accent: 'Big ideas.',
+    eyebrow: 'Little files. Big ideas.',
+    title: 'We’ll build',
+    accent: 'your website.',
     body: 'PixelFold designs and builds fast, beautiful websites for small businesses, and explains every step in plain English.',
   },
   {

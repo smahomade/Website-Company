@@ -51,6 +51,11 @@ const SCENE_CLIENTS = FAN_ORDER.map((id) => PORTFOLIO.find((p) => p.id === id))
 const PREVIEW_OF = Object.fromEntries(
   SCENE_CLIENTS.map((c) => [c.id, HERO_CARDS.find((h) => h.name === c.title)]).filter(([, card]) => card)
 );
+const PREVIEW_CARDS = Object.values(PREVIEW_OF);
+/* From here on in the story the popup's clips are fetched, so one plays the
+   moment a site is clicked (not for visitors who asked their browser to save data). */
+const CLIPS_FROM = 3.2;
+const SAVE_DATA = typeof navigator !== 'undefined' && !!(navigator.connection && navigator.connection.saveData);
 const WORK = PORTFOLIO.filter((p) => p.liveUrl);
 
 /* On the home page, start fetching the 3D chunk (and the canvas-only font) while
@@ -166,6 +171,7 @@ export default function ScrollStory() {
   const [ready, setReady] = useState(false);
   const [preview, setPreview] = useState(null); /* project card shown in the popup */
   const [warm, setWarm] = useState(null); /* the site last hovered: its popup clip loads early */
+  const [clipsOn, setClipsOn] = useState(false); /* the story has got near the client sites: keep their clips loaded */
   const previewRef = useRef(false);
   previewRef.current = !!preview;
   const closePreview = useCallback(() => setPreview(null), []);
@@ -261,7 +267,12 @@ export default function ScrollStory() {
     };
 
     /* Copy + rail, from the eased position once the scene runs. */
+    let clips = false;
     const paintCopy = (tc) => {
+      if (!clips && tc > CLIPS_FROM && !SAVE_DATA) {
+        clips = true;
+        setClipsOn(true);
+      }
       if (tc === painted) return; /* at rest tCur is constant: no style writes */
       painted = tc;
       chapterRefs.current.forEach((el, i) => {
@@ -580,7 +591,7 @@ export default function ScrollStory() {
           </>
         )}
       </div>
-      {mode === 'story' && <ReelPopup card={preview} warm={warm} onClose={closePreview} />}
+      {mode === 'story' && <ReelPopup card={preview} warm={warm} keep={clipsOn ? PREVIEW_CARDS : null} onClose={closePreview} />}
     </section>
   );
 }
