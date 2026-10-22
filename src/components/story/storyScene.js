@@ -7,8 +7,9 @@ import { createCat } from './storyCat.js';
    Everything on screen is a pure function of the story position `t`
    (0 = intro … 5 = work) plus a small idle clock, so scrolling backwards
    replays the story in reverse. t is fed in by ScrollStory and eased here.
-   The one exception is the cat's walk (see stepCat): where it stands is a
-   function of t, but its steps and the way it faces follow how it just moved. */
+   The exceptions run on their own clocks (see stepCat): the cat walks to where
+   t says it should stand at its own pace, and its acts, the build and the
+   launch results play out at theirs. */
 
 const SW = 3.4; /* sheet size (world units) */
 const SH = 2.3;
@@ -166,23 +167,33 @@ const CAT_DUCK = 0.6; /* how far it squashes down to hide */
 const CAT_Z = [1.3, 1.3, 2.4, 2.4, 2.4]; /* depth of its five stops (intro … launch) */
 const SHEETS_LIVE = 4.9; /* from here the fanned client sheets answer the pointer */
 const CAM_Z = [1, 0.97, 0.92, 0.95, 0.94, 1.04]; /* camera distance per chapter, × lay.D */
-/* Build and launch run on their own clocks once the story reaches them: the
-   site assembles, and its results arrive, at a steady calm pace however fast
-   the visitor scrolls, and they finish while the visitor rests on the chapter. */
-const PLAN = [2.2, 2.46]; /* the design turns into a plan as the page crosses over */
-const BUILD_AT = 2.56; /* the site starts to assemble… */
-const BUILD_S = 3.2; /* …and takes this many seconds */
+/* The sketch, the design and the build (drawn by the cat on its tablet) and
+   the launch results run on their own clocks once the story reaches them: at
+   a steady calm pace however fast the visitor scrolls, finishing while the
+   visitor rests on the chapter, and in a hurry if they scroll on. */
+const PLAN = [2.2, 2.46]; /* the build takes over the sketch as the page crosses over */
+const BUILD_AT = 2.56; /* from here the site can assemble */
 const PRESS = [3.12, 3.3]; /* the cat is on the launch button */
 const RESULTS = [3.84, 4.3]; /* visitors, an enquiry and a review arrive… */
 const RESULTS_S = 2.8; /* …over this many seconds */
-/* The cat's three little acts, each while the story rests on that chapter. */
-const PRESENT = [0.9, 1.08]; /* up on its hind legs, pointing out the brief's notes */
-const NOTE_S = 3; /* seconds the pointer spends on each note */
-const DRAW = [1.94, 2.14]; /* pencil out at its tablet: as it colours the sketch in there, the page turns into the design */
-const DESIGN_S = 5.6; /* …over this many seconds */
+/* The cat's acts, each while the story rests on that chapter. */
+const CALL = [0.9, 1.08]; /* consultation: on a video call with the client (another cat), whose wishes arrive as messages… */
+const CALL_S = 12.6; /* …over this many seconds */
+const DRAW = [1.94, 2.14]; /* design: at its tablet it sketches the page, and the big page draws itself… */
+const SKETCH_S = 4.5;
+const MAKE = [BUILD_AT, 3.06]; /* build: it puts the site's blocks on its sketch one by one, and the real site assembles there */
+const BUILD_S = 4.2;
 const CHECK = [0.4, 1.1, 2.9, 3.6]; /* then it holds the pencil up to check its work (seconds after: in from, in to, out from, out to) */
 const PAD_DX = 1.32; /* how far to its side the tablet stands (cat units) */
 const NAP = [3.9, 4.03]; /* once the results are in: a yawn, then asleep */
+const FOLLOW = 6; /* stiffness of the story position's spring (1/s): about a third of a second behind a steady scroll */
+/* The cat walks to each chapter's spot as fast as the scroll carries its spot along, from a
+   stroll up to a run, but never faster than a run (cat sizes per second, and per second² to
+   get going and to slow down), so a quick scroll never carries it across in a blink. */
+const WALK_V = 2.9;
+const WALK_A = 4.5;
+const RUN_V = 12;
+const RUN_A = 26;
 /* When it stops to watch the page instead of the visitor. */
 const catWatch = (t) =>
   clamp(
@@ -199,12 +210,14 @@ const pageHolds = (S) => ({ x: [S * 0.92, -S, S * 0.9], s: [1.12, 1.15, 1.12] })
    nothing, the editor window, the result cards. */
 const PAGE_OVER = [[0, 0], [0.45, 0], [0.43, 0.3]];
 
-/* Where the cat stops in each chapter (intro … launch): x, and the floor it stands on. */
+/* Where the cat stops in each chapter (intro … launch): x, and the floor it stands on. It keeps
+   to the right-hand side throughout, so it moves along with the folder instead of crossing the
+   screen; where the copy is on the right too, rebuild() stands it under the copy. */
 function catStops(S, portrait, page = pageHolds(S)) {
   const floor = portrait ? -1.1 : -0.72;
   return {
-    x: portrait ? [1.9, -1.9, 1.5, -1.5, 0.6] : [S + 1.95, -S - 1.95, page.x[0] + 1.3, page.x[1] + 1.3, page.x[2] + 0.1],
-    y: [0.2, -0.5, floor, floor, floor],
+    x: portrait ? [1.9, 1.9, 1.5, 1.5, 0.6] : [S + 1.95, S * 0.75, page.x[0] + 1.3, S * 0.75, page.x[2] + 0.1],
+    y: [0.2, portrait ? -0.5 : -1, floor, portrait ? floor : -1, floor],
   };
 }
 
@@ -573,7 +586,10 @@ export async function createStoryScene(container, { clients = [], still = false,
       return { mesh, canvas: ct.tex.image };
     });
 
-    const sketchTex = canvasTex(TX.SHEET_W, TX.SHEET_H, TX.drawDemoSketch);
+    /* the sketch the cat draws in the design chapter, sketchK (0..1) of the way drawn */
+    let sketchK = 1;
+    const SKETCH_STEPS = coarse ? 160 : 320; /* how often it is repainted while it draws */
+    const sketchTex = canvasTex(TX.SHEET_W, TX.SHEET_H, (c) => TX.drawDemoSketch(c, sketchK));
     const sketchMat = keep(cutMaterial(sketchTex.tex, false, cut));
     const sketch = new THREE.Mesh(sheetGeo, sketchMat);
     sketch.position.z = 0.001;
@@ -581,18 +597,40 @@ export async function createStoryScene(container, { clients = [], still = false,
     sketch.castShadow = true;
     page.add(sketch);
     pageMats.push(sketchMat);
-    /* brief: a highlighter stroke over each handwritten note as the cat points it out */
-    const noteMarks = TX.SKETCH_NOTES.map(([x, y, w, h]) => {
-      const m = new THREE.Mesh(
-        keep(new THREE.PlaneGeometry((w / TX.SHEET_W) * SW, (h / TX.SHEET_H) * SH)),
-        keep(new THREE.MeshBasicMaterial({ color: 0xff6a00, transparent: true, opacity: 0, depthWrite: false, toneMapped: false }))
-      );
-      m.position.set(((x + w / 2) / TX.SHEET_W - 0.5) * SW, (0.5 - (y + h / 2) / TX.SHEET_H) * SH, 0.008);
-      m.renderOrder = 7;
-      m.visible = false;
-      page.add(m);
-      return m;
+    /* Consultation: the page is a video call window (the chat fills in as the call goes)
+       with the client live in its picture, until the page sets off for the design. */
+    const callShown = TX.CALL_MSGS.map(() => 0);
+    const callTex = canvasTex(TX.SHEET_W, TX.SHEET_H, (c) => TX.drawCallWindow(c, callShown));
+    const callMat = keep(new THREE.MeshBasicMaterial({ map: callTex.tex, transparent: true, depthWrite: false, toneMapped: false }));
+    const callSheet = new THREE.Mesh(sheetGeo, callMat);
+    callSheet.position.z = 0.006;
+    callSheet.renderOrder = 9;
+    callSheet.visible = false;
+    page.add(callSheet);
+    const [ctx0, cty0, ctx1, cty1] = TX.CALL_TILE;
+    const callRT = keep(new THREE.WebGLRenderTarget(coarse ? 448 : 640, Math.round(((coarse ? 448 : 640) * (cty1 - cty0)) / (ctx1 - ctx0)), { stencilBuffer: true, samples: coarse ? 0 : 4 }));
+    callRT.texture.colorSpace = THREE.SRGBColorSpace;
+    const tileMask = canvasTex(256, 212, (c) => {
+      c.fillStyle = '#000';
+      c.fillRect(0, 0, 256, 212);
+      c.fillStyle = '#fff';
+      c.beginPath();
+      c.roundRect(0, 0, 256, 212, 8);
+      c.fill();
     });
+    const tileMat = keep(new THREE.MeshBasicMaterial({ map: callRT.texture, alphaMap: tileMask.tex, transparent: true, depthWrite: false, toneMapped: false }));
+    const callTile = new THREE.Mesh(keep(new THREE.PlaneGeometry(((ctx1 - ctx0) / TX.SHEET_W) * SW, ((cty1 - cty0) / TX.SHEET_H) * SH)), tileMat);
+    callTile.position.set(((ctx0 + ctx1) / 2 / TX.SHEET_W - 0.5) * SW, (0.5 - (cty0 + cty1) / 2 / TX.SHEET_H) * SH, 0.009);
+    callTile.renderOrder = 10;
+    callTile.visible = false;
+    page.add(callTile);
+    const tagTex = canvasTex(512, 64, TX.drawCallTag);
+    const tagMat = keep(new THREE.MeshBasicMaterial({ map: tagTex.tex, transparent: true, depthWrite: false, toneMapped: false }));
+    const callTag = new THREE.Mesh(keep(new THREE.PlaneGeometry(1.5, 0.19)), tagMat);
+    callTag.position.set(((ctx0 + 240) / TX.SHEET_W - 0.5) * SW, (0.5 - (cty1 - 44) / TX.SHEET_H) * SH, 0.012);
+    callTag.renderOrder = 11;
+    callTag.visible = false;
+    page.add(callTag);
     /* Scan line for the wipe: kept inside the sheet's width, glow fades at both ends.
        Plain blending and low opacity: a soft line, never a bright flash. */
     const scan = new THREE.Group();
@@ -617,14 +655,21 @@ export async function createStoryScene(container, { clients = [], still = false,
     page.add(badge);
 
     /* ─────────── Build: the plan, the site fading in over it, the code ─────────── */
-    const planTex = canvasTex(TX.SHEET_W, TX.SHEET_H, TX.drawDemoPlan);
     const fullTex = canvasTex(TX.SHEET_W, TX.SHEET_H, (c) => {
       c.clearRect(0, 0, TX.SHEET_W, TX.SHEET_H);
       layers.forEach((L) => c.drawImage(L.canvas, 0, 0));
     });
-    /* One sheet over the page: the plan where the site isn't built yet, the site
-       where it is. The edge between them is wide and soft and sweeps down once. */
-    const buildU = { uP: { value: 0 }, uShow: { value: 0 }, uMap: { value: fullTex.tex }, uPlan: { value: planTex.tex } };
+    /* One sheet over the page: the sketch where the site isn't built yet, the site
+       where it is. It assembles block by block (TX.BUILD_BLOCKS) as the cat puts
+       each one on the plan on its tablet, each sweeping in with a soft edge. */
+    const NB = TX.BUILD_BLOCKS.length;
+    const buildU = {
+      uShow: { value: 0 },
+      uMap: { value: fullTex.tex },
+      uPlan: { value: sketchTex.tex },
+      uBox: { value: TX.BUILD_BLOCKS.map(([x0, y0, x1, y1]) => new THREE.Vector4(x0 / TX.SHEET_W, 1 - y1 / TX.SHEET_H, x1 / TX.SHEET_W, 1 - y0 / TX.SHEET_H)) },
+      uK: { value: new Array(NB).fill(0) },
+    };
     const buildSheet = new THREE.Mesh(
       sheetGeo,
       keep(
@@ -634,14 +679,22 @@ export async function createStoryScene(container, { clients = [], still = false,
           depthWrite: false,
           vertexShader: 'varying vec2 vUv;\nvoid main(){ vUv = uv; gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0); }',
           fragmentShader: [
-            'uniform sampler2D uMap; uniform sampler2D uPlan; uniform float uP; uniform float uShow;',
+            'uniform sampler2D uMap; uniform sampler2D uPlan; uniform float uShow;',
+            'uniform vec4 uBox[' + NB + ']; uniform float uK[' + NB + '];',
             'varying vec2 vUv;',
             'float hash(vec2 p){ return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453); }',
             'float noise(vec2 p){ vec2 i = floor(p), f = fract(p); f = f * f * (3.0 - 2.0 * f);',
             '  return mix(mix(hash(i), hash(i + vec2(1.0, 0.0)), f.x), mix(hash(i + vec2(0.0, 1.0)), hash(i + vec2(1.0, 1.0)), f.x), f.y); }',
             'void main(){',
-            '  float d = (1.0 - vUv.y) * 0.6 + vUv.x * 0.08 + noise(vUv * vec2(7.0, 5.0)) * 0.12;',
-            '  float r = smoothstep(d, d + 0.22, uP * 1.04);',
+            '  float r = 0.0;',
+            '  for (int i = 0; i < ' + NB + '; i++) {',
+            '    vec4 b = uBox[i];',
+            '    if (vUv.x >= b.x && vUv.x <= b.z && vUv.y >= b.y && vUv.y <= b.w) {', /* a later block wins */
+            '      vec2 l = (vUv - b.xy) / (b.zw - b.xy);',
+            '      float d = l.x * 0.6 + (1.0 - l.y) * 0.25 + noise(vUv * vec2(9.0, 6.0)) * 0.15;', /* left to right, as the pencil drags it in */
+            '      r = smoothstep(d, d + 0.3, uK[i] * 1.3);',
+            '    }',
+            '  }',
             '  vec4 plan = texture2D(uPlan, vUv); vec4 site = texture2D(uMap, vUv);',
             '  gl_FragColor = vec4(mix(plan.rgb, site.rgb, r), mix(plan.a, site.a, r) * uShow);',
             '  #include <colorspace_fragment>',
@@ -673,7 +726,13 @@ export async function createStoryScene(container, { clients = [], still = false,
         const ang = r() * Math.PI * 2;
         const rad = 1.1 + r() * 2.1;
         from.set([home[i * 3] + Math.cos(ang) * rad, home[i * 3 + 1] + Math.sin(ang) * rad * 0.8, 0.3 + r() * 1.3], i * 3);
-        delay[i] = Math.max(0, (1 - v) * 0.6 + u * 0.08 + r() * 0.12 - 0.1); /* just ahead of the sheet's edge */
+        /* it lands as its block sweeps in */
+        let at = 0;
+        TX.BUILD_BLOCKS.forEach(([x0, y0, x1, y1], b) => {
+          if (u * TX.SHEET_W >= x0 && u * TX.SHEET_W <= x1 && (1 - v) * TX.SHEET_H >= y0 && (1 - v) * TX.SHEET_H <= y1) at = b;
+        });
+        const [bx0, , bx1] = TX.BUILD_BLOCKS[at];
+        delay[i] = Math.max(0, (at + 0.42 + 0.4 * ((u * TX.SHEET_W - bx0) / (bx1 - bx0)) + r() * 0.1) / NB - 0.24);
         seed[i] = r();
         const c = tones[Math.floor(r() * tones.length)];
         col.set([c.r, c.g, c.b], i * 3);
@@ -810,9 +869,31 @@ export async function createStoryScene(container, { clients = [], still = false,
     pixelGroup.add(pixels);
 
     /* ─────────── The PixelFold cat ─────────── */
-    /* the screen of the tablet it designs on: the page in miniature, coloured in as it draws */
+    /* the screen of the tablet it works on: the page in miniature, as far as its act (padAct) has got (padK) */
     let padK = -1;
-    const padTex = canvasTex(TX.PAD_W, TX.PAD_H, (c) => TX.drawPad(c, sketchTex.tex.image, fullTex.tex.image, Math.max(0, padK)));
+    let padAct = 0;
+    const padTex = canvasTex(TX.PAD_W, TX.PAD_H, (c) => {
+      if (padAct === 3) TX.drawPadBuild(c, sketchTex.tex.image, fullTex.tex.image, Math.max(0, padK));
+      else TX.drawPadSketch(c, Math.max(0, padK));
+    });
+    /* The client on the call: the same cat in a grey coat, in its own little room, drawn into
+       the call window's picture (renderFrame) while the call is on screen. */
+    const client = createCat({ keep, canvasTex, coat: { fur: '#8B8F98', white: '#FFFDF8' } });
+    const callRoom = new THREE.Scene();
+    callRoom.background = new THREE.Color('#EFE1CF');
+    const roomTex = canvasTex(512, 384, TX.drawCallRoom);
+    const roomBack = new THREE.Mesh(keep(new THREE.PlaneGeometry(6.4, 4.8)), keep(new THREE.MeshBasicMaterial({ map: roomTex.tex, toneMapped: false, fog: false })));
+    roomBack.position.set(0, 1.2, -1.6);
+    callRoom.add(roomBack, client.root);
+    const roomCam = new THREE.PerspectiveCamera(30, callRT.width / callRT.height, 0.5, 20);
+    roomCam.position.set(0, 1.2, 3.7);
+    roomCam.lookAt(0, 1.1, 0);
+    const callPose = { phase: 0, walk: 0, lean: 0, tail: 0, time: 0, yaw: 0, squash: 0, tuck: 0, leap: 0, press: 0, lookYaw: 0, lookPitch: 0, eyeX: 0, eyeY: -0.01, blink: 0, marks: 0, paw: 0, hand: -1, arm: 0, armX: 0, armY: 1, armZ: 0, talk: 0 };
+    /* who is talking at `ct` seconds into the call, and a mouth that moves in syllables, not like a metronome */
+    const saying = (ct, who) => TX.CALL_MSGS.some((m) => m.who === who && ct > m.at - 0.15 && ct < m.at + 1.3);
+    const CALL_HI = TX.CALL_MSGS.find((m) => m.who === 'us').at; /* our cat's hello (it waves) */
+    const CALL_LAST = TX.CALL_MSGS[TX.CALL_MSGS.length - 1].at; /* and its last word */
+    const syllables = (k) => 0.5 + 0.5 * Math.sin(time * 13 + k) * Math.sin(time * 5.3 + k * 2);
     const cat = createCat({ keep, canvasTex, padMap: padTex.tex });
     world.add(cat.shadow, cat.button, cat.tablet, cat.root, cat.paws);
     /* Its walk is driven by how far it actually moved since the last frame, so it
@@ -820,15 +901,18 @@ export async function createStoryScene(container, { clients = [], still = false,
     const cst = {
       phase: 0, walk: 0, lean: 0, tail: 0, yaw: 0, /* the walk */
       lookYaw: 0, lookPitch: 0, eyeX: 0, eyeY: 0, /* the gaze */
-      typing: 0, btnK: 0, inK: 0, upK: 0, /* at the laptop, on the button, into the folder, up over its edge (each 0..1) */
-      tool: 0, hand: 1, stand: 0, arm: 0, toolK: 0, /* its act: 1 pointer / 2 pencil, which front leg holds it, then how far it is up, reaching, holding (0..1) */
-      actT: 0, tipX: 0, tipY: 0, tipSw: 0, tipUp: 0, /* seconds into the act (design: since the page was finished); the pencil on the tablet: where (px), which way its stroke is going, how far it is lifted */
+      btnK: 0, inK: 0, upK: 0, /* on the button, into the folder, up over its edge (each 0..1) */
+      tool: 0, hand: 1, stand: 0, arm: 0, toolK: 0, /* its act (1 the call, 2 design and 3 build at its tablet), which front leg it works with, then how far it is up, ready, holding the pencil (0..1) */
+      actT: 0, tipX: 0, tipY: 0, tipSw: 0, tipUp: 0, /* seconds since its work was finished; the pencil on the tablet: where (px), which way its stroke is going, how far it is lifted */
       sleep: 0, restT: 0, yawnAt: -10, /* the nap: how far down it is, seconds rested at launch, when it yawned */
-      px: 0, pz: 0, tWas: 0, snap: true, away: true, inFolder: false,
+      px: 0, py: 0, pz: 0, wv: 0, spotV: 0, tgx: 0, tgy: 0, tgz: 0, dip: 0, tWas: 0, snap: true, away: true, inFolder: false, /* where it really is, how fast it is walking there, how far down it has stepped to pass under the copy */
       hopU: null, /* dev hook: pin the hop at this point of its arc */
     };
-    /* The design, the build and the launch results, each 0..1 on its own clock (see stepCat). */
-    const prog = { design: 0, build: 0, results: 0 };
+    /* The call, the sketch, the build and the launch results, each 0..1 on its own clock (see stepCat). */
+    const prog = { call: 0, sketch: 0, build: 0, results: 0 };
+    /* how far its act has got, and where its pencil is on the tablet */
+    const actProg = (act) => (act === 1 ? prog.call : act === 3 ? prog.build : prog.sketch);
+    const actTip = (act) => (act === 3 ? TX.buildTip(prog.build) : TX.sketchTip(prog.sketch));
     /* One hop at a time, on its own clock: a crouch, an arc and a landing. */
     const hop = { at: -10, dur: 0.62, h: 0.5 };
     const hopV = { air: 0, squash: 0 };
@@ -964,12 +1048,29 @@ export async function createStoryScene(container, { clients = [], still = false,
           const room = 0.72 * lay.catS + (24 / w) * half + (i === 3 ? 0.85 : 0);
           const xAt = (px) => mid + ((px / w) * 2 - 1) * half;
           if (box.left + box.right < w) stops.x[i] = Math.max(stops.x[i], xAt(box.right) + room);
-          else stops.x[i] = Math.min(stops.x[i], xAt(box.left) - room);
+          else {
+            /* the copy is on the right as well: it stands under the copy, its head clear of the
+               words and its feet inside the frame (the floor at a row of the screen, where it stands) */
+            const rowY = (py) => 1.85 - lay.liftY + dist * Math.tan(Math.atan2(-0.3, lay.D * CAM_Z[i]) + Math.atan((1 - (2 * py) / h) * tanHalf));
+            const feet = rowY(box.bottom + 18) - 1.9 * lay.catS;
+            if (box.bottom > 0 && feet >= rowY(h - 26)) {
+              stops.x[i] = xAt((box.left + box.right) / 2);
+              stops.y[i] = Math.min(stops.y[i], feet);
+            } else stops.x[i] = Math.min(stops.x[i], xAt(box.left) - room); /* no room under it: beside it */
+          }
         }
       });
       T = buildTracks(lay.S, lay.portrait, { sink, page: pageFit, cat: stops, ...(fitWork(w, h, aspect) || {}) });
       codeWin.position.y = SH / 2 + (lay.portrait ? 0.3 : 0.52); /* upright: tucked lower, inside the frame */
-      lay.btnDx = stops.x[3] > 0 ? -0.85 : 0.85; /* the launch button: beside its build stop, towards the middle */
+      {
+        /* the launch button: beside its build stop, away from its tablet (which stands towards the
+           page), unless the frame has no room on that side */
+        const half3 = (lay.D * CAM_Z[3] - CAT_Z[3]) * tanHalf * aspect;
+        const mid3 = -S * 0.17;
+        const away = stops.x[3] >= -S ? 1 : -1;
+        const fits = Math.abs(stops.x[3] + away * (0.85 + 0.5 * lay.catS) - mid3) < half3 * 0.82;
+        lay.btnDx = (fits ? away : -away) * 0.85;
+      }
       cst.snap = true; /* the stops moved: that isn't the cat walking */
       /* Folder pose the page leaves from (t = 1.3); frozen so the folder can
          sink away without dragging the departing page with it. */
@@ -1033,6 +1134,7 @@ export async function createStoryScene(container, { clients = [], still = false,
     let frozen = false; /* dev hook: stops the idle clock for repeatable captures */
     let tTarget = still ? stillT : 0;
     let tCur = tTarget;
+    let tVel = 0; /* how fast tCur is moving (story units per second) */
     let onFrame = null;
     const ptr = { x: 0, y: 0, sx: 0, sy: 0 };
     const v3a = new THREE.Vector3();
@@ -1127,7 +1229,50 @@ export async function createStoryScene(container, { clients = [], still = false,
       const alpha = 1 - seg(t, 4.36, 4.44);
       page.visible = alpha > 0.001;
 
-      const reveal = prog.design; /* the sketch turns into the design as the cat colours it in */
+      /* consultation: the call window, until the page sets off for the design; the chat fills
+         in and the client talks as the call goes (prog.call) */
+      const callK = (1 - soft(seg(t, 1.12, 1.4))) * alpha;
+      const onCall = callK > 0.004 && t > 0.55;
+      callSheet.visible = callTile.visible = callTag.visible = onCall;
+      if (onCall) {
+        callMat.opacity = tileMat.opacity = tagMat.opacity = callK;
+        const ct = prog.call * CALL_S;
+        let said = false;
+        TX.CALL_MSGS.forEach((m, i) => {
+          const k = Math.round(seg(ct, m.at, m.at + 0.5) * 40) / 40;
+          if (k !== callShown[i]) {
+            callShown[i] = k;
+            said = true;
+          }
+        });
+        if (said) callTex.redraw();
+        /* the client: waves hello, talks, nods at the end */
+        const live = prog.call > 0 && prog.call < 1;
+        const q = callPose;
+        q.time = time;
+        q.tail = time * 1.7;
+        q.talk = live && saying(ct, 'them') ? syllables(0) : 0;
+        q.arm = live ? bell(ct, 0.05, 0.45, 1.7) : 0;
+        q.armX = -0.5 + Math.sin(time * 8) * 0.28;
+        q.armY = 0.85;
+        q.armZ = 0.35;
+        q.lookYaw = Math.sin(time * 0.6) * 0.12 + (q.talk ? Math.sin(time * 1.7) * 0.05 : 0);
+        const listening = live && saying(ct, 'us') ? Math.max(0, Math.sin(time * 3.1)) * 0.08 : 0; /* nods while our cat talks */
+        q.lookPitch = -0.05 + (q.talk ? Math.sin(time * 2.3) * 0.05 : 0) + listening + bell(ct, CALL_LAST + 0.1, CALL_LAST + 0.7, CALL_S) * 0.12;
+        q.blink = bell((time + 2.3) % 3.9, 0, 0.09, 0.2);
+        client.pose(q);
+        client.root.matrixWorldNeedsUpdate = true;
+      }
+
+      /* design: the sketch draws itself as the cat sketches on its tablet */
+      const drawn = Math.round(prog.sketch * SKETCH_STEPS) / SKETCH_STEPS;
+      if (drawn !== sketchK) {
+        sketchK = drawn;
+        sketchTex.redraw();
+      }
+      /* the finished site takes the sketch's place under the build sheet once the build is
+         done (the sheet covers the swap), so it is there when the sheet steps aside */
+      const reveal = t >= PLAN[1] && (prog.build >= 1 || t >= PRESS[1]) ? 1 : 0;
       cut.value = 1 - reveal;
       sketch.visible = reveal < 0.999;
       layers.forEach((L) => {
@@ -1146,12 +1291,12 @@ export async function createStoryScene(container, { clients = [], still = false,
       badge.scale.setScalar(0.92 + 0.08 * b);
       badgeMat.opacity = b * alpha;
 
-      /* build: the design turns into a plan while the page crosses over, then the
-         site fades in across it (prog.build) with the code typing behind */
+      /* build: the build sheet takes over the sketch while the page crosses over, then the
+         site assembles on it block by block (prog.build) with the code typing behind */
       const planK = soft(seg(t, PLAN[0], PLAN[1])) * (1 - soft(seg(t, PRESS[1], PRESS[1] + 0.12)));
       buildSheet.visible = planK > 0.004 && prog.build < 1;
       buildU.uShow.value = planK * alpha;
-      buildU.uP.value = prog.build;
+      for (let i = 0; i < NB; i++) buildU.uK.value[i] = TX.blockK(i, prog.build);
       motes.visible = buildSheet.visible && prog.build > 0.002;
       moteU.uP.value = prog.build;
       moteU.uTime.value = time;
@@ -1222,7 +1367,8 @@ export async function createStoryScene(container, { clients = [], still = false,
 
       /* the cat: on the floor, in the air, on its button, or in the folder */
       const cw = lay.catS;
-      catAt.set(track(T.catX, t), track(T.catY, t), track(T.catZ, t)); /* where it stands */
+      catAt.set(cst.px, cst.py - cst.dip, cst.pz); /* where it stands (it walks there on its own, see stepCat) */
+      const standX = catAt.x; /* even while it is over on the launch button */
       const onBtn = soft(cst.btnK);
       const btnArc = 4 * cst.btnK * (1 - cst.btnK); /* the step up onto the button, and back off */
       const bs = soft(seg(t, PRESS[0] - 0.08, PRESS[0] - 0.02)) * (1 - soft(seg(t, PRESS[1] + 0.1, PRESS[1] + 0.2)));
@@ -1243,7 +1389,7 @@ export async function createStoryScene(container, { clients = [], still = false,
       catPos.copy(catAt);
       /* at its tablet it leans across as the pencil goes to the far edge */
       const far = cst.hand < 0 ? 1 - cst.tipX / TX.PAD_W : cst.tipX / TX.PAD_W;
-      if (cst.tool === 2) catPos.x += cst.hand * 0.42 * cw * soft(cst.arm) * clamp(far * 1.6 - 0.5);
+      if (cst.tool >= 2) catPos.x += cst.hand * 0.42 * cw * soft(cst.arm) * clamp(far * 1.6 - 0.5);
       catPos.y += (hopV.air * hop.h + btnArc * 0.5 + onBtn * 0.078) * cw;
       catQuat.identity();
       cst.inFolder = kin >= 1;
@@ -1302,49 +1448,46 @@ export async function createStoryScene(container, { clients = [], still = false,
       cat.shadow.scale.set(cw * (1 - 0.3 * lift) * (1 + 0.25 * sl), cw * 0.62 * (1 - 0.3 * lift) * (1 + 0.25 * sl), 1);
       cat.shadow.material.opacity = 0.38 * shade * (1 - 0.5 * lift);
       const jumping = kin > 0 && kin < 1;
-      const typing = kin > 0 ? 0 : soft(cst.typing);
 
-      /* its working arm: the pointer on the brief's notes, or the pencil on the design */
-      const armK = kin > 0 ? 0 : soft(cst.arm);
+      /* its working arm, and the pencil in it */
+      let armK = kin > 0 ? 0 : soft(cst.arm);
       const toolK = kin > 0 ? 0 : soft(cst.toolK);
-      /* design: its tablet stands beside it, on the side it draws with */
-      const padOn = cst.tool === 2 ? toolK : 0;
+      /* its tablet stands beside it, on the side it draws with, showing its work */
+      const padOn = cst.tool >= 2 ? toolK : 0;
       cat.tablet.visible = padOn > 0.02;
       if (cat.tablet.visible) {
-        cat.tablet.position.set(catAt.x + cst.hand * PAD_DX * cw, catAt.y, catAt.z - 0.22 * cw);
+        cat.tablet.position.set(standX + cst.hand * PAD_DX * cw, catAt.y, catAt.z - 0.22 * cw);
         cat.tablet.rotation.y = -cst.hand * 0.2;
         cat.tablet.scale.setScalar(cw * padOn);
-        const shown = Math.round(prog.design * 250) / 250;
-        if (shown !== padK) {
+        const shown = Math.round(actProg(cst.tool) * 250) / 250;
+        if (shown !== padK || cst.tool !== padAct) {
           padK = shown;
+          padAct = cst.tool;
           padTex.redraw();
         }
       }
-      let check = 0; /* design: stepping back to check its work */
-      let cocked = false; /* the tool has its own direction, not the arm's */
-      noteMarks.forEach((m) => {
-        m.visible = false;
-      });
-      if (toolK > 0 && cst.tool === 1) {
-        /* one note after another: the pointer swings across, the note lights up */
-        const n = noteMarks.length;
-        const first = cst.actT < NOTE_S;
-        const i = Math.floor(cst.actT / NOTE_S) % n;
-        const prev = (i + n - 1) % n;
-        const u = (cst.actT % NOTE_S) / NOTE_S;
-        page.updateMatrixWorld();
-        noteMarks[prev].getWorldPosition(v3a);
-        noteMarks[i].getWorldPosition(v3b);
-        v3a.lerp(v3b, first ? 1 : eio(seg(u, 0, 0.3)));
-        cat.shoulder(cst.hand, vSh);
-        toCat(vArm.copy(v3a).sub(vSh).normalize(), yaw);
-        noteMarks.forEach((m, j) => {
-          const a = (j === i ? soft(seg(u, 0.22, 0.46)) : j === prev && !first ? 1 - soft(seg(u, 0, 0.24)) : 0) * armK * alpha;
-          m.visible = a > 0.01;
-          m.material.opacity = 0.3 * a;
+      let check = 0; /* stepping back to check its work */
+      let cocked = false; /* the pencil has its own direction, not the arm's */
+      /* on the call: it waves hello, talks with a paw out as it explains, nods along while the
+         client talks, and is pleased at the end */
+      let talk = 0;
+      let callMarks = 0;
+      if (cst.tool === 1 && armK > 0) {
+        const ct = prog.call * CALL_S;
+        const live = prog.call < 1;
+        const wave = live ? bell(ct, CALL_HI - 0.3, CALL_HI + 0.1, CALL_HI + 1.2) : 0;
+        let gesture = 0;
+        if (live) TX.CALL_MSGS.forEach((m) => {
+          if (m.who === 'us' && m.at !== CALL_HI) gesture = Math.max(gesture, 0.7 * bell(ct, m.at - 0.25, m.at + 0.25, m.at + 1.35));
         });
-      } else if (toolK > 0 && cst.tool === 2) {
-        /* at its tablet: the pencil follows the row being coloured in, then comes up for a look */
+        armK *= Math.max(wave, gesture);
+        if (wave >= gesture) vArm.set(cst.hand * (0.5 + Math.sin(time * 8 + 1) * 0.28), 0.85, 0.3);
+        else vArm.set(cst.hand * (0.4 + Math.sin(time * 4.2) * 0.12), 0.15 + Math.sin(time * 5.1) * 0.12, 0.75);
+        talk = live && saying(ct, 'us') ? syllables(2) : 0;
+        callMarks = bell(ct, CALL_LAST, CALL_LAST + 0.4, CALL_LAST + 1.5);
+      }
+      if (toolK > 0 && cst.tool >= 2) {
+        /* at its tablet: the pencil follows its stroke, then comes up for a look */
         check = soft(seg(cst.actT, CHECK[0], CHECK[1])) * (1 - soft(seg(cst.actT, CHECK[2], CHECK[3]))) * armK;
         cat.tablet.updateMatrixWorld();
         cat.shoulder(cst.hand, vSh);
@@ -1358,7 +1501,6 @@ export async function createStoryScene(container, { clients = [], still = false,
           vTool.lerp(toCat(v3b.set(-cst.hand * 0.06, 1, -0.04).normalize(), yaw), check);
         }
       }
-      const glance = soft(Math.sin(time * 0.7) * 2.2 - 0.9); /* now and then it looks up from the laptop at the site */
       const turnMax = lerp(1.05, 0.8, cst.walk);
       const pk = time - pokeAt;
       const bt = time % 4.3;
@@ -1372,14 +1514,13 @@ export async function createStoryScene(container, { clients = [], still = false,
         squash,
         tuck: Math.max(hopV.air, btnArc),
         leap: air,
-        typing,
         press: soft(seg(cst.btnK, 0.8, 1)),
-        lookYaw: jumping ? 0 : lerp(lerp(clamp(wrap(cst.lookYaw - yaw), -turnMax, turnMax), 0, typing), -0.8, sl), /* asleep: its face turned back to the visitor */
-        lookPitch: jumping ? 0 : lerp(cst.lookPitch, lerp(0.24, -0.2, glance), typing) * (1 - sl),
+        lookYaw: jumping ? 0 : lerp(clamp(wrap(cst.lookYaw - yaw), -turnMax, turnMax), -0.8, sl), /* asleep: its face turned back to the visitor */
+        lookPitch: jumping ? 0 : cst.lookPitch * (1 - sl),
         eyeX: cst.eyeX * (1 - sl),
-        eyeY: lerp(cst.eyeY, lerp(-0.03, 0.03, glance), typing) * (1 - sl),
+        eyeY: cst.eyeY * (1 - sl),
         blink: pk >= 0 && pk < 0.22 ? Math.sin((Math.PI * pk) / 0.22) : bt < 0.16 ? Math.sin((Math.PI * bt) / 0.16) : 0,
-        marks: Math.max(kin >= 1 ? soft(cst.upK) : 0, bell((time - marksAt) / 0.9, 0, 0.22, 1)),
+        marks: Math.max(kin >= 1 ? soft(cst.upK) : 0, bell((time - marksAt) / 0.9, 0, 0.22, 1), callMarks),
         paw: pawK,
         stand: kin > 0 ? 0 : soft(cst.stand),
         hand: cst.hand,
@@ -1387,13 +1528,13 @@ export async function createStoryScene(container, { clients = [], still = false,
         armX: vArm.x,
         armY: vArm.y,
         armZ: vArm.z,
-        tool: cst.tool,
         toolK,
         toolX: cocked ? vTool.x : undefined,
         toolY: vTool.y,
         toolZ: vTool.z,
         wink: soft(seg(check, 0.6, 1)),
         yawn: bell((time - cst.yawnAt) / 1.7, 0, 0.47, 1),
+        talk,
         sleep: sl,
       });
 
@@ -1453,6 +1594,13 @@ export async function createStoryScene(container, { clients = [], still = false,
 
     function renderFrame() {
       update(tCur);
+      if (callTile.visible) {
+        /* the client's picture on the call */
+        client.root.updateMatrixWorld();
+        renderer.setRenderTarget(callRT);
+        renderer.render(callRoom, roomCam);
+        renderer.setRenderTarget(null);
+      }
       renderer.render(scene, camera);
     }
 
@@ -1473,38 +1621,56 @@ export async function createStoryScene(container, { clients = [], still = false,
     }
     function stepCat(dt) {
       const t = tCur;
-      const x = track(T.catX, t);
-      const z = track(T.catZ, t);
+      /* where t says it should stand, and where it really is: it walks there (below) */
+      const tx = track(T.catX, t);
+      const ty = track(T.catY, t);
+      const tz = track(T.catZ, t);
+      if (cst.snap) {
+        cst.px = tx;
+        cst.py = ty;
+        cst.pz = tz;
+        cst.tgx = tx;
+        cst.tgy = ty;
+        cst.tgz = tz;
+        cst.wv = 0;
+        cst.spotV = 0;
+        cst.dip = 0;
+      }
+      const gx = tx - cst.px;
+      const gy = ty - cst.py;
+      const gz = tz - cst.pz;
+      const gap = Math.hypot(gx, gy, gz);
+      const x = cst.px;
+      const z = cst.pz;
       const building = t >= BUILD_AT;
       const resulting = t >= RESULTS[0] && t < RESULTS[1];
       const pressing = t >= PRESS[0] && t < PRESS[1];
-      const inTo = t >= CAT_IN && (cst.snap || cst.sleep < 0.02); /* it wakes before it jumps */
-      const act = t > PRESENT[0] && t < PRESENT[1] ? 1 : t > DRAW[0] && t < DRAW[1] ? 2 : 0;
-      const toRight = track(T.glowX, t) > x; /* which side its subject is on */
+      const inTo = t >= CAT_IN && (cst.snap || (cst.sleep < 0.02 && gap < 0.05 * lay.catS)); /* it wakes, and gets to its spot, before it jumps */
+      const act = t > CALL[0] && t < CALL[1] ? 1 : t > DRAW[0] && t < DRAW[1] ? 2 : t > MAKE[0] && t < MAKE[1] ? 3 : 0;
+      const toRight = track(T.glowX, t) > x; /* which side its subject is on (its tablet goes on that side) */
       if (cst.snap) {
         /* a cut, a resize or the first frame: everything is simply where t says */
         cst.snap = false;
-        cst.px = x;
-        cst.pz = z;
         cst.tWas = t;
         cst.yaw = catIdleYaw(t, x);
         cst.walk = 0;
         cst.lean = 0;
-        cst.typing = 0;
         cst.btnK = pressing ? 1 : 0;
         cst.inK = inTo ? 1 : 0;
         cst.upK = t >= CAT_UP ? 1 : 0;
-        prog.design = t >= DRAW[0] ? 1 : 0;
+        prog.call = t >= CALL[0] ? 1 : 0;
+        prog.sketch = t >= DRAW[0] ? 1 : 0;
         prog.build = building ? 1 : 0;
         prog.results = resulting ? 1 : 0;
         cst.tool = act;
         cst.hand = toRight ? 1 : -1;
         cst.stand = act ? 1 : 0;
         cst.arm = cst.stand;
-        cst.toolK = cst.stand;
+        cst.toolK = act >= 2 ? 1 : 0;
         cst.actT = 0;
-        cst.tipX = TX.padTip(prog.design)[0];
-        cst.tipY = TX.padTip(prog.design)[1];
+        const tip = actTip(act);
+        cst.tipX = tip[0];
+        cst.tipY = tip[1];
         cst.tipSw = 0;
         cst.tipUp = 0;
         cst.sleep = 0;
@@ -1515,38 +1681,73 @@ export async function createStoryScene(container, { clients = [], still = false,
       const ease = (rate) => 1 - Math.exp(-dt * rate);
       const ramp = (v, on, secs) => clamp(v + ((on ? 1 : -1) * dt) / secs);
 
-      /* the site assembling, and the results arriving */
-      const built = prog.build;
+      /* the results arriving */
       const results = prog.results;
-      prog.build = clamp(prog.build + (building ? (dt / BUILD_S) * (t > PRESS[1] ? 6 : 1) : -dt / 1.2)); /* hurries up if the page is leaving */
       prog.results = ramp(prog.results, resulting, resulting ? RESULTS_S : 0.8);
-      /* the design: coloured in while the cat draws; finished in a hurry if the
-         page is leaving, undone if the story goes back */
-      prog.design = clamp(prog.design + (t > DRAW[1] ? (dt / DESIGN_S) * 5 : t >= DRAW[0] ? (cst.tool === 2 && cst.arm >= 1 ? dt / DESIGN_S : 0) : -dt / 0.6));
+      /* the call, the sketch and the build: each goes on while the cat is at it (and ready),
+         is finished in a hurry once the story moves on, and is undone if the story goes back */
+      const work = (v, [from, to], a, secs, back) => clamp(v + (t > to ? (dt / secs) * 5 : t >= from ? (cst.tool === a && cst.arm >= 1 ? dt / secs : 0) : -dt / back));
+      prog.call = work(prog.call, CALL, 1, CALL_S, 0.6);
+      prog.sketch = work(prog.sketch, DRAW, 2, SKETCH_S, 0.6);
+      prog.build = work(prog.build, MAKE, 3, BUILD_S, 1.2);
 
-      /* walking: the legs follow the ground it covers, with a longer stride when it hurries */
-      const dx = x - cst.px;
-      const dz = z - cst.pz;
-      cst.px = x;
-      cst.pz = z;
-      const dist = Math.hypot(dx, dz);
+      /* walking: it makes its own way to its spot, easing in and out. It goes as fast as it
+         needs to keep up with how fast the scroll moves its spot (spotV) and to close the gap:
+         a slow scroll walks it along at the scroll's pace, a fast one breaks it into a run, but
+         never faster than a run. The legs follow the ground it covers, with a longer stride the
+         faster it goes. */
+      const spotV = dt > 0 ? Math.hypot(tx - cst.tgx, ty - cst.tgy, tz - cst.tgz) / dt / lay.catS : 0;
+      cst.tgx = tx;
+      cst.tgy = ty;
+      cst.tgz = tz;
+      cst.spotV += (spotV - cst.spotV) * ease(spotV > cst.spotV ? 10 : 3);
+      let dx = 0;
+      let dz = 0;
+      let dist = 0;
+      if (gap > 1e-4 && cst.inK === 0) {
+        const pace = clamp(Math.max(cst.spotV * 1.3, (gap / lay.catS) * 3), WALK_V, RUN_V); /* cat sizes per second */
+        const acc = lerp(WALK_A, RUN_A, (pace - WALK_V) / (RUN_V - WALK_V)) * lay.catS;
+        cst.wv = Math.min(pace * lay.catS, Math.sqrt(2 * acc * gap), cst.wv + acc * dt);
+        const k = Math.min(1, (cst.wv * dt) / gap);
+        dx = gx * k;
+        dz = gz * k;
+        cst.px += dx;
+        cst.py += gy * k;
+        cst.pz += dz;
+        dist = gap * k;
+      } else cst.wv = 0;
       const speed = dt > 0 ? dist / dt : 0;
       const jumping = cst.inK > 0 && cst.inK < 1;
       const walking = cst.inK === 0 && speed > 0.1;
-      if (walking) cst.phase += Math.min((dist * 7.2) / lay.catS / (1 + speed * 0.16), 11 * dt);
+      if (walking) cst.phase += Math.min((dist * 7.2) / lay.catS / (1 + speed * 0.3), 30 * dt);
+      /* walking past a chapter's copy, it steps down the frame to keep its head under the words
+         (never off the bottom), and back up as it reaches its spot */
+      let dipWant = 0;
+      if (walking && copyBoxes && !lay.portrait) {
+        const perPx = (2 * Math.max(1, camera.position.z - cst.pz) * tanHalf) / lay.h; /* world units per CSS px where it walks */
+        v3a.set(cst.px, cst.py, cst.pz).project(camera);
+        const sx = (v3a.x * 0.5 + 0.5) * lay.w;
+        const feet = (0.5 - v3a.y * 0.5) * lay.h;
+        const head = feet - (1.85 * lay.catS) / perPx;
+        const half = (0.5 * lay.catS) / perPx;
+        copyBoxes.forEach((b, c) => {
+          if (!b || !(b.bottom > 0) || !(copyA[c] > 0.2) || sx + half < b.left || sx - half > b.right) return;
+          dipWant = Math.max(dipWant, Math.min(b.bottom + 16 - head, lay.h - 28 - feet) * perPx);
+        });
+      }
+      cst.dip += (Math.max(0, dipWant) - cst.dip) * ease(5);
       cst.walk += ((walking ? 1 : 0) - cst.walk) * ease(5.5);
       cst.lean += ((walking ? clamp(speed * 0.035, 0, 0.16) : 0) - cst.lean) * ease(5);
       cst.tail += dt * (1.8 + cst.walk * 2.4);
 
-      /* at the laptop, on the button, into the folder */
-      cst.typing = ramp(cst.typing, building && t < PRESS[0] - 0.06 && prog.build < 1 && cst.walk < 0.25, 0.45);
+      /* on the button, into the folder */
       cst.btnK = ramp(cst.btnK, pressing, 0.55);
       cst.upK = ramp(cst.upK, cst.inK >= 1 && t >= CAT_UP, 0.5);
       if (inTo || cst.upK <= 0) cst.inK = ramp(cst.inK, inTo, 0.85); /* it ducks before it jumps back out */
       cst.away = inTo; /* into the folder back first, out of it face first */
 
-      /* brief and design: it picks its tool up while it is down on all fours, stands,
-         reaches out, and then the act runs on its own clock */
+      /* each act: it gets up on its hind legs once it has stopped walking (taking its pencil
+         for the tablet ones), is ready, and then the act runs at its own pace */
       if (act && cst.stand === 0 && cst.toolK === 0) {
         cst.tool = act;
         cst.hand = toRight ? 1 : -1;
@@ -1554,17 +1755,19 @@ export async function createStoryScene(container, { clients = [], still = false,
       }
       const up = act !== 0 && act === cst.tool && cst.walk < 0.2;
       cst.stand = ramp(cst.stand, up, 0.5);
-      cst.toolK = ramp(cst.toolK, up && cst.stand > 0.6, 0.3);
+      cst.toolK = ramp(cst.toolK, up && cst.stand > 0.6 && cst.tool >= 2, 0.3);
       cst.arm = ramp(cst.arm, up && cst.stand >= 1, 0.45);
-      if (cst.arm >= 1 && (cst.tool !== 2 || prog.design >= 1)) cst.actT += dt;
-      if (cst.tool === 2) {
-        /* the pencil follows its stroke closely (the easing only softens the first reach to the glass) */
-        const tip = TX.padTip(prog.design);
-        const kt = cst.arm > 0 ? ease(45) : 1;
+      if (cst.arm >= 1 && actProg(cst.tool) >= 1) cst.actT += dt;
+      if (cst.tool >= 2) {
+        /* the pencil follows its stroke closely (the easing only softens the first reach to
+           the glass); a big jump is a lift across */
+        const tip = actTip(cst.tool);
+        const across = Math.hypot(tip[0] - cst.tipX, tip[1] - cst.tipY) > 50;
+        const kt = cst.arm > 0 ? ease(across ? 9 : 45) : 1;
         cst.tipX += (tip[0] - cst.tipX) * kt;
         cst.tipY += (tip[1] - cst.tipY) * kt;
         cst.tipSw += (tip[2] - cst.tipSw) * ease(18);
-        cst.tipUp += (tip[3] - cst.tipUp) * ease(30);
+        cst.tipUp += ((across ? 1 : tip[3]) - cst.tipUp) * ease(30);
       }
 
       /* launch: once the results are in and the story rests there, a yawn, then a nap.
@@ -1577,7 +1780,6 @@ export async function createStoryScene(container, { clients = [], still = false,
 
       /* what it reacts to */
       if (dt > 0) {
-        if (built < 1 && prog.build >= 1 && t < PRESS[1]) cheer(0.42); /* the site is finished */
         if (results < 0.36 && prog.results >= 0.36) cheer(0.4); /* an enquiry */
         if (tWas < CAT_LEAP && t >= CAT_LEAP && cst.sleep < 0.3) startHop(0.7, 0.74); /* the page takes off */
       }
@@ -1585,37 +1787,39 @@ export async function createStoryScene(container, { clients = [], still = false,
       /* facing: the way it walks, the action when it stands, the site when it types */
       let want = jumping ? (cst.away ? Math.PI : 0) : walking ? Math.atan2(dx, dz) : catIdleYaw(t, x);
       if (!jumping && !walking) {
-        want = lerp(want, (toRight ? 1 : -1) * 0.75, soft(cst.typing));
-        want = lerp(want, cst.hand * (cst.tool === 2 ? 0.5 : 0.28), soft(cst.stand)); /* standing: mostly to the visitor, turned a little to its subject */
+        want = lerp(want, cst.hand * 0.5, soft(cst.stand)); /* at its tablet: mostly to the visitor, turned a little to its work */
         want = lerp(want, 0.95, soft(cst.sleep)); /* asleep: side on */
       }
       cst.yaw += wrap(want - cst.yaw) * ease(jumping ? 10 : 5);
 
       /* gaze: the visitor (pointer), or the page while something is happening on it */
-      let w = t < CAT_IN ? catWatch(t) * (1 - cst.walk) : 0;
-      /* presenting: a glance at the sheet as the pointer moves on, then back to the
-         visitor; drawing: eyes on its work */
-      if (cst.tool === 1) w = lerp(w, bell((cst.actT % NOTE_S) / NOTE_S, 0, 0.16, 0.5), soft(cst.arm));
-      /* designing: eyes on its tablet while it works and checks, then mostly back to the visitor */
-      const atPad = cst.tool === 2 ? soft(cst.arm) * (prog.design < 1 || cst.actT < CHECK[3] ? 1 : 0.25) : 0;
+      const w = t < CAT_IN ? catWatch(t) * (1 - cst.walk) : 0;
+      /* at its tablet: eyes on its work while it draws and checks, then mostly back to the visitor */
+      const atPad = cst.tool >= 2 ? soft(cst.arm) * (actProg(cst.tool) < 1 || cst.actT < CHECK[3] ? 1 : 0.25) : 0;
+      /* on the call: eyes on the client, nodding along while they talk, its head moving as it talks */
+      const ct = prog.call * CALL_S;
+      const onCall = cst.tool === 1 ? soft(cst.arm) * (prog.call < 1 ? 1 : 0) : 0;
+      const nod = onCall * (saying(ct, 'them') ? Math.max(0, Math.sin(time * 3.1)) * 0.1 : saying(ct, 'us') ? Math.sin(time * 4.4) * 0.05 : 0);
       const hx = page.position.x - x;
-      const hy = page.position.y - (track(T.catY, t) + lay.catS);
+      const hy = page.position.y - (cst.py + lay.catS);
       const k = ease(7);
       /* its head follows the pencil across the tablet */
       const padX = cst.hand < 0 ? 1 - cst.tipX / TX.PAD_W : cst.tipX / TX.PAD_W; /* 0 at the near edge, 1 at the far one */
       const padY = cst.tipY / TX.PAD_H - 0.5;
       cst.lookYaw += (lerp(lerp(ptr.sx * 0.7, clamp(hx * 0.5, -0.8, 0.8), w), cst.hand * (0.8 + 0.45 * padX), atPad) - cst.lookYaw) * k; /* never so far that the face is lost */
-      cst.lookPitch += (lerp(lerp(ptr.sy * 0.35, -clamp(hy * 0.3, 0, 0.42), w), 0.06 + 0.3 * padY, atPad) - cst.lookPitch) * k;
+      cst.lookPitch += (lerp(lerp(ptr.sy * 0.35, -clamp(hy * 0.3, 0, 0.42), w), 0.06 + 0.3 * padY, atPad) + nod - cst.lookPitch) * k;
       cst.eyeX += (lerp(ptr.sx * 0.16, clamp(hx * 0.02, -0.03, 0.03), w) - cst.eyeX) * k;
       cst.eyeY += (lerp(-ptr.sy * 0.16, 0.035, w) - cst.eyeY) * k;
 
       /* anything still on its way keeps the scene at full frame rate */
       return (
-        (prog.design > 0 && prog.design < 1) ||
+        (prog.call > 0 && prog.call < 1) ||
+        (prog.sketch > 0 && prog.sketch < 1) ||
         (prog.build > 0 && prog.build < 1) ||
         (prog.results > 0 && prog.results < 1) ||
         jumping ||
-        cst.typing > 0 ||
+        cst.wv > 0 ||
+        cst.dip > 0.001 ||
         (cst.btnK > 0 && cst.btnK < 1) ||
         (cst.upK > 0 && cst.upK < 1) ||
         time - hop.at < hop.dur ||
@@ -1635,10 +1839,12 @@ export async function createStoryScene(container, { clients = [], still = false,
         last = now;
         return;
       }
-      /* cap at 60 fps (120/144 Hz screens don't double the cost); 30 fps when
-         nothing but the slow idle drift is moving */
-      const idleNow = tCur === tTarget && now - lastInput > 1500;
-      if (now - last < (idleNow ? 1000 / 30 : 1000 / 60) - 2) return;
+      /* A frame per screen refresh, but never two within 10 ms (so 120/144 Hz
+         screens don't double the cost), and about 30 fps when nothing but the slow
+         idle drift is moving. (A plain 60 fps cap drops a 75 or 90 Hz screen to
+         every other refresh, which reads as a stutter.) */
+      const idleNow = tCur === tTarget && tVel === 0 && now - lastInput > 1500;
+      if (now - last < (idleNow ? 28 : 10)) return;
       const dt = Math.max(0, Math.min(0.05, (now - last) / 1000));
       last = now;
       if ((window.devicePixelRatio || 1) !== lastDpr) resize(); /* monitor switch / zoom: no ResizeObserver fires */
@@ -1655,8 +1861,20 @@ export async function createStoryScene(container, { clients = [], still = false,
         }
       }
       if (!frozen) time += dt;
-      tCur += (tTarget - tCur) * (1 - Math.exp(-dt * 5.5));
-      if (Math.abs(tTarget - tCur) < 1e-4) tCur = tTarget;
+      /* The story position follows the scroll on a critically damped spring, so it
+         gathers speed and settles without a jolt however the scroll arrives
+         (wheel notches, a trackpad, the scrollbar). */
+      {
+        const x = tCur - tTarget;
+        const e = Math.exp(-FOLLOW * dt);
+        const kv = (tVel + FOLLOW * x) * dt;
+        tVel = (tVel - FOLLOW * kv) * e;
+        tCur = clamp(tTarget + (x + kv) * e, 0, 5);
+        if (Math.abs(tTarget - tCur) < 1e-4 && Math.abs(tVel) < 1e-3) {
+          tCur = tTarget;
+          tVel = 0;
+        }
+      }
       const kp = 1 - Math.exp(-dt * 3.7); /* = 0.06 per frame at 60 Hz, the same feel at 120/144 Hz */
       ptr.sx += (ptr.x - ptr.sx) * kp;
       ptr.sy += (ptr.y - ptr.sy) * kp;
@@ -1685,7 +1903,14 @@ export async function createStoryScene(container, { clients = [], still = false,
     resize(false);
     stepCat(0);
     update(tCur);
-    if (renderer.compileAsync) await renderer.compileAsync(scene, camera);
+    if (renderer.compileAsync) {
+      await renderer.compileAsync(scene, camera);
+      /* the client's picture renders into its own target, which needs its own programs */
+      renderer.setRenderTarget(callRT);
+      const roomReady = renderer.compileAsync(callRoom, roomCam);
+      renderer.setRenderTarget(null);
+      await roomReady;
+    }
     if (disposed) throw new Error('disposed');
     container.prepend(canvas);
     renderFrame();
@@ -1705,6 +1930,7 @@ export async function createStoryScene(container, { clients = [], still = false,
         tTarget = t;
         if (jump) {
           tCur = t;
+          tVel = 0;
           cst.snap = true; /* a cut, not a walk */
         }
       },
@@ -1766,11 +1992,12 @@ export async function createStoryScene(container, { clients = [], still = false,
         renderAt(t) {
           tTarget = t;
           tCur = t;
+          tVel = 0;
           cst.snap = true;
           stepCat(0);
           renderFrame();
         },
-        /* force the build / results progress for captures, e.g. { build: 0.5 } */
+        /* force the call / sketch / build / results progress for captures, e.g. { build: 0.5 } */
         fx(o) {
           if (o) {
             Object.assign(prog, o);
@@ -1801,7 +2028,7 @@ export async function createStoryScene(container, { clients = [], still = false,
             t,
             folder: pose(folder),
             flap: +flap.rotation.x.toFixed(4),
-            page: { ...pose(page), alpha: pageMats[0].opacity, reveal: 1 - cut.value },
+            page: { ...pose(page), alpha: pageMats[0].opacity, built: 1 - cut.value },
             clients: clientSheets.map((cs) => pose(cs.g)),
             camera: { x: camera.position.x, y: camera.position.y, z: camera.position.z },
             glow: { x: glow.position.x, y: glow.position.y, a: glow.material.opacity },

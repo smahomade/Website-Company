@@ -322,7 +322,7 @@ export default function ScrollStory() {
     };
 
     /* Measure the copy columns and the rail for the scene (cube clearing, finale
-       fit, and where the cat can stand on upright screens). */
+       fit, where the cat can stand on upright screens, and its path past the copy). */
     const measure = () => {
       if (!scene) return;
       const sr = stage.getBoundingClientRect();
@@ -330,9 +330,10 @@ export default function ScrollStory() {
         const inner = el && el.querySelector('.story-ch-inner');
         if (!inner) return null;
         const r = inner.getBoundingClientRect();
-        /* `top` without the slide paintCopy puts on chapters that aren't current */
+        /* `top` and `bottom` without the slide paintCopy puts on chapters that aren't current */
         const slid = /translate3d\(0(?:px)?,\s*(-?[\d.]+)px/.exec(el.style.transform);
-        return { left: r.left - sr.left, right: r.right - sr.left, top: r.top - sr.top - (slid ? parseFloat(slid[1]) : 0) };
+        const dy = slid ? parseFloat(slid[1]) : 0;
+        return { left: r.left - sr.left, right: r.right - sr.left, top: r.top - sr.top - dy, bottom: r.bottom - sr.top - dy };
       });
       const rail = railRef.current && railRef.current.offsetParent ? railRef.current.getBoundingClientRect().left - sr.left : 0;
       scene.setCopy(boxes, rail);

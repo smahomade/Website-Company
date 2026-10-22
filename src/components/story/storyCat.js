@@ -4,7 +4,7 @@ import * as TX from './storyTextures.js';
 /* The PixelFold cat, as a flat cartoon: unlit colours, one ink line round the
    whole silhouette and a cream sticker border (both cut with the stencil
    buffer, so overlapping parts never outline each other). storyScene places
-   `root`, `paws`, `button` and `shadow`, and calls pose() every frame. */
+   `root`, `paws`, `button`, `tablet` and `shadow`, and calls pose() every frame. */
 
 const FUR = '#1F1F23';
 const WHITE = '#FFFDF8';
@@ -23,7 +23,10 @@ const lift = (a) => {
   return k * k;
 };
 
-export function createCat({ keep, canvasTex, padMap = null }) {
+/* `coat` recolours it ({ fur, white }): the client it meets on the video call is another cat. */
+export function createCat({ keep, canvasTex, padMap = null, coat = null }) {
+  const furC = (coat && coat.fur) || FUR;
+  const whiteC = (coat && coat.white) || WHITE;
   /* outline widths in the cat's own units (the scene widens them on small screens) */
   const inkT = { value: 0.034 };
   const creamT = { value: 0.085 };
@@ -55,8 +58,8 @@ export function createCat({ keep, canvasTex, padMap = null }) {
   const pawInk = hull(INK, inkT, { stencilRef: 8, stencilFuncMask: 4, stencilWriteMask: 8, stencilZPass: THREE.ReplaceStencilOp });
   const creamHull = hull(CREAM, creamT, { stencilRef: 0, stencilFuncMask: 15, stencilWriteMask: 0 });
 
-  const fur = flat(FUR);
-  const white = flat(WHITE);
+  const fur = flat(furC);
+  const white = flat(whiteC);
   const pink = flat(PINK);
   const ink = flat(INK);
   const pure = flat('#FFFFFF');
@@ -110,7 +113,7 @@ export function createCat({ keep, canvasTex, padMap = null }) {
   const tail = keep(new THREE.InstancedMesh(tailGeo, pure, TAIL_N));
   tail.instanceMatrix.setUsage(THREE.DynamicDrawUsage);
   const tmpColor = new THREE.Color();
-  for (let i = 0; i < TAIL_N; i++) tail.setColorAt(i, tmpColor.set(i >= 21 ? WHITE : FUR));
+  for (let i = 0; i < TAIL_N; i++) tail.setColorAt(i, tmpColor.set(i >= 21 ? whiteC : furC));
   const tailLines = [inkHull, creamHull].map((mat, k) => {
     const im = keep(new THREE.InstancedMesh(tailGeo, mat, TAIL_N));
     im.instanceMatrix = tail.instanceMatrix; /* same beads */
@@ -125,7 +128,7 @@ export function createCat({ keep, canvasTex, padMap = null }) {
   const head = new THREE.Group();
   head.position.set(0, 1.0, 0.36);
   body.add(head);
-  const face = canvasTex(1024, 512, TX.drawCatFace);
+  const face = canvasTex(1024, 512, (c) => TX.drawCatFace(c, furC, whiteC));
   const skull = part(sph(0.5, 36, 24), flat('#FFFFFF', 1, { map: face.tex }), head, [0, 0, 0], [1.24, 1.0, 1.0]);
   part(sph(0.17, 20, 14), white, head, [0, -0.17, 0.4], [1.35, 0.8, 0.7], [0, 0, 0], null);
   part(sph(0.05, 12, 8), ink, head, [0, -0.1, 0.535], [1.45, 0.9, 0.7], [0, 0, 0], null);
@@ -182,33 +185,15 @@ export function createCat({ keep, canvasTex, padMap = null }) {
     part(markGeo, flat(color), head, [x, y, 0.02], [1, 1, 1], [0, 0, rz])
   );
 
-  /* The laptop it builds the site on: sits in front of it and turns with it. */
-  const laptop = new THREE.Group();
-  laptop.position.set(0, 0, 0.74);
-  laptop.visible = false;
-  turn.add(laptop);
-  const shell = flat('#EDE7DE');
-  part(keep(new THREE.BoxGeometry(0.9, 0.05, 0.52)), shell, laptop, [0, 0.03, 0]);
-  part(keep(new THREE.BoxGeometry(0.9, 0.6, 0.04)), shell, laptop, [0, 0.33, 0.32], [1, 1, 1], [0.3, 0, 0]);
-  part(keep(new THREE.BoxGeometry(0.16, 0.16, 0.02)), orange, laptop, [0, 0.34, 0.352], [1, 1, 1], [0.3, 0, 0], null);
-
-  /* What it holds in a front paw: the presenter's pointer and the designer's
-     pencil. Each hangs off whichever front leg is the working arm, tip along -y. */
-  const PAW = [0, -0.3, 0.05];
-  const stickGeo = keep(new THREE.CylinderGeometry(0.02, 0.024, 0.9, 10));
-  const pointer = new THREE.Group();
-  part(stickGeo, flat('#EDE7DE'), pointer, [0, -0.45, 0]);
-  part(sph(0.05, 12, 8), orange, pointer, [0, -0.92, 0]);
+  /* The pencil it works on its tablet with, held in whichever front leg is the
+     working arm, tip along -y. */
   const pencil = new THREE.Group();
   part(keep(new THREE.CylinderGeometry(0.058, 0.058, 0.46, 12)), orange, pencil, [0, -0.2, 0]);
   part(keep(new THREE.CylinderGeometry(0.06, 0.06, 0.07, 12)), pink, pencil, [0, 0.065, 0]);
   part(keep(new THREE.ConeGeometry(0.058, 0.15, 12)), flat('#F3DDBB'), pencil, [0, -0.505, 0], [1, 1, 1], [Math.PI, 0, 0]);
   part(keep(new THREE.ConeGeometry(0.024, 0.062, 10)), ink, pencil, [0, -0.552, 0], [1, 1, 1], [Math.PI, 0, 0], null);
-  const tools = [pointer, pencil];
-  tools.forEach((g) => {
-    g.position.set(...PAW);
-    g.visible = false;
-  });
+  pencil.position.set(0, -0.3, 0.05);
+  pencil.visible = false;
 
   /* The z's that drift up while it sleeps (plain cut-outs, no outline). */
   const zTex = canvasTex(64, 64, (c) => {
@@ -228,8 +213,8 @@ export function createCat({ keep, canvasTex, padMap = null }) {
     return m;
   });
 
-  /* The big tablet it designs on, up on easel legs (the scene stands it beside
-     the cat and paints its screen). Flat shapes get no outline from the hulls,
+  /* The big tablet it sketches, designs and builds on, up on easel legs (the
+     scene stands it beside the cat and paints its screen). Flat shapes get no outline from the hulls,
      so its ink line and sticker border are drawn as two larger shapes behind it. */
   const PAD = { w: 1.36, h: 1.08, up: 0.3 }; /* the slab, and how high its legs hold it */
   const padSize = { w: PAD.w - 0.16, h: PAD.h - 0.16 }; /* the screen */
@@ -282,7 +267,7 @@ export function createCat({ keep, canvasTex, padMap = null }) {
   paws.matrixAutoUpdate = false;
   const pawGeo = sph(0.15, 20, 14);
   const toeGeo = keep(new THREE.CapsuleGeometry(0.011, 0.07, 3, 6));
-  const pawWhite = flat(WHITE, 4);
+  const pawWhite = flat(whiteC, 4);
   const pawToe = flat(INK, 4);
   const pawList = [-1, 1].map((sx) => {
     const g = new THREE.Group();
@@ -310,7 +295,7 @@ export function createCat({ keep, canvasTex, padMap = null }) {
   const qAim = new THREE.Quaternion();
   const qInv = new THREE.Quaternion();
   const chain = [];
-  /* Turns `obj` (a leg, or the tool in its paw) so that its -y runs along a
+  /* Turns `obj` (a leg, or the pencil in its paw) so that its -y runs along a
      direction given in the cat's own frame: +x its left, y up, z the way it faces. */
   function aimAlong(obj, x, y, z, k) {
     if (!(k > 0)) return;
@@ -325,19 +310,19 @@ export function createCat({ keep, canvasTex, padMap = null }) {
   /* Every input is continuous, so the cat moves as smoothly as it is driven.
      p: phase (walk cycle, radians), walk 0..1, lean (forward tilt when it hurries),
      tail (its own sway clock, radians), time (s), yaw, squash, tuck 0..1 (legs
-     gathered in a hop), leap 0..1 (legs stretched in a long jump), typing 0..1,
-     press 0..1 (the button under it), lookYaw / lookPitch (head, relative to the
-     body), eyeX / eyeY, blink 0..1, marks 0..1, paw 0..1.
+     gathered in a hop), leap 0..1 (legs stretched in a long jump), press 0..1
+     (the button under it), lookYaw / lookPitch (head, relative to the body),
+     eyeX / eyeY, blink 0..1, marks 0..1, paw 0..1.
      Optional (left out = 0): stand 0..1 (up on its hind legs); hand ±1 (which
      front leg is the working arm); arm 0..1 with armX/Y/Z (where that arm
-     points, in the cat's own frame); tool 1 pointer / 2 pencil with toolK 0..1
-     and toolX/Y/Z (where its tip points; left out = along the arm); wink 0..1
-     (the eye on the working side); yawn 0..1; sleep 0..1 (curled up, z's rising). */
+     points, in the cat's own frame); toolK 0..1 (the pencil in that paw) with
+     toolX/Y/Z (where its tip points; left out = along the arm); wink 0..1 (the
+     eye on the working side); yawn 0..1; talk 0..1 (its mouth open as it speaks);
+     sleep 0..1 (curled up, z's rising). */
   function pose(p) {
     const wk = p.walk;
     const ph = p.phase;
     const t = p.time;
-    const ty = p.typing;
     const st = p.stand || 0;
     const sl = p.sleep || 0;
     const yn = p.yawn || 0;
@@ -360,36 +345,30 @@ export function createCat({ keep, canvasTex, padMap = null }) {
       bob * 0.06 * wk + Math.sin(t * 2.2) * 0.008 * (1 - wk) + HIP_Y * (1 - cu) - HIP_Z * su - 0.2 * sl,
       HIP_Z * (1 - cu) + HIP_Y * su + 0.27 * st
     );
-    body.rotation.set(Math.sin(ph * 2) * 0.035 * wk + p.lean - p.leap * 0.25 - ty * 0.26 - up, 0, s * 0.07 * wk);
+    body.rotation.set(Math.sin(ph * 2) * 0.035 * wk + p.lean - p.leap * 0.25 - up, 0, s * 0.07 * wk);
     body.scale.set(1 + breath * 0.02, 1 - (1 - bob) * 0.035 * wk + breath * 0.04, 1);
 
-    /* legs: diagonal pairs swing together, paws lift on the forward swing; at the
-       laptop the front pair taps the keys. Standing, the hind pair stays under it
-       and the front pair become arms; asleep, all four fold forward. */
+    /* legs: diagonal pairs swing together, paws lift on the forward swing.
+       Standing, the hind pair stays under it and the front pair become arms;
+       asleep, all four fold forward. */
     legs.forEach((hip, i) => {
       const a = ph + (i === 0 || i === 3 ? 0 : Math.PI);
       const front = i < 2;
       const sx = i % 2 ? 1 : -1;
-      const tap = 0.5 + 0.5 * Math.sin(t * 8 + i * Math.PI);
-      hip.rotation.set(
-        Math.sin(a) * 0.8 * wk - p.tuck * 0.6 + (front ? -1 : 1) * p.leap * 0.95 + (front ? -0.7 + tap * 0.36 : 0.2) * ty - (front ? 1.35 : 1.2) * sl,
-        0,
-        0
-      );
-      hip.position.set(sx * (0.18 + (front ? 0.09 * st : 0)), 0.4 + lift(a) * 0.07 * wk + (front ? 0.05 * ty - 0.04 * st : 0) - 0.07 * sl, front ? 0.27 - 0.07 * st : -0.27);
+      hip.rotation.set(Math.sin(a) * 0.8 * wk - p.tuck * 0.6 + (front ? -1 : 1) * p.leap * 0.95 - (front ? 1.35 : 1.2) * sl, 0, 0);
+      hip.position.set(sx * (0.18 + (front ? 0.09 * st : 0)), 0.4 + lift(a) * 0.07 * wk - (front ? 0.04 * st : 0) - 0.07 * sl, front ? 0.27 - 0.07 * st : -0.27);
       if (front) aimAlong(hip, sx * 0.42, -1, 0.34, st);
       else aimAlong(hip, 0, -1, 0, st);
       if (front && i === hand) aimAlong(hip, p.armX, p.armY, p.armZ, arm);
     });
-    tools.forEach((g, k) => {
-      const on = p.tool === k + 1 ? p.toolK || 0 : 0;
-      g.visible = on > 0.02;
-      if (!g.visible) return;
-      if (g.parent !== legs[hand]) legs[hand].add(g);
-      g.scale.setScalar(on);
-      g.quaternion.identity();
-      if (p.toolX !== undefined) aimAlong(g, p.toolX, p.toolY, p.toolZ, 1);
-    });
+    const held = p.toolK || 0;
+    pencil.visible = held > 0.02;
+    if (pencil.visible) {
+      if (pencil.parent !== legs[hand]) legs[hand].add(pencil);
+      pencil.scale.setScalar(held);
+      pencil.quaternion.identity();
+      if (p.toolX !== undefined) aimAlong(pencil, p.toolX, p.toolY, p.toolZ, 1);
+    }
 
     /* tail: held up in a curve, swaying on its own clock; wrapped round its side asleep */
     tailBase.rotation.x = -0.75 + Math.sin(ph * 2) * 0.08 * wk + p.leap * 0.5 + p.tuck * 0.3 + up * 0.85 - 0.8 * sl;
@@ -422,16 +401,15 @@ export function createCat({ keep, canvasTex, padMap = null }) {
       eye.scale.y = 1 - 0.92 * Math.max(p.blink, sl, yn * 0.9, i === hand ? p.wink || 0 : 0);
       pupil.position.set(clamp(0.012 + p.eyeX, -0.045, 0.045), clamp(p.eyeY, -0.045, 0.045), 0.05);
     });
-    yawnMouth.visible = yn > 0.03;
-    yawnMouth.scale.set(yn, yn * 1.3, 0.5);
+    const mouth = Math.max(yn, 0.55 * (p.talk || 0));
+    yawnMouth.visible = mouth > 0.03;
+    yawnMouth.scale.set(mouth, mouth * 1.3, 0.5);
 
     marks.forEach((m, i) => {
       m.visible = p.marks > 0.02;
       m.scale.setScalar(p.marks * (1 + 0.1 * Math.sin(t * 3 + i * 1.7)));
     });
     pawList.forEach((g) => g.scale.setScalar(Math.max(0.001, p.paw)));
-    laptop.visible = ty > 0.02;
-    laptop.scale.setScalar(Math.max(0.001, ty));
     buttonTop.position.y = 0.13 - 0.045 * p.press;
 
     /* asleep: three z's take turns drifting up from its head and fading */
