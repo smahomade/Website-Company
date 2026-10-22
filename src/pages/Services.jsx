@@ -12,9 +12,10 @@ import { PauseIcon, PlayIcon } from '../components/Icons.jsx';
 
 const FEATURE_CLASS = { bonus: 'feature-bonus', priority: 'feature-priority', backend: 'feature-backend' };
 
-/* Recent builds, shown beside the packages. They are real client sites and all
-   of them run to several pages, so they sit beside every tab rather than
-   standing for one (none is a one-page starter). Hovering one plays its tour. */
+/* Recent builds, shown beside the packages: real client sites. Business opens
+   on Change Work Therapies and Custom on Top One (BUILD_FOR_TAB); none of them
+   is a one-page starter, so Starter just opens on the first. The pills show the
+   others, and hovering one plays its tour. */
 const EXAMPLES = [
   { name: 'Raza Academy', short: 'Raza', note: 'An eight-page rebuild for an education provider.' },
   { name: 'Top One Salon', short: 'Top One', note: 'A bespoke build of 40+ pages for a London salon.' },
@@ -23,6 +24,9 @@ const EXAMPLES = [
   const card = HERO_CARDS.find((c) => c.name === e.name);
   return { ...e, url: card.url, still: card.tourPoster || card.img, pos: card.tourPoster ? 'center top' : card.imgPos, tour: PREFERS_REDUCED_MOTION ? null : card.tour };
 });
+/* the build a tab opens on (the pills still show the others) */
+const BUILD_FOR_TAB = { business: 'Change Work Therapies', custom: 'Top One Salon' };
+const buildFor = (tab) => Math.max(0, EXAMPLES.findIndex((e) => e.name === BUILD_FOR_TAB[tab]));
 const CAN_HOVER = typeof window !== 'undefined' && window.matchMedia('(hover: hover) and (pointer: fine)').matches;
 
 /* One build in a browser frame, with the others a click away. The mouse over
@@ -132,7 +136,7 @@ export default function Services() {
   const pageRef = useRef(null);
   const [tab, setTab] = useState('starter');
   const [modalKey, setModalKey] = useState(null);
-  const [build, setBuild] = useState(0); /* which recent build is showing */
+  const [build, setBuild] = useState(() => buildFor('starter')); /* which recent build is showing */
   useFadeIn(pageRef);
 
   const modalSvc = modalKey ? SERVICES.find((s) => s.key === modalKey) : null;
@@ -161,7 +165,15 @@ export default function Services() {
         <div className="container">
           <div className="menu-tabs">
             {SERVICE_TABS.map((t) => (
-              <button key={t.id} className={'tab-btn' + (tab === t.id ? ' active' : '')} data-tab={t.id} onClick={() => setTab(t.id)}>
+              <button
+                key={t.id}
+                className={'tab-btn' + (tab === t.id ? ' active' : '')}
+                data-tab={t.id}
+                onClick={() => {
+                  setTab(t.id);
+                  setBuild(buildFor(t.id));
+                }}
+              >
                 <span className="tab-folder"><FolderIcon kind={t.iconKind} size={36} /></span>
                 <span className="tab-label">{t.label}</span>
                 <span className="tab-sub">{t.sub}</span>

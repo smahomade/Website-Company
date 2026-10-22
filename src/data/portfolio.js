@@ -38,10 +38,10 @@ export const PORTFOLIO = [
     typeLabel: 'Custom Build',
     industry: 'Beauty & Hair',
     title: 'Top One Salon',
-    desc: 'A fully bespoke website built from scratch — 24 core pages covering hair services, beauty treatments, collections, team profiles, pricing, offers, careers and more, plus their existing SEO pages re-created alongside them, for 40+ pages in all. Fully built and delivered; the client chose to hold off going live to protect their existing search rankings.',
+    desc: 'A fully bespoke website built from scratch — 24 core pages covering hair services, beauty treatments, collections, team profiles, pricing, offers, careers and more, plus their existing SEO pages re-created alongside them, for 40+ pages in all. Now live at topone.co.uk.',
     preview: R2 + '/screenshots/TopOne/top-one-banner.JPG',
-    status: 'delivered',
-    liveUrl: 'https://topone-salon-website.scmahomade.workers.dev',
+    status: 'live',
+    liveUrl: 'https://topone.co.uk',
     slides: [
       { before: TOP_OLD + 'topone.co.uk_.jpg', after: TOP_NEW + 'top-one-salon-website.vercel.app_home.jpg', label: 'Home' },
       { before: TOP_OLD + 'topone.co.uk_about-us_.jpg', after: TOP_NEW + 'top-one-salon-website.vercel.app_aboutus.jpg', label: 'About' },

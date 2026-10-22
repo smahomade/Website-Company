@@ -52,8 +52,8 @@ function PortfolioCard({ p, index, onOpen }) {
         <h3>{p.title}</h3>
         <p>{p.desc}</p>
         <div className="portfolio-card-footer">
-          {p.status === 'live' && <span className="portfolio-live-badge">✶ Live</span>}
-          {p.status === 'delivered' && <span className="portfolio-delivered-badge">✶ Delivered</span>}
+          {p.status === 'live' && <span className="portfolio-live-badge">● Live</span>}
+          {p.status === 'delivered' && <span className="portfolio-delivered-badge">● Delivered</span>}
           {placeholder && <span className="portfolio-coming-soon">Coming Soon</span>}
           {p.liveUrl && (
             <a href={p.liveUrl} target="_blank" rel="noopener noreferrer" className="portfolio-live-btn">
