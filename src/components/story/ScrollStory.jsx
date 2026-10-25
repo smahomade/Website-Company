@@ -1,10 +1,11 @@
-import { Fragment, useCallback, useEffect, useRef, useState } from 'react';
+import { Fragment, useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { STORY_CHAPTERS } from '../../data/story.js';
 import { PORTFOLIO } from '../../data/portfolio.js';
 import { HERO_CARDS } from '../../data/heroCards.js';
 import { PREFERS_REDUCED_MOTION } from '../../lib/site.js';
 import ReelPopup from '../ReelPopup.jsx';
+import { introFolder, storyLayout } from './storyLayout.js';
 
 const N = STORY_CHAPTERS.length;
 const LAST = N - 1;
@@ -52,6 +53,16 @@ const PREVIEW_OF = Object.fromEntries(
   SCENE_CLIENTS.map((c) => [c.id, HERO_CARDS.find((h) => h.name === c.title)]).filter(([, card]) => card)
 );
 const PREVIEW_CARDS = Object.values(PREVIEW_OF);
+
+/* The opening frame as a picture (the folder and cat, captured from the scene with no cubes or
+   glow), shown exactly where the 3D folder will be while the 3D loads, then faded out as the
+   scene fades in. x / y: where the folder's fold is in the picture, fh: the folder's height
+   there (CSS px at capture). Recapture with the scratch poster script if the opening changes. */
+const POSTERS = {
+  wide: { src: '/images/story/intro-poster.webp', w: 625.7, h: 380.6, x: 281, y: 335.6, fh: 297.3 },
+  tall: { src: '/images/story/intro-poster-tall.webp', w: 328, h: 206.7, x: 157, y: 196, fh: 173.1 },
+};
+const posterFor = (w, h) => (storyLayout(w, h).portrait ? POSTERS.tall : POSTERS.wide);
 /* From here on in the story the popup's clips are fetched, so one plays the
    moment a site is clicked (not for visitors who asked their browser to save data). */
 const CLIPS_FROM = 3.2;
@@ -166,6 +177,7 @@ export default function ScrollStory() {
   const sceneRef = useRef(null);
   const lastTRef = useRef(null); /* story position at the previous paint */
   const cutTimer = useRef(0);
+  const posterRef = useRef(null);
   const [mode, setMode] = useState(() => (wantsStill() ? 'static' : 'story'));
   const [canAnimate, setCanAnimate] = useState(true); /* false once WebGL has failed */
   const [ready, setReady] = useState(false);
@@ -241,6 +253,31 @@ export default function ScrollStory() {
     const section = sectionRef.current;
     if (section) window.scrollTo({ top: section.getBoundingClientRect().top + window.scrollY, behavior: 'instant' });
   };
+
+  /* The loading picture: on the scene's folder, at whatever size the stage is. Only from the top
+     of the page (further down the story isn't at its opening frame). */
+  useLayoutEffect(() => {
+    const img = posterRef.current;
+    const stage = stageRef.current;
+    const section = sectionRef.current;
+    if (mode !== 'story' || !img || !stage || !section) return undefined;
+    if (section.getBoundingClientRect().top < -20) {
+      img.style.display = 'none';
+      return undefined;
+    }
+    const place = () => {
+      const w = stage.clientWidth;
+      const h = stage.clientHeight;
+      const P = posterFor(w, h);
+      const f = introFolder(w, h);
+      const k = f.h / P.fh;
+      if (img.getAttribute('src') !== P.src) img.setAttribute('src', P.src);
+      Object.assign(img.style, { width: P.w * k + 'px', height: P.h * k + 'px', left: f.x - P.x * k + 'px', top: f.y - P.y * k + 'px' });
+    };
+    place();
+    window.addEventListener('resize', place);
+    return () => window.removeEventListener('resize', place);
+  }, [mode]);
 
   /* Animated story. */
   useEffect(() => {
@@ -537,6 +574,16 @@ export default function ScrollStory() {
           </>
         )}
         <div className="story-bg" aria-hidden="true" />
+        {mode === 'story' && (
+          <img
+            ref={posterRef}
+            className="story-poster"
+            src={typeof window !== 'undefined' ? posterFor(window.innerWidth, window.innerHeight).src : POSTERS.wide.src}
+            alt=""
+            aria-hidden="true"
+            decoding="async"
+          />
+        )}
         <div className="story-chapters">
           {STORY_CHAPTERS.map((c, i) => (
             <Fragment key={c.id}>

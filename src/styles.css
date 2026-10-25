@@ -8049,6 +8049,17 @@ input:focus, select:focus, textarea:focus { box-shadow: 0 0 0 3px rgba(255, 106,
   transition: opacity 1.4s ease;
 }
 .story.is-ready .story-canvas { opacity: 1; }
+/* the opening frame as a picture while the 3D loads (ScrollStory puts it on the scene's
+   folder); it fades out as the scene fades in over it */
+.story-poster {
+  position: absolute;
+  z-index: 1;
+  max-width: none;
+  pointer-events: none;
+  user-select: none;
+  transition: opacity 1.4s ease;
+}
+.story.is-ready .story-poster { opacity: 0; }
 .story-stage.is-over-hit { cursor: pointer; } /* over the cat or a client site */
 .story-stage::after {
   content: '';
@@ -8618,3 +8629,6 @@ input:focus, select:focus, textarea:focus { box-shadow: 0 0 0 3px rgba(255, 106,
   .pb-title { font-size: clamp(32px, 9vw, 42px); }
   .pb-sub { font-size: 15px; }
 }
+
+/* while a page's code arrives (App.jsx): the charcoal its banner starts with, a screen tall */
+.page-loading { min-height: 100vh; background: var(--charcoal); }
