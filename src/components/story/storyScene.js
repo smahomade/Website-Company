@@ -2,6 +2,7 @@ import * as THREE from 'three';
 import { RoundedBoxGeometry } from 'three/addons/geometries/RoundedBoxGeometry.js';
 import * as TX from './storyTextures.js';
 import { createCat } from './storyCat.js';
+import { storyLayout, FH, FOLDER_SCALE } from './storyLayout.js';
 
 /* The home page's 3D story, in plain three.js (loaded lazily by ScrollStory).
    Everything on screen is a pure function of the story position `t`
@@ -14,14 +15,12 @@ import { createCat } from './storyCat.js';
 const SW = 3.4; /* sheet size (world units) */
 const SH = 2.3;
 const FW = 4.2; /* folder */
-const FH = 2.9;
 const FHF = 2.5;
 const FR = 0.16; /* top corners only: the bottom is a fold */
 const CARD_T = 0.018; /* card thickness */
 const CARD_BEVEL = 0.004;
 const BEND_R = 0.06; /* radius of the fold joining back and front */
 const BASE_Y = BEND_R + CARD_T / 2; /* where the flat panels meet the bend */
-const FOLDER_SCALE = 0.85;
 
 const clamp = (v, a = 0, b = 1) => Math.min(b, Math.max(a, v));
 const seg = (t, a, b) => clamp((t - a) / (b - a));
@@ -173,9 +172,12 @@ const CAM_Z = [1, 0.97, 0.92, 0.95, 0.94, 1.04]; /* camera distance per chapter,
    visitor rests on the chapter, and in a hurry if they scroll on. */
 const PLAN = [2.2, 2.46]; /* the build takes over the sketch as the page crosses over */
 const BUILD_AT = 2.56; /* from here the site can assemble */
-const PRESS = [3.12, 3.3]; /* the cat is on the launch button */
-const RESULTS = [3.84, 4.3]; /* visitors, an enquiry and a review arrive… */
-const RESULTS_S = 2.8; /* …over this many seconds */
+const LIFT = 3.3; /* the build sheet and the code window step aside as the page comes forward to go live */
+/* launch: once the cat has reached its spot its button appears, it steps on and presses it, the
+   site goes live, and then visitors, an enquiry and a review arrive, all on their own clock */
+const GOLIVE = [3.78, 4.3];
+const LIVE_S = 0.9; /* going live (the badge, the cubes drifting out) takes this many seconds… */
+const RESULTS_S = 2.8; /* …and the results this many */
 /* The cat's acts, each while the story rests on that chapter. */
 const CALL = [0.9, 1.08]; /* consultation: on a video call with the client (another cat), whose wishes arrive as messages… */
 const CALL_S = 12.6; /* …over this many seconds */
@@ -254,8 +256,6 @@ function buildTracks(S, portrait = false, { sink = -7.5, workX = S * 0.85, workS
     pageRX: [[2, 0], [2.6, -0.06], [3.3, -0.06], [3.5, 0], [4, 0]],
     pageRY: [[2, -0.3], [2.32, -0.3], [2.6, 0.36], [3.3, 0.36], [3.5, 0.02], [3.72, -0.22], [4, -0.22]],
     pageS: [[2, ps[0]], [2.32, ps[0]], [2.6, ps[1]], [3.3, ps[1]], [3.5, push[1]], [3.72, ps[2]], [4, ps[2]]],
-    badge: [[3.66, 0], [3.82, 1]], /* stays up and leaves with the page */
-    burst: [[3.68, 0], [3.95, 1], [4.6, 0]], /* the cubes drift outwards a little as it goes live */
     glowX: [[0, S], [0.22, S], [0.65, -S], [1.4, -S], [2, S * 0.92], [3, -S], [4, S * 0.9], [4.55, workX], [5, workX]],
     glowY: [[0, 1.2], [1, 1.5], [2, 1.5], [3, 1.3], [4, 1.6], [5, 1.9 + wy]],
     glowA: [[0, 0.34], [1, 0.26], [2, 0.3], [3, 0.24], [3.95, 0.4], [4.4, 0.3], [5, 0.34]],
@@ -921,7 +921,7 @@ export async function createStoryScene(container, { clients = [], still = false,
     const cst = {
       phase: 0, walk: 0, lean: 0, tail: 0, yaw: 0, /* the walk */
       lookYaw: 0, lookPitch: 0, eyeX: 0, eyeY: 0, /* the gaze */
-      btnK: 0, inK: 0, upK: 0, /* on the button, into the folder, up over its edge (each 0..1) */
+      btnUp: 0, btnK: 0, inK: 0, upK: 0, /* its launch button out, it on the button, into the folder, up over its edge (each 0..1) */
       tool: 0, hand: 1, stand: 0, arm: 0, toolK: 0, /* its act (1 the call, 2 design and 3 build at its tablet), which front leg it works with, then how far it is up, ready, holding the pencil (0..1) */
       actT: 0, tipX: 0, tipY: 0, tipSw: 0, tipUp: 0, /* seconds since its work was finished; the pencil on the tablet: where (px), which way its stroke is going, how far it is lifted */
       sleep: 0, restT: 0, yawnAt: -10, /* the nap: how far down it is, seconds rested at launch, when it yawned */
@@ -929,8 +929,8 @@ export async function createStoryScene(container, { clients = [], still = false,
       px: 0, py: 0, pz: 0, wv: 0, spotV: 0, tgx: 0, tgy: 0, tgz: 0, dip: 0, tWas: 0, snap: true, away: true, inFolder: false, /* where it really is, how fast it is walking there, how far down it has stepped to pass under the copy */
       hopU: null, /* dev hook: pin the hop at this point of its arc */
     };
-    /* The call, the sketch, the build and the launch results, each 0..1 on its own clock (see stepCat). */
-    const prog = { call: 0, sketch: 0, build: 0, results: 0 };
+    /* The call, the sketch, the build, going live and the launch results, each 0..1 on its own clock (see stepCat). */
+    const prog = { call: 0, sketch: 0, build: 0, live: 0, results: 0 };
     /* how far its act has got, and where its pencil is on the tablet */
     const actProg = (act) => (act === 1 ? prog.call : act === 3 ? prog.build : prog.sketch);
     const actTip = (act) => (act === 3 ? TX.buildTip(prog.build) : TX.sketchTip(prog.sketch));
@@ -939,6 +939,10 @@ export async function createStoryScene(container, { clients = [], still = false,
     const hopV = { air: 0, squash: 0 };
     let pokeAt = -10;
     let marksAt = -10;
+    /* what it says when it is poked, in turn (and when a poke wakes it) */
+    const POKES = ['Hey!', 'That tickles!', 'Hi there!', 'Mrrp?'];
+    let pokes = 0;
+    let pokeLine = '';
     function hopPose(u) {
       if (!(u > 0 && u < 1)) {
         hopV.air = 0;
@@ -1065,8 +1069,8 @@ export async function createStoryScene(container, { clients = [], still = false,
           const ang = Math.atan2(-0.3, lay.D * CAM_Z[i]) + Math.atan((1 - (2 * (box.top - 64)) / h) * tanHalf);
           stops.y[i] = Math.max(stops.y[i], 1.85 - lay.liftY + dist * Math.tan(ang));
         } else {
-          /* half the cat, plus 12px; in build, also its step across to the launch button */
-          const room = 0.72 * lay.catS + (24 / w) * half + (i === 3 ? 0.85 : 0);
+          /* half the cat, plus 12px; at launch, also its step across to the launch button */
+          const room = 0.72 * lay.catS + (24 / w) * half + (i === 4 ? 0.85 : 0);
           const xAt = (px) => mid + ((px / w) * 2 - 1) * half;
           if (box.left + box.right < w) stops.x[i] = Math.max(stops.x[i], xAt(box.right) + room);
           else {
@@ -1084,13 +1088,13 @@ export async function createStoryScene(container, { clients = [], still = false,
       T = buildTracks(lay.S, lay.portrait, { sink, page: pageFit, cat: stops, ...(fitWork(w, h, aspect) || {}) });
       codeWin.position.y = SH / 2 + (lay.portrait ? 0.3 : 0.52); /* upright: tucked lower, inside the frame */
       {
-        /* the launch button: beside its build stop, away from its tablet (which stands towards the
-           page), unless the frame has no room on that side */
-        const half3 = (lay.D * CAM_Z[3] - CAT_Z[3]) * tanHalf * aspect;
-        const mid3 = -S * 0.17;
-        const away = stops.x[3] >= -S ? 1 : -1;
-        const fits = Math.abs(stops.x[3] + away * (0.85 + 0.5 * lay.catS) - mid3) < half3 * 0.82;
-        lay.btnDx = (fits ? away : -away) * 0.85;
+        /* the launch button: beside its launch stop, towards the middle of the frame (the copy
+           leaves room there), unless the frame has no room on that side */
+        const half4 = (lay.D * CAM_Z[4] - CAT_Z[4]) * tanHalf * aspect;
+        const mid4 = S * 0.9 * 0.17;
+        const toward = stops.x[4] > mid4 ? -1 : 1;
+        const fits = Math.abs(stops.x[4] + toward * (0.85 + 0.5 * lay.catS) - mid4) < half4 * 0.82;
+        lay.btnDx = (fits ? toward : -toward) * 0.85;
       }
       cst.snap = true; /* the stops moved: that isn't the cat walking */
       /* Folder pose the page leaves from (t = 1.3); frozen so the folder can
@@ -1119,25 +1123,14 @@ export async function createStoryScene(container, { clients = [], still = false,
       camera.updateProjectionMatrix();
       lay.w = w;
       lay.h = h;
-      lay.portrait = aspect < 0.95;
-      if (lay.portrait) {
-        /* the bottom copy block takes a share of the height; frame the 3D in what's left */
-        const r = Math.min(0.58, 360 / h);
-        const band = 1 - r - 0.06;
-        lay.D = Math.max(13, 9.76 / aspect, 8.5 / band);
-        lay.liftY = lay.D * tanHalf * Math.max(0.15, r - 0.12);
+      /* the framing (camera distance, sideways room for the copy) is shared with the
+         picture that stands in for the scene while it loads (storyLayout.js) */
+      Object.assign(lay, storyLayout(w, h));
+      if (still && !lay.portrait) {
+        lay.D = 13;
         lay.S = 0;
-        lay.fanK = 0.62;
-      } else {
-        /* Below 1.45:1 the copy leaves too little room beside the stage, so the
-           camera pulls back to keep the 1.45:1 half-width. Very wide screens cap S
-           so copy and scene don't drift into two halves. */
-        lay.D = still ? 13 : 13 * Math.max(1, 1.45 / aspect);
-        const halfW = lay.D * tanHalf * aspect;
-        lay.S = still ? 0 : Math.min(halfW * lerp(0.46, 0.4, clamp((aspect - 1.3) / 0.4)), 3.2);
-        lay.liftY = 0;
-        lay.fanK = still ? 0.94 : 0.8;
       }
+      lay.fanK = lay.portrait ? 0.62 : still ? 0.94 : 0.8;
       lay.catS = lay.portrait ? 0.58 : 0.62;
       /* keep the cat's outline from thinning out on small screens */
       const perPx = (2 * (lay.D - 2) * tanHalf) / h; /* world units per CSS px at its depth */
@@ -1298,7 +1291,7 @@ export async function createStoryScene(container, { clients = [], still = false,
       }
       /* the finished site takes the sketch's place under the build sheet once the build is
          done (the sheet covers the swap), so it is there when the sheet steps aside */
-      const reveal = t >= PLAN[1] && (prog.build >= 1 || t >= PRESS[1]) ? 1 : 0;
+      const reveal = t >= PLAN[1] && (prog.build >= 1 || t >= LIFT) ? 1 : 0;
       cut.value = 1 - reveal;
       sketch.visible = reveal < 0.999;
       layers.forEach((L) => {
@@ -1312,14 +1305,14 @@ export async function createStoryScene(container, { clients = [], still = false,
       const scanK = Math.sin(Math.PI * reveal);
       scanLineMat.opacity = scanK * 0.5;
       scanGlowMat.opacity = scanK * 0.28;
-      const b = soft(track(T.badge, t));
+      const b = soft(prog.live); /* the Live badge, as it goes live (it leaves with the page) */
       badge.visible = b > 0.01;
       badge.scale.setScalar(0.92 + 0.08 * b);
       badgeMat.opacity = b * alpha;
 
       /* build: the build sheet takes over the sketch while the page crosses over, then the
          site assembles on it block by block (prog.build) with the code typing behind */
-      const planK = soft(seg(t, PLAN[0], PLAN[1])) * (1 - soft(seg(t, PRESS[1], PRESS[1] + 0.12)));
+      const planK = soft(seg(t, PLAN[0], PLAN[1])) * (1 - soft(seg(t, LIFT, LIFT + 0.12)));
       buildSheet.visible = planK > 0.004 && prog.build < 1;
       buildU.uShow.value = planK * alpha;
       for (let i = 0; i < NB; i++) buildU.uK.value[i] = TX.blockK(i, prog.build);
@@ -1327,7 +1320,7 @@ export async function createStoryScene(container, { clients = [], still = false,
       moteU.uP.value = prog.build;
       moteU.uTime.value = time;
       moteU.uAlpha.value = planK;
-      const codeA = soft(seg(t, BUILD_AT - 0.06, BUILD_AT + 0.06)) * (1 - soft(seg(t, PRESS[1] - 0.06, PRESS[1] + 0.06)));
+      const codeA = soft(seg(t, BUILD_AT - 0.06, BUILD_AT + 0.06)) * (1 - soft(seg(t, LIFT - 0.06, LIFT + 0.06)));
       codeWin.visible = codeA > 0.01;
       codeMat.opacity = codeA;
       const step = Math.round(prog.build * CODE_STEPS);
@@ -1397,10 +1390,10 @@ export async function createStoryScene(container, { clients = [], still = false,
       const standX = catAt.x; /* even while it is over on the launch button */
       const onBtn = soft(cst.btnK);
       const btnArc = 4 * cst.btnK * (1 - cst.btnK); /* the step up onto the button, and back off */
-      const bs = soft(seg(t, PRESS[0] - 0.08, PRESS[0] - 0.02)) * (1 - soft(seg(t, PRESS[1] + 0.1, PRESS[1] + 0.2)));
-      const btnX = track(T.catX, 3) + lay.btnDx; /* beside its build stop */
+      const bs = soft(cst.btnUp);
+      const btnX = track(T.catX, 4) + lay.btnDx; /* beside its launch stop */
       cat.button.visible = bs > 0.02;
-      cat.button.position.set(btnX, track(T.catY, 3), track(T.catZ, 3));
+      cat.button.position.set(btnX, track(T.catY, 4), track(T.catZ, 4));
       cat.button.scale.setScalar(cw * Math.max(0.001, bs));
       catAt.x = lerp(catAt.x, btnX, onBtn);
       hopPose(cst.hopU == null ? (time - hop.at) / hop.dur : cst.hopU);
@@ -1658,7 +1651,7 @@ export async function createStoryScene(container, { clients = [], still = false,
       }
 
       /* pixel field: idle drift, scroll parallax, a gentle spread at launch, kept off the copy */
-      const burst = track(T.burst, t);
+      const burst = soft(prog.live) * (1 - soft(seg(t, 4.3, 4.6))); /* the cubes drift outwards a little as it goes live */
       for (let i = 0; i < PIX; i++) {
         const d = pd[i];
         v3a.set(
@@ -1744,8 +1737,7 @@ export async function createStoryScene(container, { clients = [], still = false,
       const x = cst.px;
       const z = cst.pz;
       const building = t >= BUILD_AT;
-      const resulting = t >= RESULTS[0] && t < RESULTS[1];
-      const pressing = t >= PRESS[0] && t < PRESS[1];
+      const launching = t >= GOLIVE[0] && t < GOLIVE[1];
       const inTo = t >= CAT_IN && (cst.snap || (cst.sleep < 0.02 && gap < 0.05 * lay.catS)); /* it wakes, and gets to its spot, before it jumps */
       const act = t > CALL[0] && t < CALL[1] ? 1 : t > DRAW[0] && t < DRAW[1] ? 2 : t > MAKE[0] && t < MAKE[1] ? 3 : 0;
       const toRight = track(T.glowX, t) > x; /* which side its subject is on (its tablet goes on that side) */
@@ -1756,13 +1748,15 @@ export async function createStoryScene(container, { clients = [], still = false,
         cst.yaw = catIdleYaw(t, x);
         cst.walk = 0;
         cst.lean = 0;
-        cst.btnK = pressing ? 1 : 0;
+        cst.btnUp = 0;
+        cst.btnK = 0;
         cst.inK = inTo ? 1 : 0;
         cst.upK = t >= CAT_UP ? 1 : 0;
         prog.call = t >= CALL[0] ? 1 : 0;
         prog.sketch = t >= DRAW[0] ? 1 : 0;
         prog.build = building ? 1 : 0;
-        prog.results = resulting ? 1 : 0;
+        prog.live = t >= GOLIVE[0] ? 1 : 0;
+        prog.results = launching ? 1 : 0;
         cst.tool = act;
         cst.hand = toRight ? 1 : -1;
         cst.stand = act ? 1 : 0;
@@ -1785,7 +1779,14 @@ export async function createStoryScene(container, { clients = [], still = false,
       const ease = (rate) => 1 - Math.exp(-dt * rate);
       const ramp = (v, on, secs) => clamp(v + ((on ? 1 : -1) * dt) / secs);
 
-      /* the results arriving */
+      /* launch: once it is at its spot its button comes out, it steps on and presses it, the site
+         goes live while it is on it (finished in a hurry if the story moves on, undone if it goes
+         back), then it steps off, the button goes away, and the results arrive */
+      const there = gap < 0.06 * lay.catS && cst.walk < 0.2;
+      cst.btnUp = ramp(cst.btnUp, launching && (cst.btnK > 0 || (there && prog.live < 1)), 0.35);
+      cst.btnK = ramp(cst.btnK, launching && cst.btnUp >= 1 && prog.live < 1, 0.55);
+      prog.live = clamp(prog.live + (t >= GOLIVE[1] ? dt / 0.3 : launching ? (cst.btnK >= 1 || prog.live > 0 ? dt / LIVE_S : 0) : -dt / 0.6));
+      const resulting = launching && prog.live >= 1;
       const results = prog.results;
       prog.results = ramp(prog.results, resulting, resulting ? RESULTS_S : 0.8);
       /* the call, the sketch and the build: each goes on while the cat is at it (and ready),
@@ -1844,8 +1845,7 @@ export async function createStoryScene(container, { clients = [], still = false,
       cst.lean += ((walking ? clamp(speed * 0.035, 0, 0.16) : 0) - cst.lean) * ease(5);
       cst.tail += dt * (1.8 + cst.walk * 2.4);
 
-      /* on the button, into the folder */
-      cst.btnK = ramp(cst.btnK, pressing, 0.55);
+      /* into the folder */
       cst.upK = ramp(cst.upK, cst.inK >= 1 && t >= CAT_UP, 0.5);
       if (inTo || cst.upK <= 0) cst.inK = ramp(cst.inK, inTo, 0.85); /* it ducks before it jumps back out */
       cst.away = inTo; /* into the folder back first, out of it face first */
@@ -1886,8 +1886,9 @@ export async function createStoryScene(container, { clients = [], still = false,
         });
       } else if (cst.tool === 2 && cst.arm >= 1 && prog.sketch >= 1 && cst.actT > 0.3 && cst.actT < 3.4) line = 'Here’s the sketch!';
       else if (cst.tool === 3 && cst.arm >= 1 && prog.build >= 1 && cst.actT > 0.3 && cst.actT < 3.4) line = 'Built and tested!';
-      else if (t > RESULTS[0] && t < NAP[1] && prog.results > 0.05 && prog.results < 0.75) line = 'We’re live!';
+      else if (launching && t < NAP[1] && prog.live > 0.25 && prog.results < 0.6) line = 'We’re live!';
       else if (t < 0.12 && time > 1.4 && time < 5.4) line = 'Hi! Scroll down and I’ll show you how.'; /* a hello, once, as the page opens */
+      if (pokeAt > 0 && time - pokeAt < 1.8) line = pokeLine; /* a poke gets an answer */
       if (cst.walk > 0.3 || cst.inK > 0 || cst.sleep > 0.05) line = '';
       /* one line at a time: the old one fades out before the next comes in */
       if (line !== cst.say) {
@@ -1948,6 +1949,8 @@ export async function createStoryScene(container, { clients = [], still = false,
         (cst.speak > 0.002 && cst.speak < 0.998) ||
         cst.dip > 0.001 ||
         (cst.btnK > 0 && cst.btnK < 1) ||
+        (cst.btnUp > 0 && cst.btnUp < 1) ||
+        (prog.live > 0 && prog.live < 1) ||
         (cst.upK > 0 && cst.upK < 1) ||
         time - hop.at < hop.dur ||
         (cst.stand > 0 && (!coarse || cst.stand < 1 || cst.arm < 1)) || /* its acts: full rate on desktops, the calmer idle rate on phones once it is settled */
@@ -2096,6 +2099,7 @@ export async function createStoryScene(container, { clients = [], still = false,
         if (!asleep && !startHop(0.5)) return false;
         pokeAt = time;
         marksAt = time;
+        pokeLine = asleep ? 'Oh! I’m awake!' : POKES[pokes++ % POKES.length];
         lastInput = performance.now();
         return true;
       },
