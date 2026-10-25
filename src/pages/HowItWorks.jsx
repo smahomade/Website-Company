@@ -167,7 +167,7 @@ export default function HowItWorks() {
           {STEPS.map((s, i) => (
             <article className={'hiw-step' + (i % 2 ? ' hiw-step--flip' : '')} key={s.num}>
               <div className="hiw-step-copy">
-                <span className="hiw-step-index" aria-hidden="true">{s.num}</span>
+                <span className="hiw-step-index" data-num={s.num} aria-hidden="true" />
                 <p className="section-label">{s.label}</p>
                 <h2 className="section-title hiw-step-heading">{s.title}</h2>
                 <p className="hiw-step-body">{s.body}</p>

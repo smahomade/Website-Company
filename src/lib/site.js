@@ -5,7 +5,7 @@ export const BRAND = {
   tagline: 'Your ideas, well folded.',
 };
 export const LOGO = {
-  mark: '/images/brand/pixelfold-mark.png',        /* cat + folder, transparent */
+  mark: '/images/brand/pixelfold-mark.webp',       /* cat + folder, transparent (.png: the original) */
   lockup: '/images/brand/pixelfold-lockup.png',    /* horizontal mark + wordmark */
   stacked: '/images/brand/pixelfold-stacked.png',  /* stacked mark + wordmark */
   icon: '/images/brand/pixelfold-icon.png',        /* rounded app icon */

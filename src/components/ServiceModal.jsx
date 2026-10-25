@@ -26,7 +26,7 @@ export default function ServiceModal({ service, onClose }) {
   }, [open]);
 
   return (
-    <div className={'service-modal' + (open ? ' open' : '')} id="serviceModal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+    <div className={'service-modal' + (open ? ' open' : '')} id="serviceModal" role={open ? 'dialog' : undefined} aria-modal={open ? 'true' : undefined} aria-labelledby={open && d ? 'modalTitle' : undefined} aria-hidden={open ? undefined : 'true'} inert={!open}>
       <div className="service-modal-overlay" id="modalOverlay" onClick={onClose} />
       <div className="service-modal-box">
         <button className="service-modal-close" id="modalClose" aria-label="Close" onClick={onClose}>

@@ -8,6 +8,7 @@ import { useFadeIn } from '../hooks/useRevealOnScroll.js';
 import { PORTFOLIO, PORTFOLIO_FILTERS } from '../data/portfolio.js';
 import { LOGO } from '../lib/site.js';
 import Mascot from '../components/Mascot.jsx';
+import Testimonials from '../components/Testimonials.jsx';
 
 function matches(p, filter) {
   if (filter === 'all') return true;
@@ -55,6 +56,11 @@ function PortfolioCard({ p, index, onOpen }) {
           {p.status === 'live' && <span className="portfolio-live-badge">● Live</span>}
           {p.status === 'delivered' && <span className="portfolio-delivered-badge">● Delivered</span>}
           {placeholder && <span className="portfolio-coming-soon">Coming Soon</span>}
+          {p.caseStudy && (
+            <Link to={'/portfolio/' + p.id} className="portfolio-live-btn portfolio-case-btn">
+              Case study
+            </Link>
+          )}
           {p.liveUrl && (
             <a href={p.liveUrl} target="_blank" rel="noopener noreferrer" className="portfolio-live-btn">
               <ExternalLinkIcon />
@@ -133,6 +139,8 @@ export default function Portfolio() {
           </div>
         </div>
       </section>
+
+      <Testimonials />
 
       {/* CTA STRIP */}
       <section className="portfolio-cta">

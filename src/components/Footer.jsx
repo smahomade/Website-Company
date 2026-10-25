@@ -9,7 +9,7 @@ export default function Footer() {
         <div className="footer-grid">
           <div className="footer-brand">
             <Link to="/" className="brand-lockup" aria-label="PixelFold home">
-              <img src={LOGO.mark} alt="" className="brand-mark" />
+              <img src={LOGO.mark} alt="" className="brand-mark" width="202" height="205" />
               <span className="brand-word" aria-hidden="true">PIXEL<i>FOLD</i></span>
             </Link>
             <p className="footer-tagline">{BRAND.tagline}</p>
@@ -24,7 +24,7 @@ export default function Footer() {
             </div>
           </div>
           <div className="footer-col">
-            <h4>Navigate</h4>
+            <h2 className="footer-heading">Navigate</h2>
             <ul>
               <li><Link to="/">Home</Link></li>
               <li><Link to="/how-it-works">How It Works</Link></li>
@@ -35,7 +35,7 @@ export default function Footer() {
             </ul>
           </div>
           <div className="footer-col">
-            <h4>Contact</h4>
+            <h2 className="footer-heading">Contact</h2>
             <ul>
               <li><a href={CONTACT.phoneHref}>{CONTACT.phone}</a></li>
               <li><a href={'mailto:' + CONTACT.email}>{CONTACT.email}</a></li>
@@ -43,7 +43,7 @@ export default function Footer() {
             </ul>
           </div>
           <div className="footer-col">
-            <h4>Services</h4>
+            <h2 className="footer-heading">Services</h2>
             <ul>
               <li>Static Websites</li>
               <li>Dynamic Websites</li>

@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import Seo from '../components/Seo.jsx';
 import ScrollStory from '../components/story/ScrollStory.jsx';
 import Pricing from '../components/Pricing.jsx';
+import Testimonials from '../components/Testimonials.jsx';
 import { FolderIcon, PixelSquares } from '../components/BrandIcons.jsx';
 import useRevealOnScroll, { useFadeIn } from '../hooks/useRevealOnScroll.js';
 
@@ -31,6 +32,7 @@ export default function Home() {
 
       <div className="home-after">
         <Pricing />
+        <Testimonials />
 
         <section className="how-it-works" id="why-us">
           <div className="container">

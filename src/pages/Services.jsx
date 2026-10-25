@@ -163,6 +163,7 @@ export default function Services() {
       {/* PACKAGES */}
       <section className="menu-section" id="services">
         <div className="container">
+          <h2 className="sr-only">Packages</h2>
           <div className="menu-tabs">
             {SERVICE_TABS.map((t) => (
               <button

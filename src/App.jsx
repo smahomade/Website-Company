@@ -10,6 +10,7 @@ const pages = {
   howItWorks: () => import('./pages/HowItWorks.jsx'),
   services: () => import('./pages/Services.jsx'),
   portfolio: () => import('./pages/Portfolio.jsx'),
+  caseStudy: () => import('./pages/CaseStudy.jsx'),
   contact: () => import('./pages/Contact.jsx'),
   register: () => import('./pages/Register.jsx'),
   notFound: () => import('./pages/NotFound.jsx'),
@@ -17,6 +18,7 @@ const pages = {
 const HowItWorks = lazy(pages.howItWorks);
 const Services = lazy(pages.services);
 const Portfolio = lazy(pages.portfolio);
+const CaseStudy = lazy(pages.caseStudy);
 const Contact = lazy(pages.contact);
 const Register = lazy(pages.register);
 const NotFound = lazy(pages.notFound);
@@ -49,6 +51,7 @@ export default function App() {
         <Route path="how-it-works" element={page(HowItWorks)} />
         <Route path="services" element={page(Services)} />
         <Route path="portfolio" element={page(Portfolio)} />
+        <Route path="portfolio/:id" element={page(CaseStudy)} />
         <Route path="contact" element={page(Contact)} />
         <Route path="register" element={page(Register)} />
 

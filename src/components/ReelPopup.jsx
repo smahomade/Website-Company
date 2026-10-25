@@ -116,7 +116,7 @@ export default function ReelPopup({ card, warm = null, keep = null, onClose }) {
             />
           )}
           <div className="reel-popup-img-fallback" id="reelPopupFallback" style={{ display: hasImg ? 'none' : 'flex' }}>
-            <img src={LOGO.mark} alt="" />
+            <img src={LOGO.mark} alt="" width="202" height="205" />
             <span>Coming Soon</span>
           </div>
         </div>

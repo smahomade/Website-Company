@@ -10,7 +10,11 @@ const CWT_NEW = R2 + '/screenshots/ChangeWorkTherapies/FullWebsiteScreenieCWT-ne
    the project should appear under.
    `slides` is either an array of {before, after, label} (opens the
    before/after compare modal) or a flat array of image URLs (opens the
-   simple gallery). Cards without slides are "Coming soon" placeholders. */
+   simple gallery). Cards without slides are "Coming soon" placeholders.
+   `caseStudy` is the project's own page (/portfolio/<id>): only what we know
+   to be true about the job, no invented figures. Its `shots` names small
+   copies of the first three slides, cropped to the top of each page, in
+   public/images/case-studies (<shots>-<n>-600.webp and -1000.webp). */
 export const PORTFOLIO = [
   {
     id: 'raza-academy',
@@ -23,6 +27,21 @@ export const PORTFOLIO = [
     previewPos: 'center 12%',
     status: 'live',
     liveUrl: 'https://razaacademy.co.uk',
+    caseStudy: {
+      title: 'Raza Academy,',
+      accent: 'redesigned.',
+      pages: '8 pages',
+      shots: '/images/case-studies/raza-academy',
+      summary: 'A full redesign for a Richmond education provider: clearer courses, an easy way to sign up, and a look that matches the quality of the teaching.',
+      need: 'Raza Academy offers tuition in maths and Islamic studies, plus home-schooling, from Richmond. Parents needed to see what was on offer and how to sign up without hunting for it, and the site needed to look as good as the teaching is.',
+      built: [
+        'A full redesign of all eight pages, rebuilt from scratch',
+        'Clearer navigation through courses, home-schooling, registration and contact',
+        'A registration page parents can reach from anywhere on the site',
+        'Mobile-first layouts throughout',
+      ],
+      result: 'The new site is live at razaacademy.co.uk. Every page’s before and after is a click away below.',
+    },
     slides: [
       { before: RAZA_OLD + 'razaacademy.co.uk_.jpg', after: RAZA_NEW + 'razaacademy.co.uk_new.jpg', label: 'Home' },
       { before: RAZA_OLD + 'razaacademy.co.uk_about.jpg', after: RAZA_NEW + 'razaacademy.co.uk_about_new.jpg', label: 'About' },
@@ -42,6 +61,21 @@ export const PORTFOLIO = [
     preview: R2 + '/screenshots/TopOne/top-one-banner.JPG',
     status: 'live',
     liveUrl: 'https://topone.co.uk',
+    caseStudy: {
+      title: 'Top One Salon,',
+      accent: 'built from scratch.',
+      pages: '40+ pages',
+      shots: '/images/case-studies/top-one-salon',
+      summary: 'A fully bespoke site for a Richmond hair and beauty salon, with its existing search pages re-created alongside the new ones.',
+      need: 'Top One has been Richmond’s hair and beauty salon since 2005. They wanted a premium, fully bespoke site to match the salon, without losing the search rankings their existing pages had built up over the years.',
+      built: [
+        '24 core pages: hair services, beauty treatments, collections, team profiles, pricing, offers, careers and more',
+        'Their existing SEO pages re-created alongside them, for 40+ pages in all, to protect the rankings they had built',
+        'A built-in editor, so the salon can update its own pages',
+        'Booking that hands straight over to the salon’s booking system',
+      ],
+      result: 'The site is live at topone.co.uk. Every page’s before and after is a click away below.',
+    },
     slides: [
       { before: TOP_OLD + 'topone.co.uk_.jpg', after: TOP_NEW + 'top-one-salon-website.vercel.app_home.jpg', label: 'Home' },
       { before: TOP_OLD + 'topone.co.uk_about-us_.jpg', after: TOP_NEW + 'top-one-salon-website.vercel.app_aboutus.jpg', label: 'About' },
@@ -67,6 +101,21 @@ export const PORTFOLIO = [
     preview: R2 + '/screenshots/ChangeWorkTherapies/changeworktherapies-banner.JPG',
     status: 'live',
     liveUrl: 'https://changeworktherapies.com',
+    caseStudy: {
+      title: 'Change Work Therapies,',
+      accent: 'calm and trust-led.',
+      pages: '7 pages',
+      shots: '/images/case-studies/change-work-therapies',
+      summary: 'A seven-page site for a therapy practice, designed to put visitors at ease and make booking a session simple.',
+      need: 'People looking at a therapy practice need to feel at ease before they get in touch. The site had to feel calm, explain the treatments clearly and make booking a session simple.',
+      built: [
+        'Seven pages: home, about, treatments, the clinic, testimonials, booking and contact',
+        'Online session booking',
+        'Client testimonials on a page of their own',
+        'A calm, trust-led design throughout',
+      ],
+      result: 'The site is live at changeworktherapies.com. Every page is a click away below.',
+    },
     slides: [
       CWT_NEW + 'change-work-therapy.pages.dev_.jpg',
       CWT_NEW + 'change-work-therapy.pages.dev_about-me.jpg',
