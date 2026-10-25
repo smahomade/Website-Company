@@ -15,7 +15,7 @@ export const PORTFOLIO = [
   {
     id: 'raza-academy',
     type: 'redesign',
-    typeLabel: 'Redesign',
+    typeLabel: 'Business Build',
     industry: 'Education',
     title: 'Raza Academy',
     desc: 'An 8-page full redesign for a Richmond-based Islamic education provider. New look, cleaner layout and a smoother user journey — covering courses, home-schooling, registration and contact. Completed and live.',
@@ -60,7 +60,7 @@ export const PORTFOLIO = [
     id: 'change-work-therapies',
     type: 'static',
     types: ['static', 'redesign'],
-    typeLabel: 'Custom Build',
+    typeLabel: 'Business Build',
     industry: 'Therapy & Wellbeing',
     title: 'Change Work Therapies',
     desc: 'A custom seven-page website for a therapy practice — covering treatments, clinic details, client testimonials and online session booking, wrapped in a calm, trust-led design.',

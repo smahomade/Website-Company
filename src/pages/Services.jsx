@@ -12,28 +12,25 @@ import { PauseIcon, PlayIcon } from '../components/Icons.jsx';
 
 const FEATURE_CLASS = { bonus: 'feature-bonus', priority: 'feature-priority', backend: 'feature-backend' };
 
-/* Recent builds, shown beside the packages: real client sites. Business opens
-   on Change Work Therapies and Custom on Top One (BUILD_FOR_TAB); none of them
-   is a one-page starter, so Starter just opens on the first. The pills show the
-   others, and hovering one plays its tour. */
+/* Recent builds, shown beside the packages of the tab they were: real client
+   sites, each under the package it actually was (`pack`). There has been no
+   Starter build, so that tab shows none. Hovering one plays its tour. */
 const EXAMPLES = [
-  { name: 'Raza Academy', short: 'Raza', note: 'An eight-page rebuild for an education provider.' },
-  { name: 'Top One Salon', short: 'Top One', note: 'A bespoke build of 40+ pages for a London salon.' },
-  { name: 'Change Work Therapies', short: 'Change Work', note: 'A seven-page site for a therapy practice, calm and trust-led.' },
+  { name: 'Change Work Therapies', short: 'Change Work', pack: 'business', note: 'A seven-page site for a therapy practice, calm and trust-led.' },
+  { name: 'Raza Academy', short: 'Raza', pack: 'business', note: 'An eight-page rebuild for an education provider.' },
+  { name: 'Top One Salon', short: 'Top One', pack: 'custom', note: 'A bespoke build of 40+ pages for a London salon.' },
 ].map((e) => {
   const card = HERO_CARDS.find((c) => c.name === e.name);
   return { ...e, url: card.url, still: card.tourPoster || card.img, pos: card.tourPoster ? 'center top' : card.imgPos, tour: PREFERS_REDUCED_MOTION ? null : card.tour };
 });
-/* the build a tab opens on (the pills still show the others) */
-const BUILD_FOR_TAB = { business: 'Change Work Therapies', custom: 'Top One Salon' };
-const buildFor = (tab) => Math.max(0, EXAMPLES.findIndex((e) => e.name === BUILD_FOR_TAB[tab]));
+const examplesFor = (tab) => EXAMPLES.filter((e) => e.pack === tab);
 const CAN_HOVER = typeof window !== 'undefined' && window.matchMedia('(hover: hover) and (pointer: fine)').matches;
 
-/* One build in a browser frame, with the others a click away. The mouse over
-   the frame plays its tour (a still otherwise); the button does the same for
-   touch and keyboard. */
-function ExampleBuild({ index, onPick }) {
-  const ex = EXAMPLES[index];
+/* One build in a browser frame, with the others of its package a click away.
+   The mouse over the frame plays its tour (a still otherwise); the button does
+   the same for touch and keyboard. */
+function ExampleBuild({ list, label, index, onPick }) {
+  const ex = list[index];
   const videoRef = useRef(null);
   const [playing, setPlaying] = useState(false);
 
@@ -80,16 +77,18 @@ function ExampleBuild({ index, onPick }) {
         )}
       </div>
       <div className="svc-example-body">
-        <p className="section-label">Recent builds</p>
+        <p className="section-label">{label}</p>
         <strong>{ex.name}</strong>
         <span>{ex.note}</span>
-        <div className="svc-example-picks" role="group" aria-label="Choose a build">
-          {EXAMPLES.map((e, i) => (
-            <button key={e.name} type="button" className={i === index ? 'is-on' : undefined} aria-pressed={i === index} onClick={() => onPick(i)}>
-              {e.short}
-            </button>
-          ))}
-        </div>
+        {list.length > 1 && (
+          <div className="svc-example-picks" role="group" aria-label="Choose a build">
+            {list.map((e, i) => (
+              <button key={e.name} type="button" className={i === index ? 'is-on' : undefined} aria-pressed={i === index} onClick={() => onPick(i)}>
+                {e.short}
+              </button>
+            ))}
+          </div>
+        )}
       </div>
     </div>
   );
@@ -136,7 +135,8 @@ export default function Services() {
   const pageRef = useRef(null);
   const [tab, setTab] = useState('starter');
   const [modalKey, setModalKey] = useState(null);
-  const [build, setBuild] = useState(() => buildFor('starter')); /* which recent build is showing */
+  const [build, setBuild] = useState(0); /* which of the tab's recent builds is showing */
+  const builds = examplesFor(tab);
   useFadeIn(pageRef);
 
   const modalSvc = modalKey ? SERVICES.find((s) => s.key === modalKey) : null;
@@ -171,7 +171,7 @@ export default function Services() {
                 data-tab={t.id}
                 onClick={() => {
                   setTab(t.id);
-                  setBuild(buildFor(t.id));
+                  setBuild(0);
                 }}
               >
                 <span className="tab-folder"><FolderIcon kind={t.iconKind} size={36} /></span>
@@ -182,9 +182,11 @@ export default function Services() {
           </div>
 
           <div className="svc-layout" key={tab}>
-            {/* Left: a recent build + what every package includes */}
+            {/* Left: a recent build of this package (if there is one) + what every package includes */}
             <aside className="svc-aside">
-              <ExampleBuild index={build} onPick={setBuild} />
+              {builds.length > 0 && (
+                <ExampleBuild list={builds} label={builds.length > 1 ? 'Recent ' + tab + ' builds' : 'Recent ' + tab + ' build'} index={Math.min(build, builds.length - 1)} onPick={setBuild} />
+              )}
               <div className="svc-included">
                 <p className="section-label">Every package includes</p>
                 <ul>

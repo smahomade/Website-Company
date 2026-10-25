@@ -2,7 +2,7 @@ import { useEffect, useLayoutEffect, useRef } from 'react';
 import { Outlet, useLocation } from 'react-router-dom';
 import Navbar from './Navbar.jsx';
 import Footer from './Footer.jsx';
-import { trackPageView } from '../lib/analytics.js';
+import { trackPageView } from '../lib/routeChange.js'; /* not named analytics.js: ad blockers refuse that address, which blanked the page in dev */
 import useInteractive from '../hooks/useInteractive.js';
 import { PREFERS_REDUCED_MOTION } from '../lib/site.js';
 

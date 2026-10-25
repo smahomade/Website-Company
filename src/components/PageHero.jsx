@@ -27,7 +27,7 @@ export default function PageHero({ label, title, accent, sub, badges = [], art =
     if (!art || !host) return undefined;
     let scene = null;
     let cancelled = false;
-    import('./banner/bannerScene.js')
+    import('./pagehero/pageHeroScene.js') /* no "banner" in the name: ad blockers refuse such addresses */
       .then(({ createBannerScene }) => {
         if (cancelled) return;
         scene = createBannerScene(host, { kind: art, labels: labelsKey ? labelsKey.split('|') : [], still: wantsStill() });

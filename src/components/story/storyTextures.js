@@ -330,8 +330,8 @@ function wrapLines(c, text, max) {
   lines.push(line);
   return lines;
 }
-/* the window; shown[i] (0..1) is how far message i has slid in */
-export function drawCallWindow(c, shown) {
+/* the window; shown[i] (0..1) is how far message i has slid in, secs how long the call has run */
+export function drawCallWindow(c, shown, secs = 0) {
   c.clearRect(0, 0, SHEET_W, SHEET_H);
   c.save();
   rr(c, 0, 0, SHEET_W, SHEET_H, 30);
@@ -354,7 +354,8 @@ export function drawCallWindow(c, shown) {
   c.arc(SHEET_W - 112, 35, 6, 0, Math.PI * 2);
   c.fill();
   c.fillStyle = 'rgba(255,253,248,0.6)';
-  c.fillText('12:04', SHEET_W - 98, 35);
+  const s = Math.max(0, Math.floor(secs));
+  c.fillText(String(Math.floor(s / 60)).padStart(2, '0') + ':' + String(s % 60).padStart(2, '0'), SHEET_W - 98, 35);
   /* the picture's slot (the scene draws the client over it) */
   const [x0, y0, x1, y1] = CALL_TILE;
   c.fillStyle = '#2A2522';
@@ -465,6 +466,17 @@ export function drawCallRoom(c) {
   rr(c, 380, 78, 68, 46, 4);
   c.fill();
 }
+/* the ring round the client's picture while they speak (a call app's active-speaker outline) */
+export function drawSpeakerRing(c) {
+  const W = c.canvas.width;
+  const H = c.canvas.height;
+  c.clearRect(0, 0, W, H);
+  c.strokeStyle = '#58B985';
+  c.lineWidth = 6;
+  rr(c, 4, 4, W - 8, H - 8, 22);
+  c.stroke();
+}
+
 /* the name over the client's picture */
 export function drawCallTag(c) {
   c.clearRect(0, 0, c.canvas.width, c.canvas.height);
@@ -477,6 +489,72 @@ export function drawCallTag(c) {
   c.textBaseline = 'middle';
   c.fillText('Client · ' + DEMO_URL.split('.')[0], 18, 32);
   c.textBaseline = 'alphabetic';
+}
+
+/* ─────────── The cat's speech bubbles ─────────── */
+/* A cut-out bubble in the cat's own style (cream, with an ink line), on a canvas
+   of SPEECH CSS px painted at twice that. Its tail points at the cat: `side` is
+   where the tail is, 'right' (the bubble sits to the cat's left), 'left', or
+   'down' (above the cat). The tail's tip is always at the same spot on the
+   canvas (speechTip), so the scene can hang it off the cat's head; above the cat,
+   the box can slide sideways off its tail (`shift`, px) to stay on screen. */
+export const SPEECH = { w: 520, h: 128 };
+const SPEECH_TAIL = 14;
+const SPEECH_FONT = '600 17px Outfit, sans-serif';
+let speechCtx = null;
+/* the bubble's own size (CSS px), and its lines */
+export function speechBox(text) {
+  if (!speechCtx) speechCtx = document.createElement('canvas').getContext('2d');
+  speechCtx.font = SPEECH_FONT;
+  const lines = text ? wrapLines(speechCtx, text, 220) : [];
+  const w = Math.ceil(Math.max(0, ...lines.map((l) => speechCtx.measureText(l).width))) + 32;
+  return { w, h: 18 + lines.length * 23, lines };
+}
+export function speechTip(side) {
+  return side === 'right' ? [SPEECH.w - 7, SPEECH.h / 2] : side === 'left' ? [7, SPEECH.h / 2] : [SPEECH.w / 2, SPEECH.h - 7];
+}
+export function drawSpeech(c, text, side, shift = 0) {
+  c.clearRect(0, 0, c.canvas.width, c.canvas.height);
+  if (!text) return;
+  const { w, h, lines } = speechBox(text);
+  const [tx, ty] = speechTip(side);
+  const x = side === 'right' ? tx - SPEECH_TAIL - w : side === 'left' ? tx + SPEECH_TAIL : tx - w / 2 + shift;
+  const y = side === 'down' ? ty - SPEECH_TAIL - h : ty - h / 2;
+  c.save();
+  c.scale(c.canvas.width / SPEECH.w, c.canvas.height / SPEECH.h);
+  const shape = () => {
+    rr(c, x, y, w, h, 16);
+    c.moveTo(tx, ty);
+    if (side === 'down') {
+      c.lineTo(tx - 9, y + h - 1);
+      c.lineTo(tx + 9, y + h - 1);
+    } else {
+      const bx = side === 'right' ? x + w - 1 : x + 1;
+      c.lineTo(bx, ty - 8);
+      c.lineTo(bx, ty + 8);
+    }
+    c.closePath();
+  };
+  /* a cream border and an ink line all round, as on the cat (the fill on top hides
+     them where the tail meets the box) */
+  c.lineJoin = 'round';
+  c.strokeStyle = '#FFF6EA';
+  c.lineWidth = 11;
+  shape();
+  c.stroke();
+  c.strokeStyle = '#121214';
+  c.lineWidth = 5;
+  shape();
+  c.stroke();
+  c.fillStyle = '#FFFDF8';
+  shape();
+  c.fill();
+  c.fillStyle = '#1B1816';
+  c.font = SPEECH_FONT;
+  c.textAlign = 'center';
+  c.textBaseline = 'middle';
+  lines.forEach((l, i) => c.fillText(l, x + w / 2, y + 9 + 11.5 + i * 23));
+  c.restore();
 }
 
 /* ─────────── The sketch: the same layout, drawn in pencil on paper ─────────── */

@@ -600,7 +600,8 @@ export async function createStoryScene(container, { clients = [], still = false,
     /* Consultation: the page is a video call window (the chat fills in as the call goes)
        with the client live in its picture, until the page sets off for the design. */
     const callShown = TX.CALL_MSGS.map(() => 0);
-    const callTex = canvasTex(TX.SHEET_W, TX.SHEET_H, (c) => TX.drawCallWindow(c, callShown));
+    let callSecs = 0; /* the call's clock, in the title bar */
+    const callTex = canvasTex(TX.SHEET_W, TX.SHEET_H, (c) => TX.drawCallWindow(c, callShown, callSecs));
     const callMat = keep(new THREE.MeshBasicMaterial({ map: callTex.tex, transparent: true, depthWrite: false, toneMapped: false }));
     const callSheet = new THREE.Mesh(sheetGeo, callMat);
     callSheet.position.z = 0.006;
@@ -621,14 +622,22 @@ export async function createStoryScene(container, { clients = [], still = false,
     const tileMat = keep(new THREE.MeshBasicMaterial({ map: callRT.texture, alphaMap: tileMask.tex, transparent: true, depthWrite: false, toneMapped: false }));
     const callTile = new THREE.Mesh(keep(new THREE.PlaneGeometry(((ctx1 - ctx0) / TX.SHEET_W) * SW, ((cty1 - cty0) / TX.SHEET_H) * SH)), tileMat);
     callTile.position.set(((ctx0 + ctx1) / 2 / TX.SHEET_W - 0.5) * SW, (0.5 - (cty0 + cty1) / 2 / TX.SHEET_H) * SH, 0.009);
-    callTile.renderOrder = 10;
+    callTile.renderOrder = 11;
     callTile.visible = false;
     page.add(callTile);
+    /* a soft green ring round the picture while the client speaks, as call apps do */
+    const ringTex = canvasTex(336, Math.round((336 * (cty1 - cty0 + 20)) / (ctx1 - ctx0 + 20)), TX.drawSpeakerRing);
+    const ringMat = keep(new THREE.MeshBasicMaterial({ map: ringTex.tex, transparent: true, opacity: 0, depthWrite: false, toneMapped: false }));
+    const callRing = new THREE.Mesh(keep(new THREE.PlaneGeometry(((ctx1 - ctx0 + 20) / TX.SHEET_W) * SW, ((cty1 - cty0 + 20) / TX.SHEET_H) * SH)), ringMat);
+    callRing.position.set(callTile.position.x, callTile.position.y, 0.0075);
+    callRing.renderOrder = 10;
+    callRing.visible = false;
+    page.add(callRing);
     const tagTex = canvasTex(512, 64, TX.drawCallTag);
     const tagMat = keep(new THREE.MeshBasicMaterial({ map: tagTex.tex, transparent: true, depthWrite: false, toneMapped: false }));
     const callTag = new THREE.Mesh(keep(new THREE.PlaneGeometry(1.5, 0.19)), tagMat);
     callTag.position.set(((ctx0 + 240) / TX.SHEET_W - 0.5) * SW, (0.5 - (cty1 - 44) / TX.SHEET_H) * SH, 0.012);
-    callTag.renderOrder = 11;
+    callTag.renderOrder = 12;
     callTag.visible = false;
     page.add(callTag);
     /* Scan line for the wipe: kept inside the sheet's width, glow fades at both ends.
@@ -894,6 +903,17 @@ export async function createStoryScene(container, { clients = [], still = false,
     const CALL_HI = TX.CALL_MSGS.find((m) => m.who === 'us').at; /* our cat's hello (it waves) */
     const CALL_LAST = TX.CALL_MSGS[TX.CALL_MSGS.length - 1].at; /* and its last word */
     const syllables = (k) => 0.5 + 0.5 * Math.sin(time * 13 + k) * Math.sin(time * 5.3 + k * 2);
+    /* Its speech bubble: hung off its head on whichever side has room (never over the copy),
+       drawn on top of everything. Placed in screen space each frame (update). */
+    let bubbleText = '';
+    let bubbleSide = 'right';
+    let bubbleShift = 0;
+    const speechTex = canvasTex(TX.SPEECH.w * 2, TX.SPEECH.h * 2, (c) => TX.drawSpeech(c, bubbleText, bubbleSide, bubbleShift));
+    const bubbleMat = keep(new THREE.SpriteMaterial({ map: speechTex.tex, transparent: true, depthTest: false, depthWrite: false, toneMapped: false, fog: false }));
+    const bubble = new THREE.Sprite(bubbleMat);
+    bubble.renderOrder = 30;
+    bubble.visible = false;
+    scene.add(bubble);
     const cat = createCat({ keep, canvasTex, padMap: padTex.tex });
     world.add(cat.shadow, cat.button, cat.tablet, cat.root, cat.paws);
     /* Its walk is driven by how far it actually moved since the last frame, so it
@@ -905,6 +925,7 @@ export async function createStoryScene(container, { clients = [], still = false,
       tool: 0, hand: 1, stand: 0, arm: 0, toolK: 0, /* its act (1 the call, 2 design and 3 build at its tablet), which front leg it works with, then how far it is up, ready, holding the pencil (0..1) */
       actT: 0, tipX: 0, tipY: 0, tipSw: 0, tipUp: 0, /* seconds since its work was finished; the pencil on the tablet: where (px), which way its stroke is going, how far it is lifted */
       sleep: 0, restT: 0, yawnAt: -10, /* the nap: how far down it is, seconds rested at launch, when it yawned */
+      say: '', sayK: 0, speak: 0, /* what it is saying (its speech bubble) and how far that is shown; the client's speaking ring */
       px: 0, py: 0, pz: 0, wv: 0, spotV: 0, tgx: 0, tgy: 0, tgz: 0, dip: 0, tWas: 0, snap: true, away: true, inFolder: false, /* where it really is, how fast it is walking there, how far down it has stepped to pass under the copy */
       hopU: null, /* dev hook: pin the hop at this point of its arc */
     };
@@ -1234,8 +1255,10 @@ export async function createStoryScene(container, { clients = [], still = false,
       const callK = (1 - soft(seg(t, 1.12, 1.4))) * alpha;
       const onCall = callK > 0.004 && t > 0.55;
       callSheet.visible = callTile.visible = callTag.visible = onCall;
+      callRing.visible = onCall && cst.speak > 0.01;
       if (onCall) {
         callMat.opacity = tileMat.opacity = tagMat.opacity = callK;
+        ringMat.opacity = cst.speak * callK;
         const ct = prog.call * CALL_S;
         let said = false;
         TX.CALL_MSGS.forEach((m, i) => {
@@ -1245,7 +1268,10 @@ export async function createStoryScene(container, { clients = [], still = false,
             said = true;
           }
         });
-        if (said) callTex.redraw();
+        if (said || Math.floor(ct) !== callSecs) {
+          callSecs = Math.floor(ct);
+          callTex.redraw();
+        }
         /* the client: waves hello, talks, nods at the end */
         const live = prog.call > 0 && prog.call < 1;
         const q = callPose;
@@ -1556,6 +1582,81 @@ export async function createStoryScene(container, { clients = [], still = false,
         if (copyA[c] > 0.001) anyCopy = true;
       }
 
+      /* its speech bubble: beside its head on the side it is talking to (or away from its tablet),
+         else above it, else the other side; whichever keeps clear of the copy, the folder's
+         wordmark and the frame's edges. It keeps its side while that stays clear, so it never
+         hops about. */
+      const sayA = soft(cst.sayK);
+      bubble.visible = sayA > 0.01 && cst.say !== '' && cat.root.visible && kin === 0;
+      if (bubble.visible) {
+        world.updateMatrixWorld();
+        v3a.set(catPos.x, catPos.y + (1.38 + 0.3 * soft(cst.stand)) * cw, catPos.z);
+        world.localToWorld(v3a);
+        const perPx = (2 * Math.max(1, camera.position.z - v3a.z) * tanHalf) / lay.h;
+        v3b.copy(v3a).project(camera);
+        const hx = (v3b.x * 0.5 + 0.5) * lay.w;
+        const hy = (0.5 - v3b.y * 0.5) * lay.h;
+        const r = (0.5 * cw) / perPx;
+        const { w: bw, h: bh } = TX.speechBox(cst.say);
+        const right = railLeft ? railLeft - 64 : lay.w - 18; /* clear of the rail and its chapter label */
+        /* the wordmark pressed into the folder's front (painted centred, a little below halfway) */
+        let mark = null;
+        if (folder.position.y > -3) {
+          front.updateWorldMatrix(true, false);
+          let x0 = Infinity;
+          let y0 = Infinity;
+          let x1 = -Infinity;
+          let y1 = -Infinity;
+          [[-1.35, 0.42], [1.35, 0.42], [-1.35, 1.0], [1.35, 1.0]].forEach(([lx, ly]) => {
+            v3b.set(lx, ly, CARD_T / 2).applyMatrix4(front.matrixWorld).project(camera);
+            const sx = (v3b.x * 0.5 + 0.5) * lay.w;
+            const sy = (0.5 - v3b.y * 0.5) * lay.h;
+            x0 = Math.min(x0, sx);
+            x1 = Math.max(x1, sx);
+            y0 = Math.min(y0, sy);
+            y1 = Math.max(y1, sy);
+          });
+          mark = { left: x0, right: x1, top: y0, bottom: y1 };
+        }
+        const place = (side) => {
+          const tip = side === 'right' ? [hx - r, hy] : side === 'left' ? [hx + r, hy] : [hx, hy - r * 1.15 - 4];
+          const box = side === 'right' ? [tip[0] - 14 - bw, tip[1] - bh / 2, tip[0] - 14, tip[1] + bh / 2] : side === 'left' ? [tip[0] + 14, tip[1] - bh / 2, tip[0] + 14 + bw, tip[1] + bh / 2] : [tip[0] - bw / 2, tip[1] - 14 - bh, tip[0] + bw / 2, tip[1] - 14];
+          /* above it, the box slides along to stay inside the frame (its tail stays on the cat) */
+          let shift = 0;
+          if (side === 'down') {
+            shift = Math.round(clamp(Math.max(0, 18 - box[0]) - Math.max(0, box[2] - right), 26 - bw / 2, bw / 2 - 26) / 4) * 4;
+            box[0] += shift;
+            box[2] += shift;
+          }
+          let bad = Math.max(0, 18 - box[0]) + Math.max(0, box[2] - right) + Math.max(0, 76 - box[1]) + Math.max(0, box[3] - (lay.h - 10));
+          (copyBoxes || []).filter((b, c) => b && copyA[c] > 0.15).concat(mark ? [mark] : []).forEach((b) => {
+            const ox = Math.min(box[2], b.right + 12) - Math.max(box[0], b.left - 12);
+            const oy = Math.min(box[3], (b.bottom || b.top + 200) + 12) - Math.max(box[1], b.top - 12);
+            if (ox > 0 && oy > 0) bad += (ox * oy) / 100;
+          });
+          return { side, tip, bad, shift };
+        };
+        /* where it would rather the bubble went: towards the call, away from its tablet, or to its right */
+        const toward = cst.tool === 1 && cst.stand > 0.5 ? cst.hand : cst.tool >= 2 && cst.stand > 0.5 ? -cst.hand : 1;
+        const order = [toward < 0 ? 'right' : 'left', 'down', toward < 0 ? 'left' : 'right'].map(place);
+        const keepIt = order.find((o) => o.side === bubbleSide);
+        const best = keepIt && keepIt.bad === 0 && cst.say === bubbleText ? keepIt : order.reduce((a, o) => (o.bad < a.bad ? o : a));
+        if (best.side !== bubbleSide || cst.say !== bubbleText || best.shift !== bubbleShift) {
+          bubbleSide = best.side;
+          bubbleText = cst.say;
+          bubbleShift = best.shift;
+          speechTex.redraw();
+        }
+        /* hang the canvas so the tail's tip is on the head, rising a little as it appears */
+        const [tx0, ty0] = TX.speechTip(best.side);
+        const cx = best.tip[0] + TX.SPEECH.w / 2 - tx0;
+        const cy = best.tip[1] + TX.SPEECH.h / 2 - ty0 + (1 - sayA) * 8;
+        ndc.set((cx / lay.w) * 2 - 1, 1 - (cy / lay.h) * 2, 0.5).unproject(camera).sub(camera.position);
+        bubble.position.copy(camera.position).addScaledVector(ndc, (v3a.z - camera.position.z) / ndc.z);
+        bubble.scale.set(TX.SPEECH.w * perPx, TX.SPEECH.h * perPx, 1);
+        bubbleMat.opacity = sayA;
+      }
+
       /* pixel field: idle drift, scroll parallax, a gentle spread at launch, kept off the copy */
       const burst = track(T.burst, t);
       for (let i = 0; i < PIX; i++) {
@@ -1675,6 +1776,9 @@ export async function createStoryScene(container, { clients = [], still = false,
         cst.tipUp = 0;
         cst.sleep = 0;
         cst.restT = 0;
+        cst.say = '';
+        cst.sayK = 0;
+        cst.speak = 0;
       }
       const tWas = cst.tWas;
       cst.tWas = t;
@@ -1770,6 +1874,27 @@ export async function createStoryScene(container, { clients = [], still = false,
         cst.tipUp += ((across ? 1 : tip[3]) - cst.tipUp) * ease(30);
       }
 
+      /* the client's speaking ring, eased on and off */
+      const callT = prog.call * CALL_S;
+      cst.speak += ((prog.call > 0 && prog.call < 1 && saying(callT, 'them') ? 1 : 0) - cst.speak) * ease(8);
+      /* what it says in its speech bubble: its side of the call, and a word as each job is done */
+      let line = '';
+      if (cst.tool === 1 && cst.arm >= 1 && prog.call < 1) {
+        TX.CALL_MSGS.forEach((m, i) => {
+          const next = TX.CALL_MSGS[i + 1];
+          if (m.who === 'us' && callT >= m.at - 0.1 && callT < (next ? next.at : CALL_S)) line = m.text;
+        });
+      } else if (cst.tool === 2 && cst.arm >= 1 && prog.sketch >= 1 && cst.actT > 0.3 && cst.actT < 3.4) line = 'Here’s the sketch!';
+      else if (cst.tool === 3 && cst.arm >= 1 && prog.build >= 1 && cst.actT > 0.3 && cst.actT < 3.4) line = 'Built and tested!';
+      else if (t > RESULTS[0] && t < NAP[1] && prog.results > 0.05 && prog.results < 0.75) line = 'We’re live!';
+      else if (t < 0.12 && time > 1.4 && time < 5.4) line = 'Hi! Scroll down and I’ll show you how.'; /* a hello, once, as the page opens */
+      if (cst.walk > 0.3 || cst.inK > 0 || cst.sleep > 0.05) line = '';
+      /* one line at a time: the old one fades out before the next comes in */
+      if (line !== cst.say) {
+        cst.sayK = ramp(cst.sayK, false, 0.25);
+        if (cst.sayK <= 0) cst.say = line;
+      } else cst.sayK = ramp(cst.sayK, line !== '', 0.4);
+
       /* launch: once the results are in and the story rests there, a yawn, then a nap.
          Scrolling on, or a poke, wakes it. */
       const resting = t > NAP[0] && t < NAP[1] && prog.results >= 1 && cst.walk < 0.1 && time - hop.at > hop.dur;
@@ -1819,6 +1944,8 @@ export async function createStoryScene(container, { clients = [], still = false,
         (prog.results > 0 && prog.results < 1) ||
         jumping ||
         cst.wv > 0 ||
+        (cst.sayK > 0 && cst.sayK < 1) ||
+        (cst.speak > 0.002 && cst.speak < 0.998) ||
         cst.dip > 0.001 ||
         (cst.btnK > 0 && cst.btnK < 1) ||
         (cst.upK > 0 && cst.upK < 1) ||
