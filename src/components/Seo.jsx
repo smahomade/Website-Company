@@ -1,5 +1,9 @@
-import { useEffect } from 'react';
+import { createContext, useContext, useEffect } from 'react';
 import { SITE_URL } from '../lib/site.js';
+
+/* While the build renders each page to HTML (entry-server.jsx), this collects the page's head
+   tags so scripts/prerender.mjs can write them into that page's <head>. */
+export const HeadContext = createContext(null);
 
 function setMeta(attr, key, content) {
   let el = document.head.querySelector('meta[' + attr + '="' + key + '"]');
@@ -12,7 +16,9 @@ function setMeta(attr, key, content) {
 }
 
 /* Per-page <head> tags: title, description, canonical and Open Graph. */
-export default function Seo({ title, description, path = '/' }) {
+export default function Seo({ title, description, path = '/', noindex = false }) {
+  const head = useContext(HeadContext);
+  if (head) Object.assign(head, { title, description, path, noindex });
   useEffect(() => {
     const url = SITE_URL + path;
     document.title = title;

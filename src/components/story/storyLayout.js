@@ -1,6 +1,7 @@
 /* The home story's framing for a w × h stage, in plain maths (no three.js), shared by
    the 3D scene (storyScene) and the picture that stands in for it while it loads
-   (ScrollStory), so the two line up exactly. */
+   (ScrollStory, and the home page's inline script from scripts/prerender.mjs, which copies
+   these functions' source: so they only use each other and the constants here). */
 
 export const TAN_HALF = Math.tan((16 * Math.PI) / 180); /* half the camera's 32° field of view */
 export const FH = 2.9; /* folder back panel height (folder units) */
@@ -26,9 +27,23 @@ export function storyLayout(w, h) {
   return { portrait: false, D, S: Math.min(halfW * (0.46 - 0.06 * k), 3.2), liftY: 0 };
 }
 
+/* The opening frame as a picture (the folder and cat, captured from the scene with no cubes or
+   glow), shown exactly where the 3D folder will be while the 3D loads. x / y: where the folder's
+   fold is in the picture, fh: the folder's height there (CSS px at capture). Recapture with the
+   scratch poster script if the opening changes. */
+export const POSTERS = {
+  wide: { src: '/images/story/intro-poster.webp', w: 625.7, h: 380.6, x: 281, y: 335.6, fh: 297.3 },
+  tall: { src: '/images/story/intro-poster-tall.webp', w: 328, h: 206.7, x: 157, y: 196, fh: 173.1 },
+};
+
 /* Where the folder stands on screen as the story opens (t = 0, as storyScene poses it): the
    middle of its fold and its height, in CSS px. */
 export function introFolder(w, h) {
+  const dot = (a, b) => a[0] * b[0] + a[1] * b[1] + a[2] * b[2];
+  const norm = (a) => {
+    const l = Math.hypot(a[0], a[1], a[2]) || 1;
+    return [a[0] / l, a[1] / l, a[2] / l];
+  };
   const { D, S, liftY } = storyLayout(w, h);
   const aspect = w / h;
   /* the camera: at (S·0.12, 1.85 − liftY, D), looking at (S·0.18, 1.55 − liftY, 0) */
@@ -48,8 +63,3 @@ export function introFolder(w, h) {
   return { x: base[0], y: base[1], h: base[1] - peak[1] };
 }
 
-const dot = (a, b) => a[0] * b[0] + a[1] * b[1] + a[2] * b[2];
-const norm = (a) => {
-  const l = Math.hypot(a[0], a[1], a[2]) || 1;
-  return [a[0] / l, a[1] / l, a[2] / l];
-};

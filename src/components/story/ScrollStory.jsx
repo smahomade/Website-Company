@@ -5,7 +5,7 @@ import { PORTFOLIO } from '../../data/portfolio.js';
 import { HERO_CARDS } from '../../data/heroCards.js';
 import { PREFERS_REDUCED_MOTION } from '../../lib/site.js';
 import ReelPopup from '../ReelPopup.jsx';
-import { introFolder, storyLayout } from './storyLayout.js';
+import { introFolder, storyLayout, POSTERS } from './storyLayout.js';
 
 const N = STORY_CHAPTERS.length;
 const LAST = N - 1;
@@ -15,7 +15,9 @@ const BUILD = STORY_CHAPTERS.findIndex((c) => c.id === 'build');
    animated story buttons) when they have made one, otherwise their system's
    reduced-motion setting. */
 const MOTION_KEY = 'pf-story-motion';
+let chosenMotion = null; /* this visit's choice, for when storage is blocked */
 const storedMotion = () => {
+  if (chosenMotion) return chosenMotion;
   try {
     return window.localStorage.getItem(MOTION_KEY);
   } catch (err) {
@@ -54,14 +56,7 @@ const PREVIEW_OF = Object.fromEntries(
 );
 const PREVIEW_CARDS = Object.values(PREVIEW_OF);
 
-/* The opening frame as a picture (the folder and cat, captured from the scene with no cubes or
-   glow), shown exactly where the 3D folder will be while the 3D loads, then faded out as the
-   scene fades in. x / y: where the folder's fold is in the picture, fh: the folder's height
-   there (CSS px at capture). Recapture with the scratch poster script if the opening changes. */
-const POSTERS = {
-  wide: { src: '/images/story/intro-poster.webp', w: 625.7, h: 380.6, x: 281, y: 335.6, fh: 297.3 },
-  tall: { src: '/images/story/intro-poster-tall.webp', w: 328, h: 206.7, x: 157, y: 196, fh: 173.1 },
-};
+/* the loading picture (POSTERS) for a stage this size; it fades out as the scene fades in */
 const posterFor = (w, h) => (storyLayout(w, h).portrait ? POSTERS.tall : POSTERS.wide);
 /* From here on in the story the popup's clips are fetched, so one plays the
    moment a site is clicked (not for visitors who asked their browser to save data). */
@@ -178,7 +173,9 @@ export default function ScrollStory() {
   const lastTRef = useRef(null); /* story position at the previous paint */
   const cutTimer = useRef(0);
   const posterRef = useRef(null);
-  const [mode, setMode] = useState(() => (wantsStill() ? 'static' : 'story'));
+  /* The page's prebuilt HTML is the animated story, so it starts as that (and matches); a visitor
+     who wants the still version is switched over before the first paint (below). */
+  const [mode, setMode] = useState('story');
   const [canAnimate, setCanAnimate] = useState(true); /* false once WebGL has failed */
   const [ready, setReady] = useState(false);
   const [preview, setPreview] = useState(null); /* project card shown in the popup */
@@ -244,6 +241,7 @@ export default function ScrollStory() {
 
   /* Switch between the animated story and the still version, and remember it. */
   const setMotion = (on) => {
+    chosenMotion = on ? 'on' : 'off';
     try {
       window.localStorage.setItem(MOTION_KEY, on ? 'on' : 'off');
     } catch (err) {
@@ -253,6 +251,10 @@ export default function ScrollStory() {
     const section = sectionRef.current;
     if (section) window.scrollTo({ top: section.getBoundingClientRect().top + window.scrollY, behavior: 'instant' });
   };
+
+  useLayoutEffect(() => {
+    if (wantsStill()) setMode('static');
+  }, []);
 
   /* The loading picture: on the scene's folder, at whatever size the stage is. Only from the top
      of the page (further down the story isn't at its opening frame). */
@@ -272,7 +274,7 @@ export default function ScrollStory() {
       const f = introFolder(w, h);
       const k = f.h / P.fh;
       if (img.getAttribute('src') !== P.src) img.setAttribute('src', P.src);
-      Object.assign(img.style, { width: P.w * k + 'px', height: P.h * k + 'px', left: f.x - P.x * k + 'px', top: f.y - P.y * k + 'px' });
+      Object.assign(img.style, { width: P.w * k + 'px', height: P.h * k + 'px', left: f.x - P.x * k + 'px', top: f.y - P.y * k + 'px', visibility: 'visible' });
     };
     place();
     window.addEventListener('resize', place);
@@ -281,7 +283,7 @@ export default function ScrollStory() {
 
   /* Animated story. */
   useEffect(() => {
-    if (mode !== 'story') return undefined;
+    if (mode !== 'story' || wantsStill()) return undefined; /* (a still-preferring visitor's first render: about to switch) */
     const section = sectionRef.current;
     const stage = stageRef.current;
     const portraitMq = window.matchMedia('(max-aspect-ratio: 19/20)');
@@ -578,7 +580,7 @@ export default function ScrollStory() {
           <img
             ref={posterRef}
             className="story-poster"
-            src={typeof window !== 'undefined' ? posterFor(window.innerWidth, window.innerHeight).src : POSTERS.wide.src}
+            src={typeof window !== 'undefined' ? posterFor(window.innerWidth, window.innerHeight).src : undefined /* (the built page's script picks it) */}
             alt=""
             aria-hidden="true"
             decoding="async"

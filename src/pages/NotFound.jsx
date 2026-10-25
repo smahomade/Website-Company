@@ -6,7 +6,7 @@ import { PixelSquares } from '../components/BrandIcons.jsx';
 export default function NotFound() {
   return (
     <section className="pf-404">
-      <Seo title="Page not found — PixelFold" description="That page isn't in any of our folders." path="/404" />
+      <Seo title="Page not found — PixelFold" description="That page isn't in any of our folders." path="/404" noindex />
       <div className="container pf-404-inner">
         <Mascot variant="peek" size={200} />
         <p className="section-label">404</p>

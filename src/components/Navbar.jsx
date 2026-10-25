@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { Link, NavLink, useLocation } from 'react-router-dom';
 import { LOGO } from '../lib/site.js';
@@ -15,16 +15,18 @@ const LINKS = [
 export default function Navbar() {
   const { pathname } = useLocation();
   /* Pages without a dark hero (e.g. the 404) get the solid bar from the start */
-  const solid = !DARK_HERO_ROUTES.has(pathname.replace(/\/+$/, '') || '/');
-  const [scrolled, setScrolled] = useState(() => window.scrollY > 60);
+  const route = pathname.replace(/\/+$/, '') || '/';
+  const solid = !(DARK_HERO_ROUTES.has(route) || route.startsWith('/portfolio/'));
+  /* scroll state starts unscrolled (as the page's prebuilt HTML is) and is read before the first paint */
+  const [scrolled, setScrolled] = useState(false);
   const [hidden, setHidden] = useState(false);
   const [open, setOpen] = useState(false);
-  const lastY = useRef(window.scrollY);
+  const lastY = useRef(0);
   const openRef = useRef(false);
   openRef.current = open;
 
   /* Frosted bar after 60px; hide on scroll down, reveal on scroll up. */
-  useEffect(() => {
+  useLayoutEffect(() => {
     const onScroll = () => {
       const y = window.scrollY;
       setScrolled(y > 60);
@@ -74,7 +76,7 @@ export default function Navbar() {
     >
       <div className="nav-container">
         <Link to="/" className="nav-logo brand-lockup" aria-label="PixelFold home">
-          <img src={LOGO.mark} alt="" className="brand-mark" />
+          <img src={LOGO.mark} alt="" className="brand-mark" width="202" height="205" />
           <span className="brand-word" aria-hidden="true">PIXEL<i>FOLD</i></span>
         </Link>
         <button

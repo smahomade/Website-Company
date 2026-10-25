@@ -8,10 +8,10 @@
   <link rel="apple-touch-icon" href="/images/brand/favicon-192.png" />
   <meta name="theme-color" content="#111111" />
   <title>PixelFold — Fast, Beautiful Websites for Small Businesses</title>
-  <meta name="description" content="PixelFold builds fast, beautiful static and dynamic websites for small businesses. Transparent pricing, quick delivery, and zero complexity." />
+  <meta name="description" content="PixelFold designs and builds fast, beautiful websites for small businesses across the UK. Every project is quoted around what you need, and most sites go live in 1–2 weeks." />
   <link rel="canonical" href="https://www.pixelfold.co.uk/" />
   <meta property="og:title" content="PixelFold — Fast, Beautiful Websites for Small Businesses" />
-  <meta property="og:description" content="PixelFold builds fast, beautiful static and dynamic websites for small businesses. Transparent pricing, quick delivery, and zero complexity." />
+  <meta property="og:description" content="PixelFold designs and builds fast, beautiful websites for small businesses across the UK. Every project is quoted around what you need, and most sites go live in 1–2 weeks." />
   <meta property="og:url" content="https://www.pixelfold.co.uk/" />
   <meta property="og:type" content="website" />
   <meta property="og:image" content="https://www.pixelfold.co.uk/images/brand/og-image.jpg" />
@@ -19,14 +19,16 @@
   <meta property="og:image:height" content="630" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@500;600;700;800&family=Fredoka:wght@600;700&family=Caveat:wght@700&family=Nunito:ital,wght@0,400;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet" />
+  <!-- the fonts load without holding up the first paint (text shows in the fallback font, then swaps) -->
+  <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Outfit:wght@500;600;700;800&family=Fredoka:wght@600;700&family=Caveat:wght@700&family=Nunito:ital,wght@0,400;0,600;0,700;0,800;1,400&display=swap" onload="this.onload=null;this.rel='stylesheet'" />
+  <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@500;600;700;800&family=Fredoka:wght@600;700&family=Caveat:wght@700&family=Nunito:ital,wght@0,400;0,600;0,700;0,800;1,400&display=swap" /></noscript>
   <!-- Google tag (gtag.js) -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-J606S9E60Z"></script>
   <script>
     window.dataLayer = window.dataLayer || [];
     function gtag(){dataLayer.push(arguments);}
     gtag('js', new Date());
-    /* send_page_view is off: the router reports each page view instead (see src/lib/analytics.js) */
+    /* send_page_view is off: the router reports each page view instead (see src/lib/routeChange.js) */
     gtag('config', 'G-J606S9E60Z', { send_page_view: false });
   </script>
 </head>
