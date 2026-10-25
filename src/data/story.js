@@ -30,7 +30,7 @@ export const STORY_CHAPTERS = [
     eyebrow: 'Design',
     title: 'From sketch to screen,',
     accent: 'around your brand.',
-    body: 'We turn the brief into a clean, modern design: from a template you like, a site you admire, or a blank page. You see it before a line of code is written.',
+    body: 'We sketch your layout around the brief first, then design it around your brand: from a template you like, a site you admire, or a blank page. You see it before a line of code is written.',
   },
   {
     id: 'build',
