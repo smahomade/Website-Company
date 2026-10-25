@@ -8,3 +8,10 @@ export function trackPageView(path, title) {
     page_location: window.location.href,
   });
 }
+
+/* A Google Analytics event: an enquiry sent, a click towards the quote form, WhatsApp, email or
+   phone. Does nothing where analytics is blocked. */
+export function trackEvent(name, params = {}) {
+  if (typeof window === 'undefined' || typeof window.gtag !== 'function') return;
+  window.gtag('event', name, params);
+}

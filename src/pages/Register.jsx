@@ -1,12 +1,13 @@
 import { useEffect, useRef, useState } from 'react';
-import emailjs from '@emailjs/browser';
 import Seo from '../components/Seo.jsx';
 import PageHero from '../components/PageHero.jsx';
 import { CheckIcon } from '../components/Icons.jsx';
 import { useFadeIn } from '../hooks/useRevealOnScroll.js';
-import { CONTACT, EMAILJS, PREFERS_REDUCED_MOTION } from '../lib/site.js';
+import { EMAILJS, PREFERS_REDUCED_MOTION } from '../lib/site.js';
 import Mascot from '../components/Mascot.jsx';
 import NextSteps from '../components/NextSteps.jsx';
+import { FormError, Honeypot } from '../components/EnquiryBits.jsx';
+import { checkFields, sendEnquiry } from '../lib/enquiry.js';
 
 const TIERS = {
   Starter: {
@@ -78,24 +79,19 @@ function FloatField({ id, name, label, type = 'text', required, full, area }) {
   );
 }
 
-/* Shared submit handler: highlights empty required fields, then sends the
-   brief through EmailJS and swaps the form for the success panel. */
+/* Shared submit handler: checks the fields (lib/enquiry.js), then sends the brief through
+   EmailJS and swaps the form for the success panel, or says what went wrong. */
 function useBriefSubmit(intent, buildParams) {
   const [status, setStatus] = useState('idle'); /* idle | sending | sent */
+  const [error, setError] = useState(null);
+  const shownAt = useRef(Date.now());
 
   const onSubmit = async (e) => {
     e.preventDefault();
     const form = e.currentTarget;
-    let valid = true;
-    form.querySelectorAll('[required]').forEach((field) => {
-      if (field.disabled) return;
-      if (!field.value.trim()) {
-        valid = false;
-        field.style.borderColor = '#ef4444';
-        field.addEventListener('input', () => { field.style.borderColor = ''; }, { once: true });
-      }
-    });
-    if (!valid) return;
+    const problem = checkFields(form);
+    setError(problem);
+    if (problem) return;
 
     setStatus('sending');
     const fd = new FormData(form);
@@ -117,16 +113,16 @@ function useBriefSubmit(intent, buildParams) {
       ...buildParams(fd),
     };
     try {
-      await emailjs.send(EMAILJS.service, EMAILJS.quoteTemplate, params, { publicKey: EMAILJS.publicKey });
+      await sendEnquiry({ form, shownAt: shownAt.current, template: EMAILJS.quoteTemplate, params, lead: intent === 'new' ? 'quote_new' : 'quote_existing' });
       setStatus('sent');
     } catch (err) {
       console.error('EmailJS error:', err);
       setStatus('idle');
-      alert('Something went wrong — please try again or email us directly at ' + CONTACT.email);
+      setError('send');
     }
   };
 
-  return { status, onSubmit };
+  return { status, onSubmit, error };
 }
 
 function SuccessPanel({ id, title, text }) {
@@ -145,7 +141,7 @@ function NewWebsiteForm() {
   const [unsure, setUnsure] = useState(false);
   const tierRef = useRef(null);
 
-  const { status, onSubmit } = useBriefSubmit('new', (fd) => ({
+  const { status, onSubmit, error } = useBriefSubmit('new', (fd) => ({
     pkg_category: category || (unsure ? 'Not sure yet' : ''),
     pkg_tier: category ? fd.get('pkg_tier') || '' : '',
     industry: fd.get('industry') || '',
@@ -241,6 +237,8 @@ function NewWebsiteForm() {
       </div>
 
       <div className="form-submit-area">
+        <Honeypot />
+        <FormError error={error} />
         <button type="submit" className="btn btn-primary btn-submit" disabled={status === 'sending'}>
           {status === 'sending' ? 'Sending…' : 'Send my brief →'}
         </button>
@@ -252,7 +250,7 @@ function NewWebsiteForm() {
 
 /* ── Existing website brief ── */
 function ExistingWebsiteForm() {
-  const { status, onSubmit } = useBriefSubmit('existing', (fd) => ({
+  const { status, onSubmit, error } = useBriefSubmit('existing', (fd) => ({
     website_url: fd.get('website_url') || '',
     platform: fd.get('platform') || '',
     help_type: fd.get('help_type') || '',
@@ -306,6 +304,8 @@ function ExistingWebsiteForm() {
       </div>
 
       <div className="form-submit-area">
+        <Honeypot />
+        <FormError error={error} />
         <button type="submit" className="btn btn-primary btn-submit" disabled={status === 'sending'}>
           {status === 'sending' ? 'Sending…' : 'Send my brief →'}
         </button>

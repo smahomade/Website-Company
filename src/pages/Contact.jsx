@@ -1,5 +1,4 @@
 import { useRef, useState } from 'react';
-import emailjs from '@emailjs/browser';
 import Seo from '../components/Seo.jsx';
 import PageHero from '../components/PageHero.jsx';
 import { WhatsAppIcon } from '../components/Icons.jsx';
@@ -7,22 +6,32 @@ import { useFadeIn } from '../hooks/useRevealOnScroll.js';
 import { CONTACT, EMAILJS } from '../lib/site.js';
 import Mascot from '../components/Mascot.jsx';
 import NextSteps from '../components/NextSteps.jsx';
+import { FormError, Honeypot } from '../components/EnquiryBits.jsx';
+import { checkFields, sendEnquiry } from '../lib/enquiry.js';
 
 export default function Contact() {
   const pageRef = useRef(null);
   const [status, setStatus] = useState('idle'); /* idle | sending | sent */
+  const [error, setError] = useState(null);
+  const shownAt = useRef(Date.now());
   useFadeIn(pageRef);
 
+  /* checks the fields, keeps bots out, sends (lib/enquiry.js), or says what went wrong */
   const onSubmit = async (e) => {
     e.preventDefault();
     const form = e.currentTarget;
+    const problem = checkFields(form);
+    setError(problem);
+    if (problem) return;
     const fd = new FormData(form);
     setStatus('sending');
     try {
-      await emailjs.send(
-        EMAILJS.service,
-        EMAILJS.contactTemplate,
-        {
+      await sendEnquiry({
+        form,
+        shownAt: shownAt.current,
+        template: EMAILJS.contactTemplate,
+        lead: 'contact',
+        params: {
           full_name: fd.get('name') || '',
           reply_to: fd.get('email') || '',
           phone: '',
@@ -30,13 +39,12 @@ export default function Contact() {
           message: fd.get('message') || '',
           time: new Date().toLocaleString('en-GB', { dateStyle: 'full', timeStyle: 'short' }),
         },
-        { publicKey: EMAILJS.publicKey }
-      );
+      });
       setStatus('sent');
     } catch (err) {
       console.error('EmailJS error:', err);
       setStatus('idle');
-      alert('Something went wrong — please try again or email us at ' + CONTACT.email);
+      setError('send');
     }
   };
 
@@ -135,6 +143,8 @@ export default function Contact() {
                       required
                     />
                   </div>
+                  <Honeypot />
+                  <FormError error={error} />
                   <button type="submit" className="btn btn-primary contact-submit" disabled={status === 'sending'}>
                     {status === 'sending' ? 'Sending…' : 'Send it over →'}
                   </button>
