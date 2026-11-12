@@ -5,15 +5,10 @@ import PageHero from '../components/PageHero.jsx';
 import PortfolioModal from '../components/PortfolioModal.jsx';
 import { ExternalLinkIcon, PagesIcon, ScreenshotIcon } from '../components/Icons.jsx';
 import { useFadeIn } from '../hooks/useRevealOnScroll.js';
-import { PORTFOLIO, PORTFOLIO_FILTERS } from '../data/portfolio.js';
+import { PORTFOLIO } from '../data/portfolio.js';
 import { LOGO } from '../lib/site.js';
 import Mascot from '../components/Mascot.jsx';
 import Testimonials from '../components/Testimonials.jsx';
-
-function matches(p, filter) {
-  if (filter === 'all') return true;
-  return (p.types || [p.type]).includes(filter);
-}
 
 function PortfolioCard({ p, index, onOpen }) {
   const isCompare = Array.isArray(p.slides) && typeof p.slides[0] === 'object';
@@ -23,7 +18,6 @@ function PortfolioCard({ p, index, onOpen }) {
     <div
       className="portfolio-card pf-folder pf-pop"
       style={{ '--i': index }}
-      data-type={p.type}
       onClick={(e) => {
         if (!p.slides) return;
         if (e.target.closest('.portfolio-live-btn')) return;
@@ -75,17 +69,14 @@ function PortfolioCard({ p, index, onOpen }) {
 
 export default function Portfolio() {
   const pageRef = useRef(null);
-  const [filter, setFilter] = useState('all');
   const [openProject, setOpenProject] = useState(null);
   useFadeIn(pageRef);
-
-  const visible = PORTFOLIO.filter((p) => matches(p, filter));
 
   return (
     <div ref={pageRef}>
       <Seo
         title="Portfolio — PixelFold"
-        description="Browse websites PixelFold has built for real businesses. See our work across static sites, dynamic CMS sites, e-commerce, and more."
+        description="Live websites PixelFold has designed and built for real UK businesses, from an education provider to a London salon, each with a case study of what we did and why."
         path="/portfolio"
       />
 
@@ -93,8 +84,8 @@ export default function Portfolio() {
         label="Our Work"
         title="Our"
         accent="Portfolio"
-        sub="Example website builds across different industries. These show the kind of designs and quality you can expect from PixelFold."
-        badges={['Custom built', 'Static/Dynamic', 'Mobile-friendly', 'UK-based team']}
+        sub="Real websites for real businesses, all live today. Open any of them to see every page, or read the case study behind it."
+        badges={['Live client sites', 'Hand-built', 'Mobile-friendly', 'UK-based']}
         art="sites"
         tab="Portfolio"
       />
@@ -104,39 +95,23 @@ export default function Portfolio() {
         <div className="container">
           <div className="portfolio-section-header">
             <h2 className="portfolio-section-title">Browse our projects</h2>
-            <p className="portfolio-section-sub">Filter by type or scroll through everything we've built.</p>
+            <p className="portfolio-section-sub">Every one is live. Click a card to flick through its pages.</p>
           </div>
 
-          <div className="portfolio-filters">
-            {PORTFOLIO_FILTERS.map((f) => (
-              <button key={f.id} className={'portfolio-filter-btn' + (filter === f.id ? ' active' : '')} data-filter={f.id} onClick={() => setFilter(f.id)}>
-                {f.label}
-              </button>
-            ))}
-          </div>
-
-          {/* keyed on the filter so the cards replay their entrance when it changes */}
-          <div className="portfolio-grid" id="portfolioGrid" key={filter}>
-            {visible.map((p, i) => (
+          <div className="portfolio-grid" id="portfolioGrid">
+            {PORTFOLIO.map((p, i) => (
               <PortfolioCard key={p.id} p={p} index={i} onOpen={setOpenProject} />
             ))}
             {/* Open slot: invites the next project instead of showing a dummy card */}
-            <div className="pf-next-card pf-pop" style={{ '--i': visible.length }}>
+            <div className="pf-next-card pf-pop" style={{ '--i': PORTFOLIO.length }}>
               <Mascot variant="inline" size={64} />
               <p className="section-label">Next up</p>
               <h3>Your website could be here.</h3>
               <p>We're taking on new projects. Tell us what you need and we'll come back within 24 hours with a plan.</p>
-              <Link to="/register" className="btn btn-primary btn-sm">Start a project</Link>
+              <Link to="/quote" className="btn btn-primary btn-sm">Start a project</Link>
             </div>
           </div>
 
-          {/* EMPTY STATE (styled away by CSS while projects exist) */}
-          <div className="portfolio-empty">
-            <div className="portfolio-empty-icon">🚀</div>
-            <h2>Projects on the way</h2>
-            <p>We're currently building websites for our first clients. Check back soon to see our work — or be one of the first!</p>
-            <Link to="/register" className="btn btn-primary">Book a consultation</Link>
-          </div>
         </div>
       </section>
 
@@ -151,7 +126,7 @@ export default function Portfolio() {
               <h2>Let's build yours next.</h2>
               <p>Tell us about your project and we'll come back within 24 hours with a clear quote.</p>
             </div>
-            <Link to="/register" className="btn btn-white">Book a consultation &rarr;</Link>
+            <Link to="/quote" className="btn btn-white">Book a consultation &rarr;</Link>
           </div>
         </div>
       </section>

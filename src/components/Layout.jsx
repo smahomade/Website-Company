@@ -2,6 +2,7 @@ import { useEffect, useLayoutEffect, useRef } from 'react';
 import { Outlet, useLocation } from 'react-router-dom';
 import Navbar from './Navbar.jsx';
 import Footer from './Footer.jsx';
+import CookieBanner from './CookieBanner.jsx';
 import { trackEvent, trackPageView } from '../lib/routeChange.js'; /* not named analytics.js: ad blockers refuse that address, which blanked the page in dev */
 import useInteractive from '../hooks/useInteractive.js';
 import { PREFERS_REDUCED_MOTION } from '../lib/site.js';
@@ -39,7 +40,7 @@ export default function Layout() {
       if (!a) return;
       const href = a.getAttribute('href');
       const from = window.location.pathname;
-      if (/^\/register(\/|\?|#|$)/.test(href)) trackEvent('quote_click', { from, label: (a.textContent || '').trim().slice(0, 60) });
+      if (/^\/quote(\/|\?|#|$)/.test(href)) trackEvent('quote_click', { from, label: (a.textContent || '').trim().slice(0, 60) });
       else if (href.startsWith('https://wa.me/')) trackEvent('contact_click', { method: 'whatsapp', from });
       else if (href.startsWith('mailto:')) trackEvent('contact_click', { method: 'email', from });
       else if (href.startsWith('tel:')) trackEvent('contact_click', { method: 'phone', from });
@@ -58,6 +59,7 @@ export default function Layout() {
         <Outlet />
       </main>
       <Footer />
+      <CookieBanner />
     </>
   );
 }

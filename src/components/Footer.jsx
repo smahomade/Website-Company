@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom';
 import { LOGO, BRAND, CONTACT } from '../lib/site.js';
+import { askAgain } from '../lib/consent.js';
 import { WhatsAppIcon, MailIcon } from './Icons.jsx';
 
 export default function Footer() {
@@ -31,7 +32,8 @@ export default function Footer() {
               <li><Link to="/services">Services</Link></li>
               <li><Link to="/portfolio">Portfolio</Link></li>
               <li><Link to="/contact">Contact</Link></li>
-              <li><Link to="/register">Get a Quote</Link></li>
+              <li><Link to="/quote">Get a Quote</Link></li>
+              <li><Link to="/privacy">Privacy and Cookies</Link></li>
             </ul>
           </div>
           <div className="footer-col">
@@ -45,18 +47,20 @@ export default function Footer() {
           <div className="footer-col">
             <h2 className="footer-heading">Services</h2>
             <ul>
-              <li>Static Websites</li>
-              <li>Dynamic Websites</li>
-              <li>E-commerce Stores</li>
-              <li>Landing Pages</li>
-              <li>Redesigns &amp; Migrations</li>
-              <li>Maintenance Plans</li>
+              <li><Link to="/services?package=starter#services">Starter Websites</Link></li>
+              <li><Link to="/services?package=business#services">Business Websites</Link></li>
+              <li><Link to="/services?package=custom#services">Custom Builds</Link></li>
+              <li><Link to="/services?package=custom#services">Help With Your Existing Site</Link></li>
+              <li><Link to="/services?package=starter#services">Hosting &amp; Care Plans</Link></li>
             </ul>
           </div>
         </div>
         <div className="footer-bottom">
           <p>&copy; {new Date().getFullYear()} PixelFold. All rights reserved.</p>
-          <p>Crafted in the UK.</p>
+          <p className="footer-legal">
+            <Link to="/privacy">Privacy</Link>
+            <button type="button" className="footer-cookie-btn" onClick={askAgain}>Cookie settings</button>
+          </p>
         </div>
       </div>
     </footer>

@@ -1,10 +1,9 @@
 import { R2 } from '../lib/site.js';
 
-/* Cards in the home-page hero reel. Cards without `img` render the
-   "Coming soon" placeholder and the logo backdrop. `video` is a scroll down
-   the home page (the old hero's backdrop); `tour` is a click-through of the
-   site's menu, page by page, which the project popup plays, and `tourPoster`
-   is that clip's own first frame (so the still and the video match). */
+/* The client sites' preview cards: the home story's project popups (ReelPopup) and the Services
+   page's example builds. `video` is a scroll down the site's home page; `tour` is a click-through
+   of its menu, page by page, which the project popup plays, and `tourPoster` is that clip's own
+   first frame (so the still and the video match). */
 export const HERO_CARDS = [
   {
     url: 'razaacademy.co.uk',
@@ -65,31 +64,5 @@ export const HERO_CARDS = [
     orb1: 'rgba(126,220,182,0.30)',
     orb2: 'rgba(58,160,124,0.16)',
     accent: '#7EDCB6',
-  },
-  {
-    url: 'smithsplumbing.co.uk',
-    icon: '🔧',
-    tag: 'Static',
-    ind: 'Trades',
-    name: "Smith's Plumbing",
-    desc: 'A clean, fast static website for a local plumbing business. Clear contact details, service areas, and a no-fuss design that gets the phone ringing.',
-    bg: 'linear-gradient(135deg,#111111,#4a2a00)',
-    wash: 'rgba(255,138,61,0.20)',
-    orb1: 'rgba(255,138,61,0.28)',
-    orb2: 'rgba(255,106,0,0.15)',
-    accent: '#FF8A3D',
-  },
-  {
-    url: 'bloomflorist.co.uk',
-    icon: '🛒',
-    tag: 'Dynamic',
-    ind: 'E-commerce',
-    name: 'Bloom Florist',
-    desc: 'A dynamic e-commerce site for an independent florist — complete with a product catalogue, seasonal collections, and a smooth checkout experience built to drive online orders.',
-    bg: 'linear-gradient(135deg,#141210,#5a3a00)',
-    wash: 'rgba(255,106,0,0.22)',
-    orb1: 'rgba(255,138,61,0.28)',
-    orb2: 'rgba(255,106,0,0.15)',
-    accent: '#FF8A1F',
   },
 ];

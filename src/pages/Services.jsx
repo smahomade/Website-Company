@@ -1,5 +1,5 @@
-import { useEffect, useRef, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { useEffect, useLayoutEffect, useRef, useState } from 'react';
+import { Link, useLocation } from 'react-router-dom';
 import Seo from '../components/Seo.jsx';
 import PageHero from '../components/PageHero.jsx';
 import ServiceModal from '../components/ServiceModal.jsx';
@@ -125,7 +125,7 @@ function PackageRow({ s, index, onDetails }) {
       </ul>
       <div className="svc-row-actions">
         <button className="read-more-btn" onClick={() => onDetails(s.key)}>Read more</button>
-        <Link to="/register" className="btn btn-primary btn-sm">Book a consultation</Link>
+        <Link to="/quote" className="btn btn-primary btn-sm">Book a consultation</Link>
       </div>
     </div>
   );
@@ -138,6 +138,17 @@ export default function Services() {
   const [build, setBuild] = useState(0); /* which of the tab's recent builds is showing */
   const builds = examplesFor(tab);
   useFadeIn(pageRef);
+
+  /* /services?package=business opens on that package (the footer's links). Read in an effect: the
+     prebuilt page always starts on Starter, and the first render has to match it */
+  const { search } = useLocation();
+  useLayoutEffect(() => {
+    const wanted = new URLSearchParams(search).get('package');
+    if (SERVICE_TABS.some((t) => t.id === wanted)) {
+      setTab(wanted);
+      setBuild(0);
+    }
+  }, [search]);
 
   const modalSvc = modalKey ? SERVICES.find((s) => s.key === modalKey) : null;
   const modalService = modalSvc ? { ...modalSvc.modal, iconKind: modalSvc.iconKind } : null;
@@ -239,7 +250,7 @@ export default function Services() {
               <div className="order-icon"><FolderIcon kind="chat" size={44} tone="dark" /></div>
               <h3>Book a free consultation</h3>
               <p>Tell us what you need and we come back within 24 hours with a clear scope, timeline and quote. No obligation.</p>
-              <Link to="/register" className="btn btn-white">Start your brief</Link>
+              <Link to="/quote" className="btn btn-white">Start your brief</Link>
             </div>
             <div className="order-card pf-folder">
               <div className="order-icon"><FolderIcon kind="phone" size={44} tone="dark" /></div>

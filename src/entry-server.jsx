@@ -10,7 +10,7 @@ export { storyLayout, introFolder, POSTERS, TAN_HALF, FH, FOLDER_SCALE } from '.
 /* Built at build time (vite build --ssr) and run by scripts/prerender.mjs, which saves every
    page below as finished HTML, so link previews and search engines get each page's own title,
    description and words without running any JavaScript. */
-export const ROUTES = ['/', '/how-it-works', '/services', '/portfolio', '/contact', '/register', ...PORTFOLIO.map((p) => '/portfolio/' + p.id)];
+export const ROUTES = ['/', '/how-it-works', '/services', '/portfolio', '/contact', '/quote', '/privacy', ...PORTFOLIO.map((p) => '/portfolio/' + p.id)];
 export const NOT_FOUND = '/404';
 
 /* One page as HTML, and its head tags (from its <Seo>). Waits for lazily loaded pages.

@@ -79,7 +79,7 @@ write('404.html', page(await render(NOT_FOUND), NOT_FOUND));
 console.log('prerendered 404');
 
 /* the sitemap, from the same list of pages */
-const priority = (url) => (url === '/' ? '1.0' : url === '/services' ? '0.9' : url.startsWith('/portfolio/') ? '0.7' : url === '/contact' ? '0.6' : '0.8');
+const priority = (url) => (url === '/' ? '1.0' : url === '/services' ? '0.9' : url.startsWith('/portfolio/') ? '0.7' : url === '/contact' ? '0.6' : url === '/privacy' ? '0.3' : '0.8');
 const urls = ROUTES.map((url) => `  <url><loc>${SITE_URL}${url}</loc><priority>${priority(url)}</priority></url>`);
 write('sitemap.xml', `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${urls.join('\n')}\n</urlset>\n`);
 console.log('wrote sitemap.xml (' + ROUTES.length + ' pages)');

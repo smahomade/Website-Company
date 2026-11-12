@@ -3,7 +3,7 @@ import { createPortal } from 'react-dom';
 import { Link, NavLink, useLocation } from 'react-router-dom';
 import { LOGO } from '../lib/site.js';
 
-const DARK_HERO_ROUTES = new Set(['/', '/how-it-works', '/services', '/portfolio', '/contact', '/register']);
+const DARK_HERO_ROUTES = new Set(['/', '/how-it-works', '/services', '/portfolio', '/contact', '/quote']);
 
 const LINKS = [
   { to: '/how-it-works', label: 'How It Works' },
@@ -62,7 +62,7 @@ export default function Navbar() {
         </li>
       ))}
       <li>
-        <Link to="/register" className="nav-link nav-cta">Get a Quote</Link>
+        <Link to="/quote" className="nav-link nav-cta">Get a Quote</Link>
       </li>
     </ul>
   );

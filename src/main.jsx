@@ -2,7 +2,11 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { BrowserRouter } from 'react-router-dom';
 import App from './App.jsx';
+import { getChoice, startAnalytics } from './lib/consent.js';
 import './styles.css';
+
+/* Analytics only for visitors who said yes on an earlier visit (the banner asks the rest) */
+if (getChoice() === 'yes') startAnalytics(false);
 
 const app = (
   <React.StrictMode>

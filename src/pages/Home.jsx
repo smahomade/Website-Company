@@ -54,7 +54,7 @@ export default function Home() {
             </div>
             <div className="pf-divider" aria-hidden="true"><PixelSquares size={20} /></div>
             <div className="hiw-cta">
-              <Link to="/register" className="btn hiw-btn">Start your website</Link>
+              <Link to="/quote" className="btn hiw-btn">Start your website</Link>
               <Link to="/contact" className="btn btn-outline hiw-btn-secondary">Contact PixelFold</Link>
             </div>
           </div>

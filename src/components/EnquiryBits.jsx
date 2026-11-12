@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom';
 import { CONTACT } from '../lib/site.js';
 import { HONEYPOT } from '../lib/enquiry.js';
 
@@ -27,6 +28,15 @@ export function FormError({ error }) {
       ) : (
         error
       )}
+    </p>
+  );
+}
+
+/* Under each form's send button: what the details are for, and where to read more. */
+export function PrivacyNote() {
+  return (
+    <p className="form-privacy">
+      We only use your details to reply and quote. <Link to="/privacy">How we handle them</Link>
     </p>
   );
 }

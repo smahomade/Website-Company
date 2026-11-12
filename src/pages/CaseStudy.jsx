@@ -92,7 +92,7 @@ export default function CaseStudy() {
             <p className="section-label">Want something like this?</p>
             <h2>Tell us about your project.</h2>
             <p>We come back within 24 hours with a clear scope, timeline and quote.</p>
-            <Link to="/register" className="btn btn-primary">
+            <Link to="/quote" className="btn btn-primary">
               Book a free consultation <ArrowRightIcon />
             </Link>
           </div>

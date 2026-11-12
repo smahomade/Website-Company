@@ -6,7 +6,7 @@ import { useFadeIn } from '../hooks/useRevealOnScroll.js';
 import { EMAILJS, PREFERS_REDUCED_MOTION } from '../lib/site.js';
 import Mascot from '../components/Mascot.jsx';
 import NextSteps from '../components/NextSteps.jsx';
-import { FormError, Honeypot } from '../components/EnquiryBits.jsx';
+import { FormError, Honeypot, PrivacyNote } from '../components/EnquiryBits.jsx';
 import { checkFields, sendEnquiry } from '../lib/enquiry.js';
 
 const TIERS = {
@@ -243,6 +243,7 @@ function NewWebsiteForm() {
           {status === 'sending' ? 'Sending…' : 'Send my brief →'}
         </button>
         <Assurance />
+        <PrivacyNote />
       </div>
     </form>
   );
@@ -310,6 +311,7 @@ function ExistingWebsiteForm() {
           {status === 'sending' ? 'Sending…' : 'Send my brief →'}
         </button>
         <Assurance />
+        <PrivacyNote />
       </div>
     </form>
   );
@@ -347,7 +349,7 @@ function FormCard({ id, show, children, header }) {
   );
 }
 
-export default function Register() {
+export default function Quote() {
   const pageRef = useRef(null);
   const [intent, setIntent] = useState('new');
   const shownIntent = useRef(intent);
@@ -369,7 +371,7 @@ export default function Register() {
       <Seo
         title="Get a Free Quote — PixelFold"
         description="Get a free, no-obligation quote from PixelFold. Tell us about your project and we'll get back to you within 24 hours."
-        path="/register"
+        path="/quote"
       />
 
       <PageHero

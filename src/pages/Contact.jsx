@@ -6,7 +6,7 @@ import { useFadeIn } from '../hooks/useRevealOnScroll.js';
 import { CONTACT, EMAILJS } from '../lib/site.js';
 import Mascot from '../components/Mascot.jsx';
 import NextSteps from '../components/NextSteps.jsx';
-import { FormError, Honeypot } from '../components/EnquiryBits.jsx';
+import { FormError, Honeypot, PrivacyNote } from '../components/EnquiryBits.jsx';
 import { checkFields, sendEnquiry } from '../lib/enquiry.js';
 
 export default function Contact() {
@@ -148,6 +148,7 @@ export default function Contact() {
                   <button type="submit" className="btn btn-primary contact-submit" disabled={status === 'sending'}>
                     {status === 'sending' ? 'Sending…' : 'Send it over →'}
                   </button>
+                  <PrivacyNote />
                 </form>
               ) : (
                 <div className="register-success" id="contactSuccess" style={{ display: 'flex' }}>

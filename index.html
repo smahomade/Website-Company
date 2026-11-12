@@ -17,20 +17,42 @@
   <meta property="og:image" content="https://www.pixelfold.co.uk/images/brand/og-image.jpg" />
   <meta property="og:image:width" content="1200" />
   <meta property="og:image:height" content="630" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <!-- who we are, in the form search engines read (schema.org) -->
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@graph": [
+        {
+          "@type": "ProfessionalService",
+          "@id": "https://www.pixelfold.co.uk/#business",
+          "name": "PixelFold",
+          "slogan": "Your ideas, well folded.",
+          "description": "PixelFold designs and builds fast, hand-built websites for small businesses across the UK, with every project quoted around what it needs.",
+          "url": "https://www.pixelfold.co.uk/",
+          "logo": "https://www.pixelfold.co.uk/images/brand/pixelfold-icon.png",
+          "image": "https://www.pixelfold.co.uk/images/brand/og-image.jpg",
+          "email": "info@pixelfold.co.uk",
+          "telephone": "+44 7469 469 061",
+          "address": { "@type": "PostalAddress", "addressLocality": "London", "addressCountry": "GB" },
+          "areaServed": { "@type": "Country", "name": "United Kingdom" },
+          "knowsAbout": ["Web design", "Website development", "Website redesign", "Small business websites"]
+        },
+        {
+          "@type": "WebSite",
+          "@id": "https://www.pixelfold.co.uk/#website",
+          "url": "https://www.pixelfold.co.uk/",
+          "name": "PixelFold",
+          "publisher": { "@id": "https://www.pixelfold.co.uk/#business" }
+        }
+      ]
+    }
+  </script>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <!-- the fonts load without holding up the first paint (text shows in the fallback font, then swaps) -->
   <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Outfit:wght@500;600;700;800&family=Fredoka:wght@600;700&family=Caveat:wght@700&family=Nunito:ital,wght@0,400;0,600;0,700;0,800;1,400&display=swap" onload="this.onload=null;this.rel='stylesheet'" />
   <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@500;600;700;800&family=Fredoka:wght@600;700&family=Caveat:wght@700&family=Nunito:ital,wght@0,400;0,600;0,700;0,800;1,400&display=swap" /></noscript>
-  <!-- Google tag (gtag.js) -->
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-J606S9E60Z"></script>
-  <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
-    /* send_page_view is off: the router reports each page view instead (see src/lib/routeChange.js) */
-    gtag('config', 'G-J606S9E60Z', { send_page_view: false });
-  </script>
 </head>
 <body>
   <div id="root"></div>

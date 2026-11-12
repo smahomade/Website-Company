@@ -155,7 +155,7 @@ export default function HowItWorks() {
         artLabels={STEP_LABELS}
         tab="How it works"
       >
-        <Link to="/register" className="btn btn-primary">
+        <Link to="/quote" className="btn btn-primary">
           Book a free consultation
           <ArrowRightIcon />
         </Link>

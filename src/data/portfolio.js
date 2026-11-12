@@ -6,8 +6,7 @@ const TOP_OLD = R2 + '/screenshots/TopOne/FullWebsiteScreenieTop1One-old/';
 const TOP_NEW = R2 + '/screenshots/TopOne/FullWebsiteScreenieTop1One-new/';
 const CWT_NEW = R2 + '/screenshots/ChangeWorkTherapies/FullWebsiteScreenieCWT-new/';
 
-/* `type` is the primary category; `types` (optional) lists every filter
-   the project should appear under.
+/* `typeLabel` is the package the build matches on the Services page.
    `slides` is either an array of {before, after, label} (opens the
    before/after compare modal) or a flat array of image URLs (opens the
    simple gallery). Cards without slides are "Coming soon" placeholders.
@@ -18,7 +17,6 @@ const CWT_NEW = R2 + '/screenshots/ChangeWorkTherapies/FullWebsiteScreenieCWT-ne
 export const PORTFOLIO = [
   {
     id: 'raza-academy',
-    type: 'redesign',
     typeLabel: 'Business Build',
     industry: 'Education',
     title: 'Raza Academy',
@@ -53,7 +51,6 @@ export const PORTFOLIO = [
   },
   {
     id: 'top-one-salon',
-    type: 'redesign',
     typeLabel: 'Custom Build',
     industry: 'Beauty & Hair',
     title: 'Top One Salon',
@@ -92,8 +89,6 @@ export const PORTFOLIO = [
   },
   {
     id: 'change-work-therapies',
-    type: 'static',
-    types: ['static', 'redesign'],
     typeLabel: 'Business Build',
     industry: 'Therapy & Wellbeing',
     title: 'Change Work Therapies',
@@ -126,11 +121,4 @@ export const PORTFOLIO = [
       CWT_NEW + 'change-work-therapy.pages.dev_contact.jpg',
     ],
   },
-];
-
-export const PORTFOLIO_FILTERS = [
-  { id: 'all', label: 'All' },
-  { id: 'redesign', label: 'Redesign' },
-  { id: 'static', label: 'Static' },
-  { id: 'dynamic', label: 'Dynamic' },
 ];

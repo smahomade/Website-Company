@@ -116,7 +116,7 @@ function ChapterCopy({ chapter, index, onSeeWork, onPlay }) {
       {chapter.id === 'intro' && (
         <>
           <div className="story-actions">
-            <Link to="/register" className="btn btn-primary">Get a free quote</Link>
+            <Link to="/quote" className="btn btn-primary">Get a free quote</Link>
             <button type="button" className="btn btn-outline" onClick={onSeeWork}>See our work</button>
           </div>
           <p className="story-note">Quoted per project · Most sites live in 1–2 weeks</p>
@@ -145,7 +145,7 @@ function ChapterCopy({ chapter, index, onSeeWork, onPlay }) {
           </ul>
           <div className="story-actions">
             <Link to="/portfolio" className="btn btn-primary">See the full portfolio</Link>
-            <Link to="/register" className="btn btn-outline">Start your project</Link>
+            <Link to="/quote" className="btn btn-outline">Start your project</Link>
           </div>
         </>
       )}

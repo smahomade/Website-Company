@@ -4,4 +4,7 @@
 /services.html      /services       301
 /portfolio.html     /portfolio      301
 /contact.html       /contact        301
-/register.html      /register       301
+/register.html      /quote          301
+
+# The quote form moved from /register to /quote
+/register           /quote          301

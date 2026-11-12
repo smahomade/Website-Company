@@ -50,7 +50,7 @@ function FeatCard({ id, variant, active, inactive, onPick, tabLabel, kind, tag, 
             <ul className="feat-extra-pts">
               {extraPoints.map((p) => <li key={p}>{p}</li>)}
             </ul>
-            <Link to="/register" className={'btn feat-cta feat-cta--' + variant} onClick={(e) => e.stopPropagation()}>
+            <Link to="/quote" className={'btn feat-cta feat-cta--' + variant} onClick={(e) => e.stopPropagation()}>
               Book a consultation
             </Link>
           </div>

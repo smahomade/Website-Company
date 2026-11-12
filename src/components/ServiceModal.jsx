@@ -67,7 +67,7 @@ export default function ServiceModal({ service, onClose }) {
           </>
         )}
         <div className="service-modal-actions">
-          <Link to="/register" className="btn btn-primary">Book a consultation &rarr;</Link>
+          <Link to="/quote" className="btn btn-primary">Book a consultation &rarr;</Link>
           <button className="service-modal-close-link" id="modalClose2" onClick={onClose}>Close</button>
         </div>
       </div>

@@ -12,7 +12,8 @@ const pages = {
   portfolio: () => import('./pages/Portfolio.jsx'),
   caseStudy: () => import('./pages/CaseStudy.jsx'),
   contact: () => import('./pages/Contact.jsx'),
-  register: () => import('./pages/Register.jsx'),
+  quote: () => import('./pages/Quote.jsx'),
+  privacy: () => import('./pages/Privacy.jsx'),
   notFound: () => import('./pages/NotFound.jsx'),
 };
 const HowItWorks = lazy(pages.howItWorks);
@@ -20,7 +21,8 @@ const Services = lazy(pages.services);
 const Portfolio = lazy(pages.portfolio);
 const CaseStudy = lazy(pages.caseStudy);
 const Contact = lazy(pages.contact);
-const Register = lazy(pages.register);
+const Quote = lazy(pages.quote);
+const Privacy = lazy(pages.privacy);
 const NotFound = lazy(pages.notFound);
 
 /* while a page's chunk arrives: the charcoal its banner starts with, a screen tall */
@@ -53,7 +55,8 @@ export default function App() {
         <Route path="portfolio" element={page(Portfolio)} />
         <Route path="portfolio/:id" element={page(CaseStudy)} />
         <Route path="contact" element={page(Contact)} />
-        <Route path="register" element={page(Register)} />
+        <Route path="quote" element={page(Quote)} />
+        <Route path="privacy" element={page(Privacy)} />
 
         {/* Legacy static-site URLs (also redirected at the CDN via public/_redirects) */}
         <Route path="index.html" element={<Navigate to="/" replace />} />
@@ -61,7 +64,9 @@ export default function App() {
         <Route path="services.html" element={<Navigate to="/services" replace />} />
         <Route path="portfolio.html" element={<Navigate to="/portfolio" replace />} />
         <Route path="contact.html" element={<Navigate to="/contact" replace />} />
-        <Route path="register.html" element={<Navigate to="/register" replace />} />
+        <Route path="register.html" element={<Navigate to="/quote" replace />} />
+        {/* the quote form's address before it was /quote */}
+        <Route path="register" element={<Navigate to="/quote" replace />} />
 
         <Route path="*" element={page(NotFound)} />
       </Route>
