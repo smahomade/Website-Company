@@ -1,7 +1,7 @@
 import { useEffect, useLayoutEffect, useRef } from 'react';
 import { Outlet, useLocation } from 'react-router-dom';
-import Navbar from './Navbar.jsx';
-import Footer from './Footer.jsx';
+import SiteNav from './site/SiteNav.jsx';
+import SiteFooter from './site/SiteFooter.jsx';
 import CookieBanner from './CookieBanner.jsx';
 import { trackEvent, trackPageView } from '../lib/routeChange.js'; /* not named analytics.js: ad blockers refuse that address, which blanked the page in dev */
 import useInteractive from '../hooks/useInteractive.js';
@@ -54,11 +54,11 @@ export default function Layout() {
 
   return (
     <>
-      <Navbar />
-      <main ref={mainRef}>
+      <SiteNav />
+      <main id="main" tabIndex={-1} ref={mainRef}>
         <Outlet />
       </main>
-      <Footer />
+      <SiteFooter />
       <CookieBanner />
     </>
   );

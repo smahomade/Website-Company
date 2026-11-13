@@ -4,9 +4,6 @@ import App from './App.jsx';
 import { HeadContext } from './components/Seo.jsx';
 import { PORTFOLIO } from './data/portfolio.js';
 
-/* for the home page's inline script that places the loading picture before any JS arrives */
-export { storyLayout, introFolder, POSTERS, TAN_HALF, FH, FOLDER_SCALE } from './components/story/storyLayout.js';
-
 /* Built at build time (vite build --ssr) and run by scripts/prerender.mjs, which saves every
    page below as finished HTML, so link previews and search engines get each page's own title,
    description and words without running any JavaScript. */

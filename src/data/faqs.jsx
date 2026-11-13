@@ -1,8 +1,10 @@
-/* FAQ entries for the How It Works page. `a` is JSX-free text; entries
-   that need markup provide a `render` function instead. */
+/* FAQ entries for the How It Works page and the home page. `a` is JSX-free text; entries
+   that need markup provide a `render` function instead, plus the same answer as plain
+   `text` for the home page's structured data. */
 export const FAQS = [
   {
     q: 'How long does it take to build a website?',
+    text: 'Honestly, it varies quite a bit. The number of pages, how many design ideas we go through before landing on the right one, changes mid-build, and how smoothly communication flows between us all play a part. On average, most projects land somewhere between 2–6 weeks. The more responsive you are with feedback, the faster things move.',
     render: () => (
       <p>
         Honestly, it varies quite a bit. The number of pages, how many design ideas we go through before landing on the right one, changes mid-build, and how smoothly communication flows between us all play a part. On average, most projects land somewhere between <strong>2–6 weeks</strong>. The more responsive you are with feedback, the faster things move.

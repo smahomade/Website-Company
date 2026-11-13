@@ -1,0 +1,131 @@
+/* The site's stylesheet. Tailwind (the base that shadcn and 21st.dev components are built on)
+   plus the old hand-written styles.css, which the pages not yet redesigned still use.
+
+   Layer order, weakest first: Tailwind's reset < styles.css < Tailwind utilities. So the old
+   pages keep their look, and a utility class on a redesigned page always wins over an old rule
+   that happens to match (styles.css styles bare h1, a, ul and so on). */
+@layer theme, base, legacy, components, utilities;
+
+@import 'tailwindcss/theme.css' layer(theme);
+@import 'tailwindcss/preflight.css' layer(base);
+@import './styles.css' layer(legacy);
+/* Utilities are generated only from the redesigned code: the old pages use class names such as
+   "container" that are also Tailwind utilities and would pick up its rules. Add a folder here
+   when a page moves over. It works the other way too: styles.css has its own .ring-1 (a 520px
+   hero ring), so the redesigned code can't use the ring-1 utility until styles.css is gone. */
+@import 'tailwindcss/utilities.css' layer(utilities) source(none);
+@source './components/ui';
+@source './components/site';
+@source './components/home';
+@source './pages/Home.jsx';
+
+/* Brand colours under the names shadcn and 21st.dev components expect (bg-primary,
+   text-muted-foreground, border-border and so on). Text on orange is charcoal: white on
+   #FF6A00 is under 3:1. */
+@layer base {
+  :root {
+    --background: #fffdf8;
+    --foreground: #111111;
+    --card: #ffffff;
+    --card-foreground: #111111;
+    --popover: #ffffff;
+    --popover-foreground: #111111;
+    --primary: #ff6a00;
+    --primary-foreground: #111111;
+    --secondary: #f6f4f0;
+    --secondary-foreground: #111111;
+    --muted: #f6f4f0;
+    --muted-foreground: #6e6860;
+    --accent: #fff1e6;
+    --accent-foreground: #111111;
+    --destructive: #c4320a;
+    --border: rgba(17, 17, 17, 0.1);
+    --input: rgba(17, 17, 17, 0.16);
+    --ring: #ff6a00;
+  }
+  html {
+    scroll-padding-top: 96px; /* anchors land below the floating nav */
+    /* Tailwind's reset makes 1.5 the default; the old pages were laid out on the browser's own
+       default, so keep that and give the redesigned parts 1.5 on their own roots (leading-normal) */
+    line-height: normal;
+  }
+  /* the skip link moves focus here; no ring round the whole page */
+  #main:focus {
+    outline: none;
+  }
+}
+
+/* inline: utilities use these values directly instead of a CSS variable, because styles.css
+   already defines --radius-sm, --shadow-md and others for its own use */
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+
+  --color-ink: #111111;
+  --color-espresso: #1c1a17;
+  --color-cream: #fffdf8;
+  --color-sand: #f6f4f0;
+  --color-orange: #ff6a00;
+  --color-orange-soft: #ff8a3d;
+  --color-orange-ink: #b54708; /* orange for small text on cream (AA) */
+  --color-orange-tint: #fff1e6;
+
+  --font-sans: 'Nunito', ui-sans-serif, system-ui, sans-serif;
+  --font-display: 'Outfit', 'Nunito', ui-sans-serif, system-ui, sans-serif;
+
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-xl: 20px;
+  --radius-2xl: 28px;
+
+  --shadow-sm: 0 1px 2px rgba(17, 17, 17, 0.06), 0 1px 1px rgba(17, 17, 17, 0.03);
+  --shadow-md: 0 10px 28px -12px rgba(60, 40, 0, 0.18);
+  --shadow-lg: 0 24px 60px -24px rgba(60, 40, 0, 0.28);
+
+  --animate-accordion-down: accordion-down 0.25s ease-out;
+  --animate-accordion-up: accordion-up 0.2s ease-out;
+}
+
+@keyframes accordion-down {
+  from { height: 0; }
+  to { height: var(--radix-accordion-content-height); }
+}
+@keyframes accordion-up {
+  from { height: var(--radix-accordion-content-height); }
+  to { height: 0; }
+}
+
+@layer components {
+  /* Sections fade up the first time they scroll into view (hooks/useReveal.js). Only things
+     below the fold are ever hidden, and only once the script runs, so the prebuilt page shows
+     everything. Calm: one soft fade, no bounce. */
+  [data-reveal] {
+    transition: opacity 0.7s ease, transform 0.7s cubic-bezier(0.2, 0.7, 0.2, 1);
+    transition-delay: calc(var(--reveal-i, 0) * 90ms);
+  }
+  [data-reveal][data-hidden] {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+  @media (prefers-reduced-motion: reduce) {
+    [data-reveal] { transition: opacity 0.4s ease; transition-delay: 0ms; }
+    [data-reveal][data-hidden] { transform: none; }
+  }
+}
