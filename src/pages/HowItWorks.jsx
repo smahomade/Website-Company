@@ -142,14 +142,14 @@ export default function HowItWorks() {
     <div ref={pageRef}>
       <Seo
         title="How It Works — PixelFold"
-        description="Getting a website with PixelFold is refreshingly simple: a conversation, a build you can watch take shape, and a handover that's explained properly."
+        description="Getting a website with PixelFold: a conversation, a build you can watch take shape, and a handover that's explained properly."
         path="/how-it-works"
       />
 
       <PageHero
         label="How it works"
         title="Three steps."
-        accent="No jargon."
+        accent="Plain English."
         sub="A conversation, a build you can watch take shape, and a handover that’s actually explained."
         art="steps"
         artLabels={STEP_LABELS}
@@ -186,7 +186,7 @@ export default function HowItWorks() {
           <div className="hiw-starts-grid">
             <div className="hiw-start">
               <p className="section-label">Already have a site?</p>
-              <h3>We’ll tell you honestly whether to fix it or start over.</h3>
+              <h3>We’ll tell you whether to fix it or start over.</h3>
               <p>Bring the link. We’ll look at what’s working, what isn’t, and give you a straight answer before any work begins.</p>
             </div>
             <div className="hiw-start">

@@ -73,7 +73,7 @@ export default function Contact() {
             {/* LEFT — Info */}
             <div className="contact-info">
               <h2 className="contact-info-title">Let's talk.</h2>
-              <p className="contact-info-sub">Whether you want a brand-new site or need help with an existing one, start with a message. There is no pressure and no obligation.</p>
+              <p className="contact-info-sub">Whether you want a brand-new site or need help with an existing one, start with a message. There’s no obligation.</p>
 
               <div className="contact-info-cards">
                 <div className="contact-info-card">

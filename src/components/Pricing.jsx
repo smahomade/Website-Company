@@ -85,7 +85,7 @@ export default function Pricing() {
             kind="key"
             tag="Build only"
             title="One-off payment"
-            desc="We build your website and hand it over completely. You own it outright — no strings attached."
+            desc="We build your website and hand it over completely. You own it outright."
             points={['Full design and build', 'One round of revisions', 'Full ownership — yours to keep', 'Domain and hosting guidance']}
             extraLabel="After launch you get"
             extraPoints={[
@@ -105,8 +105,8 @@ export default function Pricing() {
             kind="cloud"
             tag="Managed for you"
             title="Monthly plan"
-            desc="We build your site and handle everything ongoing — no technical headaches, ever."
-            points={['Everything in the one-off plan', 'Hosting and security managed', 'Ongoing changes and updates', 'Priority support whenever you need it']}
+            desc="We build your site and look after it afterwards: hosting, security and updates."
+            points={['Everything in the one-off plan', 'Hosting and security managed', 'Ongoing changes and updates', 'Priority support']}
             extraLabel="Every month we handle"
             extraPoints={[
               'Hosting on our fast, secure servers with SSL',

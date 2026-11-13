@@ -165,7 +165,7 @@ export default function Services() {
         label="What we offer"
         title="Our"
         accent="Services"
-        sub="Websites for small businesses across the UK. Every project is scoped and quoted around what you actually need, with clear timelines and no hidden fees."
+        sub="Websites for small businesses across the UK. Every project is scoped and quoted around what you actually need."
         badges={['Quoted per project', 'Mobile-first design', 'UK-based', 'Fast turnaround']}
         art="folders"
         tab="Services"

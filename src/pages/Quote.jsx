@@ -378,7 +378,7 @@ export default function Quote() {
         label="Free Quote"
         title="Tell us about"
         accent="your project."
-        sub="Fill in the short brief below and we'll come back within 24 hours with a clear scope, timeline and quote. No obligation, no pressure, no jargon."
+        sub="Fill in the short brief below and we'll come back within 24 hours with a clear scope, timeline and quote. No obligation."
         badges={['100% free', 'Quoted per project', 'Reply within 24 hrs', 'No commitment']}
         art="brief"
         tab="Free quote"

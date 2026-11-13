@@ -10,7 +10,7 @@ export const STORY_CHAPTERS = [
     eyebrow: 'Little files. Big ideas.',
     title: 'We’ll build',
     accent: 'your website.',
-    body: 'PixelFold designs and builds fast, beautiful websites for small businesses, and explains every step in plain English.',
+    body: 'PixelFold designs and builds fast, beautiful websites for small businesses, and explains the process in plain English.',
   },
   {
     id: 'brief',
@@ -40,7 +40,7 @@ export const STORY_CHAPTERS = [
     eyebrow: 'Build',
     title: 'Built properly,',
     accent: 'pixel by pixel.',
-    body: 'Hand-built, fast-loading and fully responsive. We test on real phones, tablets and desktops until every piece is right.',
+    body: 'Hand-built, fast-loading and fully responsive. We test it on real phones, tablets and desktops before launch.',
     points: ['Mobile-first', 'Basic SEO built in', 'Tested on real devices'],
   },
   {
@@ -51,7 +51,7 @@ export const STORY_CHAPTERS = [
     eyebrow: 'Launch',
     title: 'Live, and',
     accent: 'fully yours.',
-    body: 'Domain, hosting and SSL handled. Then we walk you through everything, so you’re never left in the dark. Most sites go live in 2\u2060–\u20606\u00a0weeks.', /* word joiners + nbsp keep "2–6 weeks" on one line */
+    body: 'Domain, hosting and SSL handled. Then we walk you through how it all works. Most sites go live in 2\u2060–\u20606\u00a0weeks.', /* word joiners + nbsp keep "2–6 weeks" on one line */
   },
   {
     id: 'work',

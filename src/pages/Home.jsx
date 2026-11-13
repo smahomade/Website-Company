@@ -9,9 +9,9 @@ import useRevealOnScroll, { useFadeIn } from '../hooks/useRevealOnScroll.js';
 
 const WHY_US = [
   { kind: 'clock', title: 'A clear timeline', desc: 'Most websites go live in 2–6 weeks, depending on the size of the site and how quickly feedback comes back.' },
-  { kind: 'phone', title: 'Mobile-friendly', desc: 'Every site we build looks great on phones, tablets, and desktops. Your customers browse on mobile — we make sure you look good.' },
-  { kind: 'coin', title: 'Honest pricing', desc: 'Every project is scoped and quoted individually, and agreed before we start. No surprise invoices, no hidden extras.' },
-  { kind: 'search', title: 'Basic SEO included', desc: 'Every site comes with basic SEO setup so Google can find you. We also help with domain, hosting, and Google Business if you need it.' },
+  { kind: 'phone', title: 'Mobile-friendly', desc: 'Every site we build is designed for phones first, then tablets and desktops, and tested on real devices.' },
+  { kind: 'coin', title: 'Quoted per project', desc: 'Every project is scoped and quoted individually, and agreed before we start.' },
+  { kind: 'search', title: 'Basic SEO included', desc: 'Every site comes with basic SEO set up: page titles, descriptions and a sitemap. We also help with domain, hosting, and Google Business if you need it.' },
 ];
 
 export default function Home() {
