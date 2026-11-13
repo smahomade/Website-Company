@@ -88,6 +88,7 @@
 
   --font-sans: 'Nunito', ui-sans-serif, system-ui, sans-serif;
   --font-display: 'Outfit', 'Nunito', ui-sans-serif, system-ui, sans-serif;
+  --font-hand: 'Caveat', cursive;
 
   --radius-sm: 8px;
   --radius-md: 12px;
@@ -128,4 +129,17 @@
     [data-reveal] { transition: opacity 0.4s ease; transition-delay: 0ms; }
     [data-reveal][data-hidden] { transform: none; }
   }
+
+  /* the dashed thread between the pinned steps (ui/how-it-works.jsx) creeps along slowly;
+     -140 is a whole number of 8 + 6 dash repeats, so the loop has no jump */
+  .pf-thread {
+    animation: pf-thread 9s linear infinite;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .pf-thread { animation: none; }
+  }
+}
+
+@keyframes pf-thread {
+  to { stroke-dashoffset: -140; }
 }

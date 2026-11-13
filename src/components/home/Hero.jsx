@@ -32,7 +32,9 @@ function TourWindow({ className }) {
       <div className="relative aspect-video bg-sand">
         {state === 'idle' ? (
           <img
-            src={TOUR.poster}
+            src="/images/home/site-top-one-salon-800.webp"
+            srcSet={'/images/home/site-top-one-salon-480.webp 480w, /images/home/site-top-one-salon-800.webp 800w, ' + TOUR.poster + ' 1280w'}
+            sizes="(min-width: 1024px) 450px, 80vw"
             alt="Top One Salon's website, designed and built by PixelFold"
             width="1280"
             height="720"
@@ -77,7 +79,9 @@ function HeroFolder() {
       {/* the sites filed inside */}
       <BrowserFrame url="changeworktherapies.com" className="absolute left-[5%] top-[3%] z-10 w-[72%] -rotate-[5deg] shadow-md">
         <img
-          src="/images/story/shot-change-work-therapies.webp"
+          src="/images/home/hero-change-work-therapies-800.webp"
+          srcSet="/images/home/hero-change-work-therapies-480.webp 480w, /images/home/hero-change-work-therapies-800.webp 800w, /images/story/shot-change-work-therapies.webp 1217w"
+          sizes="(min-width: 1024px) 400px, 72vw"
           alt=""
           width="1217"
           height="631"
