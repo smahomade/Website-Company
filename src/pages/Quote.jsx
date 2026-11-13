@@ -269,7 +269,7 @@ function NewWebsiteBrief() {
           <Field id="new_timeline" label="When would you like it?">
             <Select name="timeline" defaultValue="">
               <option value="">Choose one…</option>
-              <option value="ASAP (1–2 weeks)">As soon as possible</option>
+              <option value="As soon as possible">As soon as possible</option>
               <option value="Within 1 month">Within a month</option>
               <option value="2–3 months">In 2–3 months</option>
               <option value="Flexible">I’m flexible</option>
