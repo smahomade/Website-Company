@@ -25,9 +25,9 @@ const Quote = lazy(pages.quote);
 const Privacy = lazy(pages.privacy);
 const NotFound = lazy(pages.notFound);
 
-/* while a page's chunk arrives: the charcoal its banner starts with, a screen tall */
+/* while a page's chunk arrives: the cream its header starts with, a screen tall */
 const page = (Page) => (
-  <Suspense fallback={<div className="page-loading" aria-hidden="true" />}>
+  <Suspense fallback={<div className="min-h-[100svh] bg-background" aria-hidden="true" />}>
     <Page />
   </Suspense>
 );

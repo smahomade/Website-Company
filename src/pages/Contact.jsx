@@ -1,28 +1,69 @@
 import { useRef, useState } from 'react';
-import Seo from '../components/Seo.jsx';
-import PageHero from '../components/PageHero.jsx';
-import { WhatsAppIcon } from '../components/Icons.jsx';
-import { useFadeIn } from '../hooks/useRevealOnScroll.js';
-import { CONTACT, EMAILJS } from '../lib/site.js';
-import Mascot from '../components/Mascot.jsx';
-import NextSteps from '../components/NextSteps.jsx';
-import { FormError, Honeypot, PrivacyNote } from '../components/EnquiryBits.jsx';
-import { checkFields, sendEnquiry } from '../lib/enquiry.js';
+import { ArrowUpRight, Clock, Mail } from 'lucide-react';
+import Seo from '@/components/Seo.jsx';
+import PageHeader from '@/components/site/PageHeader.jsx';
+import NextSteps from '@/components/site/NextSteps.jsx';
+import { ErrorSummary, Field, Honeypot, PrivacyNote, SendError, SentPanel, SubmitButton, useFormErrors } from '@/components/site/form.jsx';
+import { Input, Select, Textarea } from '@/components/ui/input';
+import { WhatsAppIcon } from '@/components/Icons.jsx';
+import { checkFields, sendEnquiry } from '@/lib/enquiry.js';
+import { CONTACT, EMAILJS } from '@/lib/site.js';
+
+const SUBJECTS = ['I need a new website', 'I want to redesign my existing site', 'A question about pricing', 'Ongoing maintenance or a managed plan', 'Something else'];
+
+/* The ways to reach us besides the form. WhatsApp first: calls from unknown numbers often get
+   lost among spam. */
+function Ways() {
+  const card = 'flex gap-4 rounded-[22px] border border-ink/10 bg-card p-5 shadow-sm';
+  const icon = 'grid size-11 shrink-0 place-items-center rounded-xl';
+  return (
+    <ul className="space-y-3">
+      <li className={card}>
+        <span className={icon + ' bg-[#25D366]/15 text-[#128C4B]'}><WhatsAppIcon size={22} /></span>
+        <div className="min-w-0">
+          <p className="font-display font-bold text-ink">WhatsApp or phone</p>
+          <a href={CONTACT.whatsapp} target="_blank" rel="noopener noreferrer" className="inline-flex min-h-11 items-center gap-1 font-semibold text-ink underline-offset-4 hover:text-orange-ink hover:underline">
+            {CONTACT.phone} <ArrowUpRight aria-hidden="true" className="size-4" />
+            <span className="sr-only">(opens WhatsApp)</span>
+          </a>
+          <p className="text-sm leading-relaxed text-muted-foreground">A WhatsApp message is best: calls often get lost among spam.</p>
+        </div>
+      </li>
+      <li className={card}>
+        <span className={icon + ' bg-orange-tint text-orange-ink'}><Mail aria-hidden="true" className="size-5" /></span>
+        <div className="min-w-0">
+          <p className="font-display font-bold text-ink">Email</p>
+          <a href={'mailto:' + CONTACT.email} className="inline-flex min-h-11 items-center break-all font-semibold text-ink underline-offset-4 hover:text-orange-ink hover:underline">
+            {CONTACT.email}
+          </a>
+        </div>
+      </li>
+      <li className={card}>
+        <span className={icon + ' bg-sand text-ink'}><Clock aria-hidden="true" className="size-5" /></span>
+        <div>
+          <p className="font-display font-bold text-ink">Hours</p>
+          <p className="font-semibold text-ink">Flexible: message any time</p>
+          <p className="text-sm leading-relaxed text-muted-foreground">No fixed office hours. We reply as soon as we’re free, usually the same day.</p>
+        </div>
+      </li>
+    </ul>
+  );
+}
 
 export default function Contact() {
-  const pageRef = useRef(null);
   const [status, setStatus] = useState('idle'); /* idle | sending | sent */
-  const [error, setError] = useState(null);
+  const [sendFailed, setSendFailed] = useState(false);
+  const errs = useFormErrors();
   const shownAt = useRef(Date.now());
-  useFadeIn(pageRef);
 
   /* checks the fields, keeps bots out, sends (lib/enquiry.js), or says what went wrong */
   const onSubmit = async (e) => {
     e.preventDefault();
     const form = e.currentTarget;
-    const problem = checkFields(form);
-    setError(problem);
-    if (problem) return;
+    const problems = checkFields(form);
+    errs.show(problems);
+    setSendFailed(false);
+    if (problems.length) return;
     const fd = new FormData(form);
     setStatus('sending');
     try {
@@ -35,7 +76,7 @@ export default function Contact() {
           full_name: fd.get('name') || '',
           reply_to: fd.get('email') || '',
           phone: '',
-          subject: fd.get('subject') || 'General Enquiry',
+          subject: fd.get('subject') || 'General enquiry',
           message: fd.get('message') || '',
           time: new Date().toLocaleString('en-GB', { dateStyle: 'full', timeStyle: 'short' }),
         },
@@ -44,120 +85,79 @@ export default function Contact() {
     } catch (err) {
       console.error('EmailJS error:', err);
       setStatus('idle');
-      setError('send');
+      setSendFailed(true);
     }
   };
 
   return (
-    <div ref={pageRef}>
+    <div className="leading-normal">
       <Seo
         title="Contact — PixelFold"
         description="Get in touch with PixelFold. We build fast, beautiful websites for small businesses. Message us on WhatsApp, email, or fill in our contact form."
         path="/contact"
       />
-
-      <PageHero
-        label="Get in Touch"
-        title="Get in"
-        accent="Touch"
-        sub="Need a website for your business? Contact PixelFold and we'll help you get online. Every conversation starts with a free, no-obligation chat."
-        badges={['24 hr response', 'No obligation', 'Free consultation']}
-        art="plane"
-        tab="Contact"
-        filed
+      <PageHeader
+        label="Contact"
+        title="Let’s talk about"
+        accent="your website."
+        sub="Need a new site, or help with the one you’ve got? Send a message and we’ll reply within 24 hours. Every conversation starts with a free, no-obligation chat."
+        chips={['Reply within 24 hours', 'No obligation', 'Free consultation']}
       />
 
-      <section className="contact-section">
-        <div className="container">
-          <div className="contact-grid">
-            {/* LEFT — Info */}
-            <div className="contact-info">
-              <h2 className="contact-info-title">Let's talk.</h2>
-              <p className="contact-info-sub">Whether you want a brand-new site or need help with an existing one, start with a message. There is no pressure and no obligation.</p>
+      <section className="bg-background pb-24 md:pb-32">
+        <div className="mx-auto grid max-w-6xl gap-10 px-5 md:px-8 lg:grid-cols-[0.85fr_1.15fr] lg:gap-14">
+          <div className="space-y-6">
+            <h2 className="font-display text-2xl font-bold tracking-[-0.02em] text-ink">Other ways to reach us</h2>
+            <Ways />
+            <NextSteps />
+          </div>
 
-              <div className="contact-info-cards">
-                <div className="contact-info-card">
-                  <span className="contact-info-icon">✉️</span>
-                  <div>
-                    <strong>Email</strong>
-                    <a href={'mailto:' + CONTACT.email}>{CONTACT.email}</a>
-                  </div>
+          {/* the form first on phones; beside the other ways from lg up */}
+          <div className="max-lg:order-first rounded-[28px] border border-ink/10 bg-card p-6 shadow-sm md:p-9">
+            {status === 'sent' ? (
+              <SentPanel title="Message sent!" text="Thanks for getting in touch. We’ll get back to you within 24 hours, usually the same day." />
+            ) : (
+              <form noValidate onSubmit={onSubmit} onInput={errs.onInput} className="relative space-y-6">
+                <div>
+                  <h2 className="font-display text-2xl font-bold tracking-[-0.02em] text-ink">Send us a message</h2>
+                  <p className="mt-1.5 text-muted-foreground">
+                    Fields marked <span className="text-orange-ink">*</span> are needed.
+                  </p>
                 </div>
-                <div className="contact-info-card">
-                  <span className="contact-info-icon"><WhatsAppIcon size={22} /></span>
-                  <div>
-                    <strong>Phone &amp; WhatsApp</strong>
-                    <a href={CONTACT.whatsapp} target="_blank" rel="noopener noreferrer">{CONTACT.phone}</a>
-                    <small style={{ display: 'block', opacity: 0.55, fontSize: '0.72rem', marginTop: 3 }}>
-                      We prefer WhatsApp texts — gets lost in spam calls otherwise!
-                    </small>
-                  </div>
+                <ErrorSummary errors={errs.errors} summaryRef={errs.summaryRef} />
+                <div className="grid gap-6 sm:grid-cols-2">
+                  <Field id="contact-name" label="Your name" required error={errs.messageFor('contact-name')}>
+                    <Input name="name" autoComplete="name" data-error="Enter your name" />
+                  </Field>
+                  <Field id="contact-email" label="Email address" required error={errs.messageFor('contact-email')}>
+                    <Input type="email" name="email" autoComplete="email" inputMode="email" data-error="Enter your email address" />
+                  </Field>
                 </div>
-                <div className="contact-info-card">
-                  <span className="contact-info-icon">🕐</span>
-                  <div>
-                    <strong>Hours</strong>
-                    <span>Flexible — message any time</span>
-                    <small style={{ display: 'block', opacity: 0.55, fontSize: '0.72rem', marginTop: 3 }}>
-                      No fixed office hours. We reply as soon as we're free, usually the same day.
-                    </small>
-                  </div>
-                </div>
-              </div>
-
-              <NextSteps />
-            </div>
-
-            {/* RIGHT — Form */}
-            <div className="contact-form-wrap pf-folder">
-              {status !== 'sent' ? (
-                <form className="contact-form" onSubmit={onSubmit} noValidate>
-                  <div className="contact-form-row">
-                    <div className="contact-form-group">
-                      <label htmlFor="contact-name">Your name</label>
-                      <input type="text" id="contact-name" name="name" placeholder="Jane Smith" autoComplete="name" required />
-                    </div>
-                    <div className="contact-form-group">
-                      <label htmlFor="contact-email">Email address</label>
-                      <input type="email" id="contact-email" name="email" placeholder="jane@example.com" autoComplete="email" required />
-                    </div>
-                  </div>
-                  <div className="contact-form-group">
-                    <label htmlFor="contact-subject">Subject</label>
-                    <select id="contact-subject" name="subject" defaultValue="">
-                      <option value="" disabled>What's this about?</option>
-                      <option value="new-website">I need a new website</option>
-                      <option value="redesign">I want to redesign my existing site</option>
-                      <option value="pricing">Pricing question</option>
-                      <option value="maintenance">Ongoing maintenance / managed plan</option>
-                      <option value="other">Something else</option>
-                    </select>
-                  </div>
-                  <div className="contact-form-group">
-                    <label htmlFor="contact-message">Your message</label>
-                    <textarea
-                      id="contact-message"
-                      name="message"
-                      rows="6"
-                      placeholder="Tell us a bit about your project — what you do, what you need, and any questions you have…"
-                      required
-                    />
-                  </div>
-                  <Honeypot />
-                  <FormError error={error} />
-                  <button type="submit" className="btn btn-primary contact-submit" disabled={status === 'sending'}>
-                    {status === 'sending' ? 'Sending…' : 'Send it over →'}
-                  </button>
+                <Field id="contact-subject" label="What’s it about?">
+                  <Select name="subject" defaultValue="">
+                    <option value="">Choose one…</option>
+                    {SUBJECTS.map((s) => (
+                      <option key={s} value={s}>{s}</option>
+                    ))}
+                  </Select>
+                </Field>
+                <Field
+                  id="contact-message"
+                  label="Your message"
+                  required
+                  hint="What you do, what you need, and any questions you have."
+                  error={errs.messageFor('contact-message')}
+                >
+                  <Textarea name="message" rows={6} data-error="Tell us a little about what you need" />
+                </Field>
+                <Honeypot />
+                {sendFailed && <SendError />}
+                <div className="flex flex-col gap-4">
+                  <SubmitButton sending={status === 'sending'}>Send message</SubmitButton>
                   <PrivacyNote />
-                </form>
-              ) : (
-                <div className="register-success" id="contactSuccess" style={{ display: 'flex' }}>
-                  <Mascot variant="success" size={110} />
-                  <h3>Message sent!</h3>
-                  <p>Thanks for reaching out — we'll get back to you within 24 hours.</p>
                 </div>
-              )}
-            </div>
+              </form>
+            )}
           </div>
         </div>
       </section>

@@ -1,23 +1,6 @@
-/* The site's stylesheet. Tailwind (the base that shadcn and 21st.dev components are built on)
-   plus the old hand-written styles.css, which the pages not yet redesigned still use.
-
-   Layer order, weakest first: Tailwind's reset < styles.css < Tailwind utilities. So the old
-   pages keep their look, and a utility class on a redesigned page always wins over an old rule
-   that happens to match (styles.css styles bare h1, a, ul and so on). */
-@layer theme, base, legacy, components, utilities;
-
-@import 'tailwindcss/theme.css' layer(theme);
-@import 'tailwindcss/preflight.css' layer(base);
-@import './styles.css' layer(legacy);
-/* Utilities are generated only from the redesigned code: the old pages use class names such as
-   "container" that are also Tailwind utilities and would pick up its rules. Add a folder here
-   when a page moves over. It works the other way too: styles.css has its own .ring-1 (a 520px
-   hero ring), so the redesigned code can't use the ring-1 utility until styles.css is gone. */
-@import 'tailwindcss/utilities.css' layer(utilities) source(none);
-@source './components/ui';
-@source './components/site';
-@source './components/home';
-@source './pages/Home.jsx';
+/* The site's stylesheet: Tailwind (the base shadcn and 21st.dev components are built on), the
+   brand colours under the names those components expect, and the few site-wide rules below. */
+@import 'tailwindcss';
 
 /* Brand colours under the names shadcn and 21st.dev components expect (bg-primary,
    text-muted-foreground, border-border and so on). Text on orange is charcoal: white on
@@ -45,9 +28,25 @@
   }
   html {
     scroll-padding-top: 96px; /* anchors land below the floating nav */
-    /* Tailwind's reset makes 1.5 the default; the old pages were laid out on the browser's own
-       default, so keep that and give the redesigned parts 1.5 on their own roots (leading-normal) */
-    line-height: normal;
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    html { scroll-behavior: smooth; }
+  }
+  /* clip, not hidden: hidden makes body a scroll container, which silently breaks
+     position: sticky (the project deck, the Services and case-study asides) */
+  html,
+  body {
+    overflow-x: clip;
+  }
+  body {
+    background: var(--background);
+    color: var(--foreground);
+    font-family: 'Nunito', ui-sans-serif, system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+  ::selection {
+    background: #ff6a00;
+    color: #111111;
   }
   /* the skip link moves focus here; no ring round the whole page */
   #main:focus {
@@ -55,8 +54,7 @@
   }
 }
 
-/* inline: utilities use these values directly instead of a CSS variable, because styles.css
-   already defines --radius-sm, --shadow-md and others for its own use */
+/* inline: utilities use these values directly instead of through a CSS variable */
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
@@ -138,7 +136,21 @@
   @media (prefers-reduced-motion: reduce) {
     .pf-thread { animation: none; }
   }
+
+  /* dialogs (ui/dialog.jsx): the backdrop fades, the panel fades and rises a little; Radix waits
+     for the closing animation before removing them */
+  .pf-fade[data-state='open'] { animation: pf-fade-in 0.2s ease-out; }
+  .pf-fade[data-state='closed'] { animation: pf-fade-out 0.15s ease-in; }
+  .pf-rise[data-state='open'] { animation: pf-rise-in 0.26s cubic-bezier(0.2, 0.7, 0.2, 1); }
+  .pf-rise[data-state='closed'] { animation: pf-fade-out 0.15s ease-in; }
+  @media (prefers-reduced-motion: reduce) {
+    .pf-fade[data-state], .pf-rise[data-state] { animation-duration: 0.01s; }
+  }
 }
+
+@keyframes pf-fade-in { from { opacity: 0; } }
+@keyframes pf-fade-out { to { opacity: 0; } }
+@keyframes pf-rise-in { from { opacity: 0; transform: translateY(12px); } }
 
 @keyframes pf-thread {
   to { stroke-dashoffset: -140; }

@@ -1,21 +1,22 @@
 import { useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
-import Seo from '../components/Seo.jsx';
-import PageHero from '../components/PageHero.jsx';
-import PortfolioModal from '../components/PortfolioModal.jsx';
-import Testimonials from '../components/Testimonials.jsx';
-import { ArrowRightIcon, ExternalLinkIcon, PagesIcon } from '../components/Icons.jsx';
-import { PORTFOLIO } from '../data/portfolio.js';
+import { ArrowRight, ArrowUpRight, Check, Images } from 'lucide-react';
+import Seo from '@/components/Seo.jsx';
+import PageHeader from '@/components/site/PageHeader.jsx';
+import ProjectViewer from '@/components/site/ProjectViewer.jsx';
+import BrowserFrame from '@/components/home/BrowserFrame.jsx';
+import Quotes from '@/components/home/Quotes.jsx';
+import { Button } from '@/components/ui/button';
+import { PORTFOLIO } from '@/data/portfolio.js';
 import NotFound from './NotFound.jsx';
 
-/* One client's project (/portfolio/<id>): what they needed, what we built, where it is now,
-   with a few of its pages and the rest a click away. Content is the `caseStudy` in portfolio.js. */
+/* One client's project (/portfolio/<id>): what they needed, what we built, where it is now, with a
+   few of its pages and the rest a click away. Content is the `caseStudy` in portfolio.js. */
 export default function CaseStudy() {
   const { id } = useParams();
   const [open, setOpen] = useState(false);
-  const index = PORTFOLIO.findIndex((x) => x.id === id && x.caseStudy);
-  if (index < 0) return <NotFound />;
-  const p = PORTFOLIO[index];
+  const p = PORTFOLIO.find((x) => x.id === id && x.caseStudy);
+  if (!p) return <NotFound />;
   const cs = p.caseStudy;
   const studies = PORTFOLIO.filter((x) => x.caseStudy);
   const next = studies[(studies.indexOf(p) + 1) % studies.length];
@@ -29,84 +30,111 @@ export default function CaseStudy() {
     return { key: full, src: at(1000), srcSet: `${at(600)} 600w, ${at(1000)} 1000w`, label };
   });
   const host = p.liveUrl ? p.liveUrl.replace(/^https?:\/\//, '').replace(/\/$/, '') : null;
+  const h2 = 'font-display text-2xl font-bold tracking-[-0.02em] text-ink';
 
   return (
-    <>
+    <div className="leading-normal">
       <Seo title={p.title + ' case study — PixelFold'} description={cs.summary} path={'/portfolio/' + p.id} />
-      <PageHero label="Case study" title={cs.title} accent={cs.accent} sub={cs.summary} badges={[p.industry, cs.pages, p.typeLabel]} art="sites" tab="Case study" />
+      <PageHeader label="Case study" title={cs.title} accent={cs.accent} sub={cs.summary} chips={[p.industry, cs.pages, p.typeLabel.replace(' Build', ' build')]}>
+        {p.liveUrl && (
+          <Button asChild size="lg">
+            <a href={p.liveUrl} target="_blank" rel="noopener noreferrer">
+              Visit {host} <ArrowUpRight />
+              <span className="sr-only">(opens in a new tab)</span>
+            </a>
+          </Button>
+        )}
+        {p.slides && (
+          <Button size="lg" variant="outline" onClick={() => setOpen(true)} aria-haspopup="dialog">
+            <Images /> See every page
+          </Button>
+        )}
+      </PageHeader>
 
-      <section className="cs-body">
-        <div className="container cs-grid">
-          <div className="cs-text">
-            <h2>What they needed</h2>
-            <p>{cs.need}</p>
-            <h2>What we built</h2>
-            <ul className="cs-built">
-              {cs.built.map((b) => (
-                <li key={b}>{b}</li>
-              ))}
-            </ul>
-            <h2>The result</h2>
-            <p>{cs.result}</p>
-            <div className="cs-actions">
-              {p.liveUrl && (
-                <a href={p.liveUrl} target="_blank" rel="noopener noreferrer" className="btn btn-primary">
-                  <ExternalLinkIcon /> Visit {host}
-                </a>
-              )}
-              {p.slides && (
-                <button type="button" className="btn btn-outline" onClick={() => setOpen(true)}>
-                  <PagesIcon /> See every page
-                </button>
-              )}
+      <section className="bg-background pb-24 md:pb-32">
+        <div className="mx-auto grid max-w-6xl gap-12 px-5 md:px-8 lg:grid-cols-[0.9fr_1.1fr] lg:gap-16">
+          <div className="space-y-10 lg:sticky lg:top-28 lg:self-start">
+            <div>
+              <h2 className={h2}>What they needed</h2>
+              <p className="mt-3 text-lg leading-relaxed text-muted-foreground">{cs.need}</p>
+            </div>
+            <div>
+              <h2 className={h2}>What we built</h2>
+              <ul className="mt-4 space-y-3">
+                {cs.built.map((b) => (
+                  <li key={b} className="flex items-start gap-3 leading-relaxed text-ink">
+                    <span className="mt-1 grid size-5 shrink-0 place-items-center rounded-full bg-primary text-ink">
+                      <Check aria-hidden="true" className="size-3" strokeWidth={3} />
+                    </span>
+                    {b}
+                  </li>
+                ))}
+              </ul>
+            </div>
+            <div>
+              <h2 className={h2}>The result</h2>
+              <p className="mt-3 text-lg leading-relaxed text-muted-foreground">{cs.result}</p>
             </div>
           </div>
-          <div className="cs-shots">
+
+          <div className="space-y-6">
             {shots.map((s, i) => (
-              <figure key={s.key} className="cs-shot pf-browser">
-                <div className="pf-browser-bar">
-                  <span className="pf-browser-dots"><i /><i /><i /></span>
-                  <span className="pf-browser-url">{host}</span>
-                </div>
-                <img
-                  src={s.src}
-                  srcSet={s.srcSet}
-                  sizes={s.srcSet ? '(max-width: 860px) calc(100vw - 40px), 560px' : undefined}
-                  width="1000"
-                  height="625"
-                  alt={p.title + (s.label ? ' — ' + s.label + ' page' : ' page ' + (i + 1))}
-                  loading={i ? 'lazy' : 'eager'}
-                />
-                {s.label && <figcaption>{s.label}</figcaption>}
+              <figure key={s.key}>
+                <BrowserFrame url={host}>
+                  <img
+                    src={s.src}
+                    srcSet={s.srcSet}
+                    sizes={s.srcSet ? '(min-width: 1024px) 600px, 100vw' : undefined}
+                    width="1000"
+                    height="625"
+                    alt={p.title + (s.label ? ', ' + s.label + ' page' : ', page ' + (i + 1))}
+                    loading={i ? 'lazy' : 'eager'}
+                    className="block aspect-[16/10] w-full object-cover object-top"
+                  />
+                </BrowserFrame>
+                {s.label && <figcaption className="mt-2 text-sm font-semibold text-muted-foreground">{s.label}</figcaption>}
               </figure>
             ))}
+            {p.slides && p.slides.length > 3 && (
+              <Button variant="outline" onClick={() => setOpen(true)} aria-haspopup="dialog">
+                <Images /> See all {p.slides.length} pages
+              </Button>
+            )}
           </div>
         </div>
       </section>
 
-      <Testimonials only={p.id} label={'What ' + p.title + ' say'} />
+      <Quotes only={p.id} label={'What ' + p.title + ' say'} title="In their" accent="own words." />
 
-      <section className="cs-next">
-        <div className="container cs-next-inner">
+      <section className="bg-espresso py-20 md:py-24">
+        <div className="mx-auto grid max-w-6xl items-center gap-8 px-5 md:px-8 lg:grid-cols-[1.2fr_0.8fr]">
           <div>
-            <p className="section-label">Want something like this?</p>
-            <h2>Tell us about your project.</h2>
-            <p>We come back within 24 hours with a clear scope, timeline and quote.</p>
-            <Link to="/quote" className="btn btn-primary">
-              Book a free consultation <ArrowRightIcon />
-            </Link>
+            <p className="font-display text-sm font-bold uppercase tracking-[0.16em] text-orange-soft">Want something like this?</p>
+            <h2 className="mt-3 font-display text-[clamp(2rem,4vw,3rem)] font-bold leading-[1.06] tracking-[-0.03em] text-cream">Tell us about your project.</h2>
+            <p className="mt-4 text-lg leading-relaxed text-cream/70">We come back within 24 hours with a clear scope, timeline and quote.</p>
+            <Button asChild size="lg" className="mt-8">
+              <Link to="/quote">
+                Book a free consultation <ArrowRight />
+              </Link>
+            </Button>
           </div>
           {next && next !== p && (
-            <Link to={'/portfolio/' + next.id} className="cs-next-link">
-              <span className="section-label">Next case study</span>
-              <strong>{next.title}</strong>
-              <span>{next.caseStudy.summary}</span>
+            <Link
+              to={'/portfolio/' + next.id}
+              className="group block rounded-[24px] border border-cream/10 bg-[#24211d] p-7 outline-none transition-colors hover:border-cream/30 focus-visible:ring-[3px] focus-visible:ring-ring/45"
+            >
+              <p className="font-display text-xs font-bold uppercase tracking-[0.16em] text-cream/55">Next case study</p>
+              <p className="mt-2 flex items-center gap-2 font-display text-2xl font-bold text-cream">
+                {next.title}
+                <ArrowRight className="size-5 transition-transform duration-300 group-hover:translate-x-1 motion-reduce:transition-none" />
+              </p>
+              <p className="mt-2 leading-relaxed text-cream/70">{next.caseStudy.summary}</p>
             </Link>
           )}
         </div>
       </section>
 
-      <PortfolioModal project={open ? p : null} onClose={() => setOpen(false)} />
-    </>
+      <ProjectViewer project={open ? p : null} onClose={() => setOpen(false)} />
+    </div>
   );
 }

@@ -61,7 +61,7 @@ function PlanCard({ plan, i }) {
       </ul>
 
       <div className={cn('mt-7 border-t pt-6', featured ? 'border-cream/10' : 'border-ink/10')}>
-        <p className={cn('text-sm font-bold', featured ? 'text-cream/55' : 'text-ink/55')}>{plan.extraLabel}</p>
+        <p className={cn('text-sm font-bold', featured ? 'text-cream/60' : 'text-ink/65')}>{plan.extraLabel}</p>
         <ul className={cn('mt-3 space-y-2 text-[15px]', featured ? 'text-cream/75' : 'text-muted-foreground')}>
           {plan.extra.map((x) => (
             <li key={x} className="flex gap-2.5">

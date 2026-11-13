@@ -1,15 +1,13 @@
-import { useEffect, useLayoutEffect, useRef } from 'react';
+import { useEffect, useLayoutEffect } from 'react';
 import { Outlet, useLocation } from 'react-router-dom';
 import SiteNav from './site/SiteNav.jsx';
 import SiteFooter from './site/SiteFooter.jsx';
 import CookieBanner from './CookieBanner.jsx';
 import { trackEvent, trackPageView } from '../lib/routeChange.js'; /* not named analytics.js: ad blockers refuse that address, which blanked the page in dev */
-import useInteractive from '../hooks/useInteractive.js';
 import { PREFERS_REDUCED_MOTION } from '../lib/site.js';
 
 export default function Layout() {
   const { pathname, hash } = useLocation();
-  const mainRef = useRef(null);
 
   /* Scroll to top on route change (or to the #hash target if there is one).
      Layout effect + 'instant': the jump lands before the new page paints, and
@@ -49,13 +47,10 @@ export default function Layout() {
     return () => document.removeEventListener('click', onClick);
   }, []);
 
-  /* Spotlight cards, magnetic buttons and staggered reveals on every page. */
-  useInteractive(mainRef, pathname);
-
   return (
     <>
       <SiteNav />
-      <main id="main" tabIndex={-1} ref={mainRef}>
+      <main id="main" tabIndex={-1}>
         <Outlet />
       </main>
       <SiteFooter />

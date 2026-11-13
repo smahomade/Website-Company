@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { getChoice, onAskAgain, setChoice } from '../lib/consent.js';
+import { Button } from '@/components/ui/button';
+import { getChoice, onAskAgain, setChoice } from '@/lib/consent.js';
 
 /* Asks once whether Google Analytics may run (lib/consent.js), with "No thanks" as easy as yes.
    It appears on the visitor's first scroll, tap or key press rather than on load: a banner
@@ -40,19 +41,26 @@ export default function CookieBanner() {
     setOpen(false);
   };
   return (
-    <section className="cookie-banner" role="region" aria-label="Cookie choice">
-      <p className="cookie-banner-title">Can we count your visit?</p>
-      <p className="cookie-banner-text">
+    <section
+      role="region"
+      aria-label="Cookie choice"
+      className="pf-rise fixed inset-x-3 bottom-3 z-[950] rounded-[22px] border border-ink/10 bg-cream p-5 leading-normal shadow-lg sm:inset-x-auto sm:bottom-5 sm:left-5 sm:w-[390px]"
+      data-state="open"
+    >
+      <p className="font-display text-lg font-bold text-ink">Can we count your visit?</p>
+      <p className="mt-1.5 text-[15px] leading-relaxed text-muted-foreground">
         Google Analytics shows us which pages help people find us. It uses cookies, so it only runs if you say yes.{' '}
-        <Link to="/privacy">Privacy and cookies</Link>
+        <Link to="/privacy" className="font-semibold text-ink underline underline-offset-2 hover:text-orange-ink">
+          Privacy and cookies
+        </Link>
       </p>
-      <div className="cookie-banner-actions">
-        <button type="button" ref={yesRef} className="cookie-btn" onClick={() => answer('yes')}>
+      <div className="mt-4 grid grid-cols-2 gap-2">
+        <Button ref={yesRef} variant="dark" onClick={() => answer('yes')}>
           Yes, that’s fine
-        </button>
-        <button type="button" className="cookie-btn" onClick={() => answer('no')}>
+        </Button>
+        <Button variant="dark" onClick={() => answer('no')}>
           No thanks
-        </button>
+        </Button>
       </div>
     </section>
   );

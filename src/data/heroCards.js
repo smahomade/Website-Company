@@ -1,9 +1,9 @@
 import { R2 } from '../lib/site.js';
 
-/* The client sites' preview cards: the home story's project popups (ReelPopup) and the Services
-   page's example builds. `video` is a scroll down the site's home page; `tour` is a click-through
-   of its menu, page by page, which the project popup plays, and `tourPoster` is that clip's own
-   first frame (so the still and the video match). */
+/* The client sites' preview cards, used by the Services page's example builds. `tour` is a
+   click-through of the site's menu, page by page, which plays when asked, and `tourPoster` is that
+   clip's own first frame (so the still and the video match). `video` is an older scroll down the
+   site's home page. */
 export const HERO_CARDS = [
   {
     url: 'razaacademy.co.uk',

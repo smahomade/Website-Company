@@ -1,8 +1,10 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import Seo from '../components/Seo.jsx';
-import { CONTACT } from '../lib/site.js';
-import { askAgain, getChoice, GA_ID, onChoiceChange } from '../lib/consent.js';
+import Seo from '@/components/Seo.jsx';
+import PageHeader from '@/components/site/PageHeader.jsx';
+import { Button } from '@/components/ui/button';
+import { CONTACT } from '@/lib/site.js';
+import { askAgain, getChoice, GA_ID, onChoiceChange } from '@/lib/consent.js';
 
 const UPDATED = '30 October 2026';
 
@@ -20,25 +22,27 @@ export default function Privacy() {
   const mail = <a href={'mailto:' + CONTACT.email}>{CONTACT.email}</a>;
 
   return (
-    <article className="legal-page">
+    <article className="leading-normal">
       <Seo
         title="Privacy and cookies — PixelFold"
         description="What PixelFold collects through this website, why, how long it is kept, and how to change your cookie choice."
         path="/privacy"
       />
-      <div className="container legal-inner">
-        <p className="section-label">Privacy and cookies</p>
-        <h1 className="legal-title">Your details, handled properly.</h1>
-        <p className="legal-lead">
-          This page explains what PixelFold collects through this website, why, and what you can do about it. If anything here
-          is unclear, email {mail} and we’ll explain.
-        </p>
-        <p className="legal-updated">Last updated {UPDATED}</p>
+      <PageHeader
+        label="Privacy and cookies"
+        title="Your details,"
+        accent="handled properly."
+        sub="What PixelFold collects through this website, why, and what you can do about it. If anything here is unclear, email us and we’ll explain."
+      />
+      {/* the text below is styled from here: headings, paragraphs, lists, links and the table */}
+      <div className="mx-auto max-w-6xl px-5 pb-24 md:px-8 md:pb-32">
+      <div className="max-w-3xl [&_a]:font-semibold [&_a]:text-ink [&_a]:underline [&_a]:underline-offset-2 [&_a:hover]:text-orange-ink [&_h2]:mt-12 [&_h2]:font-display [&_h2]:text-2xl [&_h2]:font-bold [&_h2]:tracking-[-0.02em] [&_h2]:text-ink [&_p]:mt-4 [&_p]:text-[17px] [&_p]:leading-relaxed [&_p]:text-ink/80 [&_ul]:mt-4 [&_ul]:list-disc [&_ul]:space-y-2 [&_ul]:pl-6 [&_ul]:text-[17px] [&_ul]:leading-relaxed [&_ul]:text-ink/80 [&_ul]:marker:text-orange-ink">
+        <p className="!mt-0 text-sm !text-muted-foreground">Last updated {UPDATED}</p>
 
-        <div className="legal-choice">
+        <div className="mt-6 flex flex-col gap-4 rounded-[24px] border border-ink/10 bg-card p-6 shadow-sm sm:flex-row sm:items-center sm:justify-between">
           <div>
-            <h2>Your cookie choice</h2>
-            <p>
+            <h2 className="!mt-0 !text-xl">Your cookie choice</h2>
+            <p className="!mt-1.5 !text-[15px]">
               {choice === 'yes'
                 ? 'Analytics is on: you said yes to Google Analytics in this browser.'
                 : choice === 'no'
@@ -46,9 +50,9 @@ export default function Privacy() {
                   : 'You haven’t chosen yet, so Google Analytics isn’t running.'}
             </p>
           </div>
-          <button type="button" className="btn btn-outline" onClick={askAgain}>
+          <Button variant="outline" onClick={askAgain} className="shrink-0">
             Change cookie settings
-          </button>
+          </Button>
         </div>
 
         <h2>Who we are</h2>
@@ -88,8 +92,8 @@ export default function Privacy() {
         </p>
 
         <h2>Cookies and what the site remembers</h2>
-        <div className="legal-table-wrap">
-          <table className="legal-table">
+        <div className="mt-5 overflow-x-auto rounded-2xl border border-ink/10 bg-card">
+          <table className="w-full min-w-[540px] text-left text-[15px] [&_code]:rounded [&_code]:bg-sand [&_code]:px-1.5 [&_code]:py-0.5 [&_code]:text-[13px] [&_td]:border-t [&_td]:border-ink/10 [&_td]:px-4 [&_td]:py-3 [&_td]:align-top [&_td]:text-ink/80 [&_th]:bg-sand/70 [&_th]:px-4 [&_th]:py-3 [&_th]:font-display [&_th]:font-bold [&_th]:text-ink">
             <thead>
               <tr>
                 <th scope="col">Name</th>
@@ -106,11 +110,6 @@ export default function Privacy() {
               <tr>
                 <td><code>pf-analytics</code></td>
                 <td>Remembers your answer to the cookie question. Kept in your browser, never sent to us.</td>
-                <td>Until you clear it</td>
-              </tr>
-              <tr>
-                <td><code>pf-story-motion</code></td>
-                <td>Remembers whether you turned the home page’s motion on or off. Kept in your browser, never sent to us.</td>
                 <td>Until you clear it</td>
               </tr>
             </tbody>
@@ -155,6 +154,7 @@ export default function Privacy() {
 
         <h2>Changes to this page</h2>
         <p>If we change how we handle your details, we’ll update this page and the date at the top.</p>
+      </div>
       </div>
     </article>
   );

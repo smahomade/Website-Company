@@ -7,32 +7,22 @@ import { trackEvent } from './routeChange.js';
 
 const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
 
-/* Marks empty required fields (and an email that can't be one) and says what is wrong, or null
-   when the form is good to send. */
-export function checkFields(form) {
-  let missing = false;
-  let badEmail = false;
-  form.querySelectorAll('[required], input[type="email"]').forEach((field) => {
-    if (field.disabled) return;
+/* What's wrong with the fields inside `root` (a form, or one step of it): each required field left
+   empty, and an email or web address that can't be one. Returns [{ id, message }] in page order,
+   empty when all is well. A field's own "it's empty" message comes from its data-error. Radio
+   buttons and tick boxes are left to the form itself. */
+export function checkFields(root) {
+  const errors = [];
+  root.querySelectorAll('input, select, textarea').forEach((field) => {
+    if (field.disabled || !field.id || ['hidden', 'radio', 'checkbox'].includes(field.type)) return;
     const value = field.value.trim();
-    const wrong = (field.required && !value) || (field.type === 'email' && value && !EMAIL.test(value));
-    if (!wrong) return;
-    if (field.type === 'email' && value) badEmail = true;
-    else missing = true;
-    field.setAttribute('aria-invalid', 'true');
-    field.style.borderColor = '#ef4444';
-    field.addEventListener(
-      'input',
-      () => {
-        field.style.borderColor = '';
-        field.removeAttribute('aria-invalid');
-      },
-      { once: true }
-    );
+    let message = null;
+    if (field.required && !value) message = field.dataset.error || 'Fill this in';
+    else if (field.type === 'email' && value && !EMAIL.test(value)) message = 'Enter an email address like name@example.com';
+    else if (field.type === 'url' && value && !/\.[a-z]{2,}/i.test(value)) message = 'Enter the web address, like yourbusiness.co.uk';
+    if (message) errors.push({ id: field.id, message });
   });
-  if (missing) return 'Fill in the highlighted fields first.';
-  if (badEmail) return 'That email address doesn’t look right. Check it and try again.';
-  return null;
+  return errors;
 }
 
 /* Bots fill in every field, including one people never see (Honeypot), and send within moments

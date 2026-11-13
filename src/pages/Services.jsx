@@ -1,89 +1,105 @@
-import { useEffect, useLayoutEffect, useRef, useState } from 'react';
+import { useLayoutEffect, useRef, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import Seo from '../components/Seo.jsx';
-import PageHero from '../components/PageHero.jsx';
-import ServiceModal from '../components/ServiceModal.jsx';
-import { useFadeIn } from '../hooks/useRevealOnScroll.js';
-import { SERVICES, SERVICE_TABS } from '../data/services.js';
-import { HERO_CARDS } from '../data/heroCards.js';
-import { CONTACT, PREFERS_REDUCED_MOTION } from '../lib/site.js';
-import { FolderIcon } from '../components/BrandIcons.jsx';
-import { PauseIcon, PlayIcon } from '../components/Icons.jsx';
+import { ArrowRight, Check, Mail, MessagesSquare, Pause, Play } from 'lucide-react';
+import Seo from '@/components/Seo.jsx';
+import PageHeader from '@/components/site/PageHeader.jsx';
+import ServiceDialog from '@/components/site/ServiceDialog.jsx';
+import { FEATURE_ICON, FEATURE_TONE, KIND_ICON } from '@/components/site/packageIcons.js';
+import SectionHeading from '@/components/home/SectionHeading.jsx';
+import BrowserFrame from '@/components/home/BrowserFrame.jsx';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { WhatsAppIcon } from '@/components/Icons.jsx';
+import { SERVICES, SERVICE_TABS } from '@/data/services.js';
+import { HERO_CARDS } from '@/data/heroCards.js';
+import { CONTACT } from '@/lib/site.js';
+import useReveal from '@/hooks/useReveal.js';
+import { cn } from '@/lib/utils';
 
-const FEATURE_CLASS = { bonus: 'feature-bonus', priority: 'feature-priority', backend: 'feature-backend' };
-
-/* Recent builds, shown beside the packages of the tab they were: real client
-   sites, each under the package it actually was (`pack`). There has been no
-   Starter build, so that tab shows none. Hovering one plays its tour. */
+/* Recent builds, shown beside the packages of the tab they were: real client sites, each under the
+   package it actually was (`pack`). There has been no Starter build, so that tab shows none. */
 const EXAMPLES = [
   { name: 'Change Work Therapies', short: 'Change Work', pack: 'business', note: 'A seven-page site for a therapy practice, calm and trust-led.' },
   { name: 'Raza Academy', short: 'Raza', pack: 'business', note: 'An eight-page rebuild for an education provider.' },
   { name: 'Top One Salon', short: 'Top One', pack: 'custom', note: 'A bespoke build of 40+ pages for a London salon.' },
 ].map((e) => {
   const card = HERO_CARDS.find((c) => c.name === e.name);
-  return { ...e, url: card.url, still: card.tourPoster || card.img, pos: card.tourPoster ? 'center top' : card.imgPos, tour: PREFERS_REDUCED_MOTION ? null : card.tour };
+  return { ...e, url: card.url, still: card.tourPoster || card.img, tour: card.tour };
 });
-const examplesFor = (tab) => EXAMPLES.filter((e) => e.pack === tab);
-const CAN_HOVER = typeof window !== 'undefined' && window.matchMedia('(hover: hover) and (pointer: fine)').matches;
 
-/* One build in a browser frame, with the others of its package a click away.
-   The mouse over the frame plays its tour (a still otherwise); the button does
-   the same for touch and keyboard. */
-function ExampleBuild({ list, label, index, onPick }) {
-  const ex = list[index];
-  const videoRef = useRef(null);
+const INCLUDED = ['Mobile-first design', 'Basic on-page SEO', 'Contact form', 'Handover explained in plain English'];
+
+const EXPECT = [
+  { t: 'Free consultation', d: 'A short conversation about your business and what you need.' },
+  { t: 'Quote within 24 hours', d: 'Scope, timeline and price, agreed before any work starts.' },
+  { t: 'Progress as it happens', d: 'You see the site take shape rather than waiting for a big reveal.' },
+  { t: 'Launch and handover', d: 'We put it live and walk you through domain, hosting and security.' },
+];
+
+/* One recent build in a browser window, with the others of its package a click away. Its tour
+   plays only when asked: the mouse over the window, or the button (touch and keyboard). The video
+   isn't fetched until then. */
+function ExampleBuild({ list, tab }) {
+  const [index, setIndex] = useState(0);
   const [playing, setPlaying] = useState(false);
-
-  useEffect(() => setPlaying(false), [index]);
+  const videoRef = useRef(null);
+  const ex = list[Math.min(index, list.length - 1)];
 
   const play = () => {
-    const v = videoRef.current;
-    if (!v) return;
-    const p = v.play();
-    if (p && p.catch) p.catch(() => setPlaying(false));
     setPlaying(true);
+    requestAnimationFrame(() => videoRef.current?.play()?.catch(() => setPlaying(false)));
   };
   const stop = () => {
     const v = videoRef.current;
-    if (!v) return;
-    v.pause();
-    v.currentTime = 0; /* back to the frame the still shows */
+    if (v) {
+      v.pause();
+      v.currentTime = 0;
+    }
     setPlaying(false);
+  };
+  const pick = (i) => {
+    stop();
+    setIndex(i);
   };
 
   return (
-    <div className={'svc-example pf-folder' + (ex.tour ? ' has-clip' : '') + (playing ? ' is-playing' : '')}>
+    <div className="rounded-[24px] border border-ink/10 bg-card p-4 shadow-sm">
       <div
-        className="pf-browser"
-        onPointerEnter={(e) => {
-          if (e.pointerType === 'mouse') play();
-        }}
-        onPointerLeave={(e) => {
-          if (e.pointerType === 'mouse') stop();
-        }}
+        onPointerEnter={(e) => e.pointerType === 'mouse' && play()}
+        onPointerLeave={(e) => e.pointerType === 'mouse' && stop()}
       >
-        <div className="pf-browser-bar">
-          <span className="pf-browser-dots"><i /><i /><i /></span>
-          <span className="pf-browser-url">{ex.url}</span>
-        </div>
-        <img src={ex.still} alt={ex.url + ' website'} loading="lazy" style={{ objectPosition: ex.pos }} />
-        {ex.tour && (
-          <>
-            <video key={ex.tour} ref={videoRef} src={ex.tour} muted loop playsInline preload={CAN_HOVER ? 'auto' : 'metadata'} aria-hidden="true" tabIndex={-1} />
-            <button type="button" className="svc-example-play" aria-label={(playing ? 'Stop the ' : 'Play the ') + ex.name + ' preview'} onClick={playing ? stop : play}>
-              {playing ? <PauseIcon /> : <PlayIcon />}
+        <BrowserFrame url={ex.url} className="shadow-md">
+          <div className="relative aspect-video bg-sand">
+            <img src={ex.still} alt={ex.name + '’s website'} loading="lazy" className="absolute inset-0 size-full object-cover object-top" />
+            {playing && <video key={ex.tour} ref={videoRef} src={ex.tour} muted loop playsInline aria-hidden="true" tabIndex={-1} className="absolute inset-0 size-full object-cover" />}
+            <button
+              type="button"
+              onClick={playing ? stop : play}
+              aria-label={(playing ? 'Stop the ' : 'Play the ') + ex.name + ' tour'}
+              className="absolute bottom-3 right-3 grid size-11 cursor-pointer place-items-center rounded-full bg-cream/95 text-ink shadow-md outline-none transition-colors hover:bg-white focus-visible:ring-[3px] focus-visible:ring-ring/60"
+            >
+              {playing ? <Pause className="size-4" /> : <Play className="size-4" />}
             </button>
-          </>
-        )}
+          </div>
+        </BrowserFrame>
       </div>
-      <div className="svc-example-body">
-        <p className="section-label">{label}</p>
-        <strong>{ex.name}</strong>
-        <span>{ex.note}</span>
+      <div className="px-2 pb-2 pt-5">
+        <p className="font-display text-xs font-bold uppercase tracking-[0.16em] text-orange-ink">
+          Recent {tab} build{list.length > 1 ? 's' : ''}
+        </p>
+        <p className="mt-1.5 font-display text-xl font-bold text-ink">{ex.name}</p>
+        <p className="mt-1 text-[15px] leading-relaxed text-muted-foreground">{ex.note}</p>
         {list.length > 1 && (
-          <div className="svc-example-picks" role="group" aria-label="Choose a build">
+          <div role="group" aria-label="Choose a build" className="mt-4 flex flex-wrap gap-2">
             {list.map((e, i) => (
-              <button key={e.name} type="button" className={i === index ? 'is-on' : undefined} aria-pressed={i === index} onClick={() => onPick(i)}>
+              <button
+                key={e.name}
+                type="button"
+                aria-pressed={e === ex}
+                onClick={() => pick(i)}
+                className="min-h-10 cursor-pointer rounded-full border border-ink/15 px-4 text-sm font-semibold text-ink/75 outline-none transition-colors hover:border-ink/40 focus-visible:ring-[3px] focus-visible:ring-ring/45 aria-pressed:border-ink aria-pressed:bg-ink aria-pressed:text-cream"
+              >
                 {e.short}
               </button>
             ))}
@@ -94,40 +110,67 @@ function ExampleBuild({ list, label, index, onPick }) {
   );
 }
 
-const INCLUDED = ['Mobile-first design', 'Basic on-page SEO', 'Contact form', 'Handover explained in plain English'];
-
-const EXPECT = [
-  { n: '1', t: 'Free consultation', d: 'A short conversation about your business and what you need.' },
-  { n: '2', t: 'Quote within 24 hours', d: 'Scope, timeline and price, agreed before any work starts.' },
-  { n: '3', t: 'Progress as it happens', d: 'You see the site take shape rather than waiting for a big reveal.' },
-  { n: '4', t: 'Launch and handover', d: 'We put it live and walk you through domain, hosting and security.' },
-];
-
-function PackageRow({ s, index, onDetails }) {
+function Included() {
   return (
-    <div className={'svc-row pf-pop ' + s.tier} style={{ '--i': index }}>
-      <div className="svc-row-head">
-        <span className="svc-row-icon"><FolderIcon kind={s.iconKind} size={40} /></span>
-        <div className="svc-row-titles">
-          <div className="svc-row-meta">
-            <span className="card-tier-label">{s.tierLabel}</span>
-            {s.ribbon && <span className={'svc-row-ribbon' + (s.ribbon.own ? ' is-own' : '')}>{s.ribbon.text}</span>}
+    <div className="rounded-[24px] border border-ink/10 bg-sand/70 p-6">
+      <p className="font-display text-sm font-bold uppercase tracking-[0.16em] text-orange-ink">Every package includes</p>
+      <ul className="mt-4 space-y-2.5">
+        {INCLUDED.map((x) => (
+          <li key={x} className="flex items-center gap-3 font-semibold text-ink">
+            <span className="grid size-5 place-items-center rounded-full bg-ink text-cream">
+              <Check aria-hidden="true" className="size-3" strokeWidth={3} />
+            </span>
+            {x}
+          </li>
+        ))}
+      </ul>
+      <p className="mt-5 border-t border-ink/10 pt-4 text-sm leading-relaxed text-muted-foreground">
+        No fixed price list. Each package is scoped and quoted around your project, and agreed before any work starts.
+      </p>
+    </div>
+  );
+}
+
+function PackageCard({ s, onDetails }) {
+  const Icon = KIND_ICON[s.iconKind] || KIND_ICON.key;
+  return (
+    <article className="rounded-[24px] border border-ink/10 bg-card p-6 shadow-sm transition-shadow hover:shadow-md md:p-7">
+      <div className="flex items-start gap-4">
+        <span className="grid size-12 shrink-0 place-items-center rounded-xl bg-orange-tint text-orange-ink">
+          <Icon aria-hidden="true" className="size-6" />
+        </span>
+        <div className="min-w-0 flex-1">
+          <div className="flex flex-wrap items-center gap-2">
+            <span className="font-display text-xs font-bold uppercase tracking-[0.16em] text-ink/65">{s.tierLabel}</span>
+            {s.ribbon && <Badge variant={s.ribbon.own ? 'dark' : 'primary'}>{s.ribbon.text}</Badge>}
           </div>
-          <h3 className="svc-row-title">{s.title}</h3>
-          <p className="svc-row-tagline">{s.tagline}</p>
+          <h3 className="mt-1 font-display text-2xl font-bold tracking-[-0.02em] text-ink">{s.title}</h3>
+          <p className="mt-1 text-muted-foreground">{s.tagline}</p>
         </div>
       </div>
-      <ul className="svc-row-features">
+      <ul className="mt-5 grid gap-x-6 gap-y-2.5 sm:grid-cols-2">
         {s.features.map((f) => {
-          const item = typeof f === 'string' ? { text: f } : f;
-          return <li key={item.text} className={FEATURE_CLASS[item.type] || undefined}>{item.text}</li>;
+          const item = typeof f === 'string' ? { text: f, type: 'standard' } : f;
+          const FIcon = FEATURE_ICON[item.type] || FEATURE_ICON.standard;
+          return (
+            <li key={item.text} className="flex items-start gap-2.5 text-[15px] font-semibold text-ink">
+              <span className={cn('mt-0.5 grid size-5 shrink-0 place-items-center rounded-full', FEATURE_TONE[item.type] || FEATURE_TONE.standard)}>
+                <FIcon aria-hidden="true" className="size-3" strokeWidth={3} />
+              </span>
+              {item.text}
+            </li>
+          );
         })}
       </ul>
-      <div className="svc-row-actions">
-        <button className="read-more-btn" onClick={() => onDetails(s.key)}>Read more</button>
-        <Link to="/quote" className="btn btn-primary btn-sm">Book a consultation</Link>
+      <div className="mt-6 flex flex-wrap items-center gap-3 border-t border-ink/10 pt-5">
+        <Button asChild>
+          <Link to="/quote">Book a consultation</Link>
+        </Button>
+        <Button variant="ghost" onClick={() => onDetails(s.key)} aria-haspopup="dialog">
+          Read more <span className="sr-only">about {s.title}</span>
+        </Button>
       </div>
-    </div>
+    </article>
   );
 }
 
@@ -135,140 +178,130 @@ export default function Services() {
   const pageRef = useRef(null);
   const [tab, setTab] = useState('starter');
   const [modalKey, setModalKey] = useState(null);
-  const [build, setBuild] = useState(0); /* which of the tab's recent builds is showing */
-  const builds = examplesFor(tab);
-  useFadeIn(pageRef);
+  useReveal(pageRef);
 
   /* /services?package=business opens on that package (the footer's links). Read in an effect: the
      prebuilt page always starts on Starter, and the first render has to match it */
   const { search } = useLocation();
   useLayoutEffect(() => {
     const wanted = new URLSearchParams(search).get('package');
-    if (SERVICE_TABS.some((t) => t.id === wanted)) {
-      setTab(wanted);
-      setBuild(0);
-    }
+    if (SERVICE_TABS.some((t) => t.id === wanted)) setTab(wanted);
   }, [search]);
 
-  const modalSvc = modalKey ? SERVICES.find((s) => s.key === modalKey) : null;
-  const modalService = modalSvc ? { ...modalSvc.modal, iconKind: modalSvc.iconKind } : null;
+  const service = modalKey ? SERVICES.find((s) => s.key === modalKey) : null;
 
   return (
-    <div ref={pageRef}>
+    <div ref={pageRef} className="leading-normal">
       <Seo
         title="Services — PixelFold"
         description="PixelFold builds single-page, multi-page and fully custom websites for small businesses, with managed hosting and support if you want it. Each project is scoped and quoted individually."
         path="/services"
       />
-
-      <PageHero
-        label="What we offer"
-        title="Our"
-        accent="Services"
+      <PageHeader
+        label="Services"
+        title="Websites built around"
+        accent="your business."
         sub="Websites for small businesses across the UK. Every project is scoped and quoted around what you actually need, with clear timelines and no hidden fees."
-        badges={['Quoted per project', 'Mobile-first design', 'UK-based', 'Fast turnaround']}
-        art="folders"
-        tab="Services"
+        chips={['Quoted per project', 'Mobile-first design', 'UK-based', 'Plain English']}
       />
 
-      {/* PACKAGES */}
-      <section className="menu-section" id="services">
-        <div className="container">
+      <section id="services" className="bg-background pb-24 md:pb-32">
+        <div className="mx-auto max-w-6xl px-5 md:px-8">
           <h2 className="sr-only">Packages</h2>
-          <div className="menu-tabs">
-            {SERVICE_TABS.map((t) => (
-              <button
-                key={t.id}
-                className={'tab-btn' + (tab === t.id ? ' active' : '')}
-                data-tab={t.id}
-                onClick={() => {
-                  setTab(t.id);
-                  setBuild(0);
-                }}
-              >
-                <span className="tab-folder"><FolderIcon kind={t.iconKind} size={36} /></span>
-                <span className="tab-label">{t.label}</span>
-                <span className="tab-sub">{t.sub}</span>
-              </button>
-            ))}
-          </div>
+          {/* every tab's packages are in the page, so search engines read them all; forceMount keeps
+              them all showing too, so the ones not chosen are hidden by their state */}
+          <Tabs value={tab} onValueChange={setTab}>
+            <TabsList aria-label="Package type" className="grid w-full grid-cols-3 sm:inline-flex sm:w-fit">
+              {SERVICE_TABS.map((t) => {
+                const Icon = KIND_ICON[t.iconKind];
+                return (
+                  <TabsTrigger key={t.id} value={t.id} className="flex-col gap-0 px-3 py-2 sm:flex-row sm:gap-2 sm:px-5">
+                    {Icon && <Icon aria-hidden="true" className="hidden size-5 sm:block" />}
+                    <span>{t.label}</span>
+                    <span className="text-xs font-semibold sm:hidden">{t.sub}</span>
+                    <span className="hidden text-sm font-medium sm:inline">· {t.sub}</span>
+                  </TabsTrigger>
+                );
+              })}
+            </TabsList>
 
-          <div className="svc-layout" key={tab}>
-            {/* Left: a recent build of this package (if there is one) + what every package includes */}
-            <aside className="svc-aside">
-              {builds.length > 0 && (
-                <ExampleBuild list={builds} label={builds.length > 1 ? 'Recent ' + tab + ' builds' : 'Recent ' + tab + ' build'} index={Math.min(build, builds.length - 1)} onPick={setBuild} />
-              )}
-              <div className="svc-included">
-                <p className="section-label">Every package includes</p>
-                <ul>
-                  {INCLUDED.map((x) => <li key={x}>{x}</li>)}
-                </ul>
-                <p className="svc-included-note">No fixed price list. Each package is scoped and quoted around your project, and agreed before any work starts.</p>
-              </div>
-            </aside>
-
-            {/* Right: the packages in this tab */}
-            <div className="svc-rows">
-              {SERVICES.filter((s) => s.category === tab).map((s, i) => (
-                <PackageRow key={s.key} s={s} index={i} onDetails={setModalKey} />
-              ))}
-            </div>
-          </div>
+            {SERVICE_TABS.map((t) => {
+              const builds = EXAMPLES.filter((e) => e.pack === t.id);
+              return (
+                <TabsContent key={t.id} value={t.id} forceMount className="mt-8 grid gap-6 data-[state=inactive]:hidden lg:grid-cols-[0.8fr_1.2fr] lg:gap-8">
+                  <aside className="space-y-6 lg:sticky lg:top-28 lg:self-start">
+                    {builds.length > 0 && <ExampleBuild list={builds} tab={t.id} />}
+                    <Included />
+                  </aside>
+                  <div className="space-y-5">
+                    {SERVICES.filter((s) => s.category === t.id).map((s) => (
+                      <PackageCard key={s.key} s={s} onDetails={setModalKey} />
+                    ))}
+                  </div>
+                </TabsContent>
+              );
+            })}
+          </Tabs>
         </div>
       </section>
 
-      {/* WHAT TO EXPECT */}
-      <section className="svc-expect">
-        <div className="container">
-          <div className="section-header">
-            <p className="section-label">What to expect</p>
-            <h2 className="section-title">How a project runs, <em>start to finish.</em></h2>
-          </div>
-          <ol className="svc-expect-list">
-            {EXPECT.map((e) => (
-              <li key={e.n}>
-                <span className="svc-expect-num">{e.n}</span>
-                <strong>{e.t}</strong>
-                <p>{e.d}</p>
+      <section className="bg-sand/70 py-24 md:py-32">
+        <div className="mx-auto max-w-6xl px-5 md:px-8">
+          <SectionHeading label="What to expect" title="How a project runs," accent="start to finish." />
+          <ol className="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+            {EXPECT.map((e, i) => (
+              <li key={e.t} data-reveal style={{ '--reveal-i': i }} className="rounded-[24px] border border-ink/10 bg-card p-6 shadow-sm">
+                <span aria-hidden="true" className="font-hand text-[42px] font-bold leading-none text-orange-ink">{'0' + (i + 1)}</span>
+                <p className="mt-3 font-display text-lg font-bold text-ink">{e.t}</p>
+                <p className="mt-1.5 text-[15px] leading-relaxed text-muted-foreground">{e.d}</p>
               </li>
             ))}
           </ol>
         </div>
       </section>
 
-      {/* CTA */}
-      <section className="order-section" id="cta">
-        <div className="container">
-          <div className="section-header">
-            <p className="section-label">Ready when you are</p>
-            <h2 className="section-title" style={{ color: '#fff' }}>Tell us about your project.</h2>
-          </div>
-          <div className="order-grid">
-            <div className="order-card order-card-featured pf-folder">
-              <div className="order-popular">Recommended</div>
-              <div className="order-icon"><FolderIcon kind="chat" size={44} tone="dark" /></div>
-              <h3>Book a free consultation</h3>
-              <p>Tell us what you need and we come back within 24 hours with a clear scope, timeline and quote. No obligation.</p>
-              <Link to="/quote" className="btn btn-white">Start your brief</Link>
+      <section className="bg-espresso py-24 text-cream md:py-32">
+        <div className="mx-auto max-w-6xl px-5 md:px-8">
+          <SectionHeading tone="dark" label="Ready when you are" title="Tell us about" accent="your project." />
+          <div className="mt-12 grid gap-5 md:grid-cols-3">
+            <div data-reveal className="flex flex-col rounded-[24px] bg-primary p-7 text-ink">
+              <span className="grid size-12 place-items-center rounded-xl bg-ink text-cream">
+                <MessagesSquare aria-hidden="true" className="size-6" />
+              </span>
+              <Badge variant="dark" className="mt-5">Recommended</Badge>
+              <h3 className="mt-3 font-display text-2xl font-bold">Book a free consultation</h3>
+              <p className="mt-2 flex-1 leading-relaxed">Tell us what you need and we come back within 24 hours with a clear scope, timeline and quote. No obligation.</p>
+              <Button asChild variant="dark" className="mt-6 self-start">
+                <Link to="/quote">
+                  Start your brief <ArrowRight />
+                </Link>
+              </Button>
             </div>
-            <div className="order-card pf-folder">
-              <div className="order-icon"><FolderIcon kind="phone" size={44} tone="dark" /></div>
-              <h3>Message on WhatsApp</h3>
-              <p>Prefer to talk it through? Send a message and we will arrange a quick call at a time that suits you.</p>
-              <a href={CONTACT.whatsapp} target="_blank" rel="noopener noreferrer" className="btn btn-outline-light">Open WhatsApp</a>
+            <div data-reveal style={{ '--reveal-i': 1 }} className="flex flex-col rounded-[24px] border border-cream/10 bg-[#24211d] p-7">
+              <span className="grid size-12 place-items-center rounded-xl bg-cream/10 text-cream">
+                <WhatsAppIcon size={22} />
+              </span>
+              <h3 className="mt-5 font-display text-2xl font-bold text-cream">Message on WhatsApp</h3>
+              <p className="mt-2 flex-1 leading-relaxed text-cream/70">Prefer to talk it through? Send a message and we’ll arrange a quick call at a time that suits you.</p>
+              <Button asChild variant="outline-light" className="mt-6 self-start">
+                <a href={CONTACT.whatsapp} target="_blank" rel="noopener noreferrer">Open WhatsApp</a>
+              </Button>
             </div>
-            <div className="order-card pf-folder">
-              <div className="order-icon"><FolderIcon kind="mail" size={44} tone="dark" /></div>
-              <h3>Send an email</h3>
-              <p>Email your requirements and we will respond within 24 hours with next steps.</p>
-              <a href={'mailto:' + CONTACT.email} className="btn btn-outline-light">Email us</a>
+            <div data-reveal style={{ '--reveal-i': 2 }} className="flex flex-col rounded-[24px] border border-cream/10 bg-[#24211d] p-7">
+              <span className="grid size-12 place-items-center rounded-xl bg-cream/10 text-cream">
+                <Mail aria-hidden="true" className="size-6" />
+              </span>
+              <h3 className="mt-5 font-display text-2xl font-bold text-cream">Send an email</h3>
+              <p className="mt-2 flex-1 leading-relaxed text-cream/70">Email what you need and we’ll reply within 24 hours with next steps.</p>
+              <Button asChild variant="outline-light" className="mt-6 self-start">
+                <a href={'mailto:' + CONTACT.email}>Email us</a>
+              </Button>
             </div>
           </div>
         </div>
       </section>
 
-      <ServiceModal service={modalService} onClose={() => setModalKey(null)} />
+      <ServiceDialog service={service} onClose={() => setModalKey(null)} />
     </div>
   );
 }
