@@ -119,7 +119,7 @@ function ChapterCopy({ chapter, index, onSeeWork, onPlay }) {
             <Link to="/quote" className="btn btn-primary">Get a free quote</Link>
             <button type="button" className="btn btn-outline" onClick={onSeeWork}>See our work</button>
           </div>
-          <p className="story-note">Quoted per project · Most sites live in 1–2 weeks</p>
+          <p className="story-note">Quoted per project · Most sites live in 2–6 weeks</p>
           {onPlay && (
             <button type="button" className="story-motion story-motion--play" onClick={onPlay}>
               Play the animated story

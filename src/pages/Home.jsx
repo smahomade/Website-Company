@@ -8,7 +8,7 @@ import { FolderIcon, PixelSquares } from '../components/BrandIcons.jsx';
 import useRevealOnScroll, { useFadeIn } from '../hooks/useRevealOnScroll.js';
 
 const WHY_US = [
-  { kind: 'clock', title: 'Fast turnaround', desc: 'Most websites are ready in 1–2 weeks. No lengthy delays, no waiting months to go live.' },
+  { kind: 'clock', title: 'A clear timeline', desc: 'Most websites go live in 2–6 weeks, depending on the size of the site and how quickly feedback comes back.' },
   { kind: 'phone', title: 'Mobile-friendly', desc: 'Every site we build looks great on phones, tablets, and desktops. Your customers browse on mobile — we make sure you look good.' },
   { kind: 'coin', title: 'Honest pricing', desc: 'Every project is scoped and quoted individually, and agreed before we start. No surprise invoices, no hidden extras.' },
   { kind: 'search', title: 'Basic SEO included', desc: 'Every site comes with basic SEO setup so Google can find you. We also help with domain, hosting, and Google Business if you need it.' },

@@ -51,7 +51,7 @@ export const STORY_CHAPTERS = [
     eyebrow: 'Launch',
     title: 'Live, and',
     accent: 'fully yours.',
-    body: 'Domain, hosting and SSL handled. Then we walk you through everything, so you’re never left in the dark. Most sites go live in 1\u2060–\u20602\u00a0weeks.', /* word joiners + nbsp keep "1–2 weeks" on one line */
+    body: 'Domain, hosting and SSL handled. Then we walk you through everything, so you’re never left in the dark. Most sites go live in 2\u2060–\u20606\u00a0weeks.', /* word joiners + nbsp keep "2–6 weeks" on one line */
   },
   {
     id: 'work',

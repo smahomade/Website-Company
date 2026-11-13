@@ -226,7 +226,7 @@ function NewWebsiteForm() {
           <label htmlFor="new_timeline">Desired Timeline</label>
           <select name="timeline" id="new_timeline" defaultValue="">
             <option value="" disabled>Select…</option>
-            <option value="ASAP (1–2 weeks)">ASAP (1–2 weeks)</option>
+            <option value="As soon as possible">As soon as possible</option>
             <option value="Within 1 month">Within 1 month</option>
             <option value="2–3 months">2–3 months</option>
             <option value="Flexible">Flexible</option>
