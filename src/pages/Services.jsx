@@ -201,7 +201,7 @@ export default function Services() {
         label="Services"
         title="Websites built around"
         accent="your business."
-        sub="Websites for small businesses across the UK. Every project is scoped and quoted around what you actually need, with clear timelines and no hidden fees."
+        sub="Websites for small businesses across the UK. Every project is scoped and quoted around what you actually need."
         chips={['Quoted per project', 'Mobile-first design', 'UK-based', 'Plain English']}
       />
 

@@ -94,13 +94,13 @@ function IconVisual({ icon: Icon }) {
 
 const TILES = [
   {
-    title: 'Looks right on every screen',
+    title: 'Designed for every screen',
     text: 'Designed for phones first, then tablets and desktops, and tested on real devices before anything goes live.',
     visual: <ScreensVisual />,
     wide: true,
   },
   {
-    title: 'Shows up when people search',
+    title: 'Set up for search',
     text: 'Page titles, descriptions, a sitemap and help with Google Business, set up properly from day one.',
     visual: <SearchVisual />,
   },
@@ -110,13 +110,13 @@ const TILES = [
     visual: <IconVisual icon={KeyRound} />,
   },
   {
-    title: 'Plain English, always',
-    text: 'No jargon. You’ll always know what’s happening, what’s next and why.',
+    title: 'Plain English',
+    text: 'We explain what’s happening, what’s next and why, without the jargon.',
     visual: <ChatVisual />,
   },
   {
     title: 'Quoted per project',
-    text: 'No price list and no surprise invoices. A clear quote, agreed before we start.',
+    text: 'No price list. Each project gets its own quote, agreed before we start.',
     visual: <IconVisual icon={FileText} />,
   },
 ];
@@ -127,9 +127,9 @@ export default function Benefits() {
       <div className="mx-auto max-w-6xl px-5 md:px-8">
         <SectionHeading
           label="Why PixelFold"
-          title="Everything a small business needs"
-          accent="to get online properly."
-          sub="Simple, honest and done properly, so you can get on with running your business."
+          title="What you get"
+          accent="with PixelFold."
+          sub="The parts of a website that matter most to a small business, and how we handle them."
         />
         <div className="mt-14 grid gap-5 md:grid-cols-2 lg:grid-cols-3">
           {TILES.map((t, i) => (

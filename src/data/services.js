@@ -68,7 +68,7 @@ export const SERVICES = [
       title: 'Starter — We Manage',
       desc: 'We build your site, put it live, and keep everything running — you just focus on your business.',
       meta: [
-        { icon: '👤', text: 'Ideal for: busy owners who want zero tech hassle' },
+        { icon: '👤', text: 'Ideal for: busy owners who’d rather not handle the technical side' },
         { icon: '🔄', text: 'Rolling monthly — cancel anytime' },
       ],
       features: [
@@ -224,7 +224,7 @@ export const SERVICES = [
       icon: '📦',
       tag: 'Business · Managed',
       title: 'Business — We Manage',
-      desc: 'Your full business site built, hosted, and managed end-to-end — zero tech hassle for you.',
+      desc: 'Your full business site built, hosted, and managed end-to-end.',
       meta: [
         { icon: '📄', text: '3–6 pages included' },
         { icon: '🔄', text: 'Rolling monthly — cancel anytime' },

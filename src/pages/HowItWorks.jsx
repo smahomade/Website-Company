@@ -69,7 +69,7 @@ const STEPS = [
 const STARTS = [
   {
     label: 'Already have a site?',
-    title: 'We’ll tell you honestly whether to fix it or start over.',
+    title: 'We’ll tell you whether to fix it or start over.',
     text: 'Bring the link. We’ll look at what’s working, what isn’t, and give you a straight answer before any work begins.',
   },
   {
@@ -87,13 +87,13 @@ export default function HowItWorks() {
     <div ref={pageRef} className="leading-normal">
       <Seo
         title="How It Works — PixelFold"
-        description="Getting a website with PixelFold is refreshingly simple: a conversation, a build you can watch take shape, and a handover that's explained properly."
+        description="Getting a website with PixelFold: a conversation, a build you can watch take shape, and a handover that's explained properly."
         path="/how-it-works"
       />
       <PageHeader
         label="How it works"
         title="Three steps."
-        accent="No jargon."
+        accent="Plain English."
         sub="A conversation, a build you can watch take shape, and a handover that’s actually explained."
       >
         <Button asChild size="lg">

@@ -18,13 +18,13 @@ const STEPS = [
   {
     stage: 'Build',
     title: 'Built properly, pixel by pixel.',
-    body: 'Hand-built, fast-loading and fully responsive. We test on real phones, tablets and desktops until every piece is right.',
+    body: 'Hand-built, fast-loading and fully responsive. We test it on real phones, tablets and desktops before launch.',
     points: ['Mobile-first', 'Basic SEO built in', 'Tested on real devices'],
   },
   {
     stage: 'Launch',
     title: 'Live, and fully yours.',
-    body: 'Domain, hosting and SSL handled. Then we walk you through everything, so you’re never left in the dark.',
+    body: 'Domain, hosting and SSL handled. Then we walk you through how it all works.',
   },
 ];
 

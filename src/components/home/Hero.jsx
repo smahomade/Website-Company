@@ -145,7 +145,7 @@ export default function Hero() {
             </span>
           </h1>
           <p className="mt-7 max-w-[34rem] text-lg leading-relaxed text-muted-foreground md:text-xl">
-            PixelFold designs and builds fast, beautiful websites for small businesses, and explains every step in plain English.
+            PixelFold designs and builds fast, beautiful websites for small businesses, and explains the process in plain English.
           </p>
           <div className="mt-9 flex flex-wrap gap-3">
             <Button asChild size="lg">
