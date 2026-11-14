@@ -14,7 +14,6 @@ import { WhatsAppIcon } from '@/components/Icons.jsx';
 import { SERVICES, SERVICE_TABS } from '@/data/services.js';
 import { HERO_CARDS } from '@/data/heroCards.js';
 import { CONTACT } from '@/lib/site.js';
-import useReveal from '@/hooks/useReveal.js';
 import { cn } from '@/lib/utils';
 
 /* Recent builds, shown beside the packages of the tab they were: real client sites, each under the
@@ -173,10 +172,8 @@ function PackageCard({ s, onDetails }) {
 }
 
 export default function Services() {
-  const pageRef = useRef(null);
   const [tab, setTab] = useState('starter');
   const [modalKey, setModalKey] = useState(null);
-  useReveal(pageRef);
 
   /* /services?package=business opens on that package (the footer's links). Read in an effect: the
      prebuilt page always starts on Starter, and the first render has to match it */
@@ -189,7 +186,7 @@ export default function Services() {
   const service = modalKey ? SERVICES.find((s) => s.key === modalKey) : null;
 
   return (
-    <div ref={pageRef} className="leading-normal">
+    <div className="leading-normal">
       <Seo
         title="Services — PixelFold"
         description="PixelFold builds single-page, multi-page and fully custom websites for small businesses, with managed hosting and support if you want it. Each project is scoped and quoted individually."
@@ -247,7 +244,7 @@ export default function Services() {
           <SectionHeading title="How a project runs," accent="start to finish." />
           <ol className="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
             {EXPECT.map((e, i) => (
-              <li key={e.t} data-reveal style={{ '--reveal-i': i }} className="rounded-[24px] border border-ink/10 bg-card p-6">
+              <li key={e.t} className="rounded-[24px] border border-ink/10 bg-card p-6">
                 <span aria-hidden="true" className="font-hand text-[42px] font-bold leading-none text-orange-ink">{'0' + (i + 1)}</span>
                 <p className="mt-3 font-display text-lg font-bold text-ink">{e.t}</p>
                 <p className="mt-1.5 text-[15px] leading-relaxed text-muted-foreground">{e.d}</p>
@@ -261,7 +258,7 @@ export default function Services() {
         <div className="mx-auto max-w-6xl px-5 md:px-8">
           <SectionHeading tone="dark" title="Tell us about" accent="your project." />
           <div className="mt-12 grid gap-5 md:grid-cols-3">
-            <div data-reveal className="flex flex-col rounded-[24px] bg-primary p-7 text-ink">
+            <div className="flex flex-col rounded-[24px] bg-primary p-7 text-ink">
               <span className="grid size-12 place-items-center rounded-xl bg-ink text-cream">
                 <MessagesSquare aria-hidden="true" className="size-6" />
               </span>
@@ -274,7 +271,7 @@ export default function Services() {
                 </Link>
               </Button>
             </div>
-            <div data-reveal style={{ '--reveal-i': 1 }} className="flex flex-col rounded-[24px] border border-cream/10 bg-[#24211d] p-7">
+            <div className="flex flex-col rounded-[24px] border border-cream/10 bg-[#24211d] p-7">
               <span className="grid size-12 place-items-center rounded-xl bg-cream/10 text-cream">
                 <WhatsAppIcon size={22} />
               </span>
@@ -284,7 +281,7 @@ export default function Services() {
                 <a href={CONTACT.whatsapp} target="_blank" rel="noopener noreferrer">Open WhatsApp</a>
               </Button>
             </div>
-            <div data-reveal style={{ '--reveal-i': 2 }} className="flex flex-col rounded-[24px] border border-cream/10 bg-[#24211d] p-7">
+            <div className="flex flex-col rounded-[24px] border border-cream/10 bg-[#24211d] p-7">
               <span className="grid size-12 place-items-center rounded-xl bg-cream/10 text-cream">
                 <Mail aria-hidden="true" className="size-6" />
               </span>

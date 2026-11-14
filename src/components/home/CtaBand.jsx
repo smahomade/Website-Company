@@ -8,7 +8,7 @@ import { CONTACT, LOGO } from '@/lib/site.js';
 export default function CtaBand() {
   return (
     <section className="bg-background px-3 pb-20 pt-6 md:px-5 md:pb-28">
-      <div data-reveal className="relative mx-auto max-w-6xl pt-7">
+      <div className="relative mx-auto max-w-6xl pt-7">
         <div aria-hidden="true" className="absolute left-0 top-0 h-10 w-[38%] max-w-[300px] rounded-t-[22px] bg-primary" />
         <div className="relative overflow-hidden rounded-[28px] rounded-tl-none bg-primary px-7 py-14 md:px-14 md:py-20">
           <div className="relative z-10 max-w-2xl">

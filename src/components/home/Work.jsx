@@ -33,7 +33,7 @@ const PROJECTS = ORDER.map((id) => PORTFOLIO.find((p) => p.id === id))
 export default function Work() {
   return (
     <section id="work" className="relative bg-espresso text-cream">
-      <div className="mx-auto flex max-w-6xl flex-col gap-6 px-5 pt-24 md:flex-row md:items-end md:justify-between md:px-8 md:pt-32">
+      <div className="mx-auto flex max-w-6xl flex-col gap-6 px-5 pt-16 md:flex-row md:items-end md:justify-between md:px-8 md:pt-32">
         <SectionHeading
           tone="dark"
           title="Websites already working"
@@ -51,8 +51,8 @@ export default function Work() {
         <ProjectDeck projects={PROJECTS} ground={GROUND} />
       </Suspense>
 
-      <div className="mx-auto max-w-6xl px-5 pb-24 md:px-8 md:pb-32">
-        <p data-reveal className="font-display text-[clamp(2.6rem,7vw,6.5rem)] font-bold leading-[0.95] tracking-[-0.045em] text-cream">
+      <div className="mx-auto max-w-6xl px-5 pb-16 md:px-8 md:pb-32">
+        <p className="font-display text-[clamp(2.6rem,7vw,6.5rem)] font-bold leading-[0.95] tracking-[-0.045em] text-cream">
           Yours could be next.
         </p>
         <Button asChild size="lg" className="mt-8">

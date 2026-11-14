@@ -4,7 +4,7 @@ import { cn } from '@/lib/utils';
 /* shadcn/ui's Input, Textarea, Label and a native Select in PixelFold colours. Text is 16px so
    phones don't zoom in on focus; aria-invalid turns the border red. */
 const control =
-  'w-full min-w-0 rounded-xl border border-input bg-white px-4 text-base text-ink shadow-[0_1px_2px_rgba(17,17,17,0.04)] outline-none transition-[border-color,box-shadow] placeholder:text-ink/40 hover:border-ink/25 focus-visible:border-primary focus-visible:ring-[3px] focus-visible:ring-ring/25 aria-[invalid=true]:border-destructive aria-[invalid=true]:ring-destructive/15 disabled:cursor-not-allowed disabled:bg-sand disabled:opacity-60';
+  'w-full min-w-0 rounded-xl border border-input bg-white px-4 text-base text-ink shadow-[0_1px_2px_rgba(17,17,17,0.04)] outline-none transition-[border-color,box-shadow] placeholder:text-ink/60 hover:border-ink/25 focus-visible:border-primary focus-visible:ring-[3px] focus-visible:ring-ring/25 aria-[invalid=true]:border-destructive aria-[invalid=true]:ring-destructive/15 disabled:cursor-not-allowed disabled:bg-sand disabled:opacity-60';
 
 function Input({ className, type = 'text', ...props }) {
   return <input type={type} data-slot="input" className={cn(control, 'h-12', className)} {...props} />;

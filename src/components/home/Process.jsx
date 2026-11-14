@@ -30,7 +30,7 @@ const STEPS = [
 
 export default function Process() {
   return (
-    <section className="relative overflow-hidden bg-background py-24 md:py-32">
+    <section className="relative overflow-hidden bg-background py-16 md:py-32">
       <PinnedSteps steps={STEPS}>
         <SectionHeading
           align="center"

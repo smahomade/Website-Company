@@ -1,4 +1,4 @@
-import { FileText, KeyRound } from 'lucide-react';
+import { FileCode2, FileText, FolderOpen, Images } from 'lucide-react';
 import { LOGO } from '@/lib/site.js';
 import { cn } from '@/lib/utils';
 import SectionHeading from './SectionHeading.jsx';
@@ -51,7 +51,7 @@ function SearchVisual() {
         </span>
         <div className="leading-tight">
           <p className="text-[13px] font-bold text-ink">PixelFold</p>
-          <p className="text-[11px] text-ink/50">https://www.pixelfold.co.uk</p>
+          <p className="text-[11px] text-ink/60">https://www.pixelfold.co.uk</p>
         </div>
       </div>
       <p className="mt-2.5 font-display text-[15px] font-semibold leading-snug text-[#2c46b8]">Websites for small businesses | PixelFold</p>
@@ -74,11 +74,55 @@ function ChatVisual() {
   );
 }
 
-function IconVisual({ icon: Icon }) {
+/* What a one-off build hands over: the same list as the One-off card in Plans */
+const HANDOVER = [
+  [FileCode2, 'Source code'],
+  [Images, 'Images and project files'],
+  [FileText, 'Hosting set-up guide'],
+];
+
+function HandoverVisual() {
   return (
-    <span aria-hidden="true" className="grid size-14 place-items-center rounded-2xl bg-orange-tint text-orange-ink">
-      <Icon className="size-7" strokeWidth={2} />
-    </span>
+    <div aria-hidden="true" className="rounded-xl border border-ink/10 bg-white p-3">
+      <p className="flex items-center gap-2 px-1 pb-2.5 font-display text-sm font-semibold text-ink">
+        <FolderOpen className="size-4 text-orange-ink" strokeWidth={2.2} />
+        your-website
+      </p>
+      <ul className="space-y-0.5 border-t border-ink/[0.08] pt-2">
+        {HANDOVER.map(([Icon, t]) => (
+          <li key={t} className="flex items-center gap-2.5 px-1 py-1.5 text-[13px] text-ink/75">
+            <Icon className="size-4 shrink-0 text-ink/45" strokeWidth={2} />
+            {t}
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+}
+
+/* The parts of a written quote, with no figures in it: every project is priced on its own */
+const QUOTE_ROWS = [
+  ['Scope', 'What we’ll build'],
+  ['Timeline', 'When it goes live'],
+  ['Price', 'What it costs'],
+];
+
+function QuoteVisual() {
+  return (
+    <div aria-hidden="true" className="rounded-xl border border-ink/10 bg-white p-4">
+      <div className="flex items-baseline justify-between gap-3">
+        <p className="font-display text-sm font-bold text-ink">Your quote</p>
+        <p className="text-[11px] font-semibold uppercase tracking-[0.12em] text-ink/60">In writing</p>
+      </div>
+      <dl className="mt-2 divide-y divide-ink/[0.08] text-[13px]">
+        {QUOTE_ROWS.map(([k, v]) => (
+          <div key={k} className="flex justify-between gap-4 py-2">
+            <dt className="text-ink/60">{k}</dt>
+            <dd className="font-semibold text-ink">{v}</dd>
+          </div>
+        ))}
+      </dl>
+    </div>
   );
 }
 
@@ -97,7 +141,7 @@ const TILES = [
   {
     title: 'Yours to keep',
     text: 'Choose a one-off build and it’s handed over in full: every file, the code, the lot.',
-    visual: <IconVisual icon={KeyRound} />,
+    visual: <HandoverVisual />,
   },
   {
     title: 'Plain English',
@@ -107,27 +151,25 @@ const TILES = [
   {
     title: 'Quoted per project',
     text: 'No price list. Each project gets its own quote, agreed before we start.',
-    visual: <IconVisual icon={FileText} />,
+    visual: <QuoteVisual />,
   },
 ];
 
 export default function Benefits() {
   return (
-    <section className="bg-background py-24 md:py-32">
+    <section className="bg-background py-16 md:py-32">
       <div className="mx-auto max-w-6xl px-5 md:px-8">
         <SectionHeading
           title="What you get"
           accent="with PixelFold."
           sub="The parts of a website that matter most to a small business, and how we handle them."
         />
-        <div className="mt-14 grid gap-5 md:grid-cols-2 lg:grid-cols-3">
+        <div className="mt-10 grid gap-4 md:mt-14 md:grid-cols-2 md:gap-5 lg:grid-cols-3">
           {TILES.map((t, i) => (
             <div
               key={t.title}
-              data-reveal
-              style={{ '--reveal-i': i % 3 }}
               className={cn(
-                'flex flex-col justify-between gap-8 rounded-2xl border border-ink/10 bg-card p-6 md:p-7',
+                'flex flex-col justify-between gap-6 rounded-2xl border border-ink/10 bg-card p-5 md:gap-8 md:p-7',
                 t.wide && 'md:col-span-2'
               )}
             >

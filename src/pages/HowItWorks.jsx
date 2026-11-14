@@ -1,4 +1,3 @@
-import { useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowRight, Cloud, Globe, ShieldCheck } from 'lucide-react';
 import Seo from '@/components/Seo.jsx';
@@ -8,7 +7,6 @@ import Faq from '@/components/home/Faq.jsx';
 import CtaBand from '@/components/home/CtaBand.jsx';
 import { Button } from '@/components/ui/button';
 import { R2 } from '@/lib/site.js';
-import useReveal from '@/hooks/useReveal.js';
 import { cn } from '@/lib/utils';
 
 const PILLARS = [
@@ -79,11 +77,9 @@ const STARTS = [
 ];
 
 export default function HowItWorks() {
-  const pageRef = useRef(null);
-  useReveal(pageRef);
 
   return (
-    <div ref={pageRef} className="leading-normal">
+    <div className="leading-normal">
       <Seo
         title="How It Works — PixelFold"
         description="Getting a website with PixelFold: a conversation, a build you can watch take shape, and a handover that's explained properly."
@@ -104,7 +100,7 @@ export default function HowItWorks() {
       <section className="bg-background pb-24 md:pb-32">
         <div className="mx-auto max-w-6xl space-y-20 px-5 md:space-y-28 md:px-8">
           {STEPS.map((s, i) => (
-            <article key={s.stage} data-reveal className="grid items-center gap-10 lg:grid-cols-2 lg:gap-16">
+            <article key={s.stage} className="grid items-center gap-10 lg:grid-cols-2 lg:gap-16">
               <div className={cn(i % 2 && 'lg:order-2')}>
                 <span aria-hidden="true" className="font-hand text-6xl font-bold leading-none text-orange-ink">{'0' + (i + 1)}</span>
                 <h2 className="mt-4 font-display text-[clamp(2rem,4vw,3rem)] font-bold leading-[1.06] tracking-[-0.03em] text-ink text-balance">{s.title}</h2>
@@ -119,7 +115,7 @@ export default function HowItWorks() {
       <section className="bg-espresso py-24 md:py-28">
         <div className="mx-auto grid max-w-6xl gap-5 px-5 md:grid-cols-2 md:px-8">
           {STARTS.map((s, i) => (
-            <div key={s.title} data-reveal style={{ '--reveal-i': i }} className="rounded-[28px] border border-cream/10 bg-[#24211d] p-8 md:p-10">
+            <div key={s.title} className="rounded-[28px] border border-cream/10 bg-[#24211d] p-8 md:p-10">
               <h2 className="font-display text-3xl font-bold leading-tight tracking-[-0.02em] text-cream text-balance">{s.title}</h2>
               <p className="mt-4 text-lg leading-relaxed text-cream/70">{s.text}</p>
             </div>

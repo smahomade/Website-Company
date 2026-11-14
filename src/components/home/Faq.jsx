@@ -27,7 +27,7 @@ const FAQ_SCHEMA = JSON.stringify({
 
 export default function Faq() {
   return (
-    <section className="bg-background py-24 md:py-32">
+    <section className="bg-background py-16 md:py-32">
       <div className="mx-auto grid max-w-6xl gap-12 px-5 md:px-8 lg:grid-cols-[0.85fr_1.15fr] lg:gap-16">
         <div className="lg:sticky lg:top-28 lg:self-start">
           <SectionHeading title="Questions," accent="answered." sub="Can’t see yours? Ask us directly. We reply within 24 hours, usually the same day." />
@@ -45,7 +45,7 @@ export default function Faq() {
           </div>
         </div>
 
-        <div data-reveal className="rounded-[28px] border border-ink/10 bg-card px-6 py-2 md:px-8">
+        <div className="rounded-[28px] border border-ink/10 bg-card px-6 py-2 md:px-8">
           <Accordion type="single" collapsible defaultValue="faq-0">
             {ITEMS.map((f, i) => (
               <AccordionItem key={f.q} value={'faq-' + i}>

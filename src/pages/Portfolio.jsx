@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react';
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowRight, ArrowUpRight, Images } from 'lucide-react';
 import Seo from '@/components/Seo.jsx';
@@ -10,14 +10,13 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { PORTFOLIO } from '@/data/portfolio.js';
 import { LOGO } from '@/lib/site.js';
-import useReveal from '@/hooks/useReveal.js';
 
 const host = (url) => url.replace(/^https?:\/\//, '').replace(/\/$/, '');
 
 function ProjectCard({ p, i, onPages }) {
   const shot = p.caseStudy ? p.caseStudy.shots + '-1-' : null;
   return (
-    <article data-reveal style={{ '--reveal-i': i % 2 }} className="group flex flex-col overflow-hidden rounded-[28px] border border-ink/10 bg-card transition-shadow hover:shadow-lg">
+    <article className="group flex flex-col overflow-hidden rounded-[28px] border border-ink/10 bg-card transition-shadow hover:shadow-lg">
       <div className="relative overflow-hidden border-b border-ink/[0.08] bg-sand">
         <img
           src={shot ? shot + '1000.webp' : p.preview}
@@ -75,12 +74,10 @@ function ProjectCard({ p, i, onPages }) {
 }
 
 export default function Portfolio() {
-  const pageRef = useRef(null);
   const [open, setOpen] = useState(null);
-  useReveal(pageRef);
 
   return (
-    <div ref={pageRef} className="leading-normal">
+    <div className="leading-normal">
       <Seo
         title="Portfolio — PixelFold"
         description="Live websites PixelFold has designed and built for real UK businesses, from an education provider to a London salon, each with a case study of what we did and why."
@@ -99,7 +96,7 @@ export default function Portfolio() {
             <ProjectCard key={p.id} p={p} i={i} onPages={setOpen} />
           ))}
           {/* the open slot: invites the next project instead of showing a dummy card */}
-          <div data-reveal style={{ '--reveal-i': 1 }} className="flex flex-col items-start justify-center rounded-[28px] border-2 border-dashed border-ink/15 bg-sand/60 p-8 md:p-10">
+          <div className="flex flex-col items-start justify-center rounded-[28px] border-2 border-dashed border-ink/15 bg-sand/60 p-8 md:p-10">
             <span className="grid size-20 place-items-center rounded-[24px] bg-cream p-2.5 shadow-sm">
               <img src={LOGO.mark} alt="" width="202" height="205" className="h-auto w-full" />
             </span>

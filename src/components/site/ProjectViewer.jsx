@@ -128,7 +128,7 @@ export default function ProjectViewer({ project, onClose }) {
               <Badge>{p.typeLabel}</Badge>
               <DialogTitle className="text-xl md:text-2xl">
                 {p.title}
-                <span className="text-ink/45"> · {slide && labelOf(slide, current)}</span>
+                <span className="text-ink/55"> · {slide && labelOf(slide, current)}</span>
               </DialogTitle>
             </div>
             <DialogDescription className="sr-only">

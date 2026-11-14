@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowRight, Check, KeyRound, LifeBuoy } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
@@ -26,14 +27,14 @@ const PLANS = [
   },
 ];
 
-function PlanCard({ plan, i }) {
+function PlanCard({ plan, id, hiddenOnPhones }) {
   const { icon: Icon, featured } = plan;
   return (
     <div
-      data-reveal
-      style={{ '--reveal-i': i }}
+      id={id}
       className={cn(
         'relative flex flex-col rounded-[28px] border p-7 md:p-9',
+        hiddenOnPhones && 'max-md:hidden',
         featured ? 'border-ink bg-ink text-cream shadow-lg' : 'border-ink/10 bg-card text-ink'
       )}
     >
@@ -77,8 +78,9 @@ function PlanCard({ plan, i }) {
 }
 
 export default function Plans() {
+  const [shown, setShown] = useState(0); /* phones only: which plan is on screen */
   return (
-    <section id="pricing" className="bg-sand/70 py-24 md:py-32">
+    <section id="pricing" className="bg-sand/70 py-16 md:py-32">
       <div className="mx-auto max-w-6xl px-5 md:px-8">
         <SectionHeading
           align="center"
@@ -86,9 +88,27 @@ export default function Plans() {
           accent="or let us keep it tidy."
           sub="We build your site either way. The difference is who looks after it afterwards. Both are quoted per project after a free consultation."
         />
-        <div className="mx-auto mt-14 grid max-w-4xl gap-5 md:grid-cols-2">
+        {/* phones: a switch between the two plans, so the page isn't two long cards in a row */}
+        <div role="group" aria-label="Show a plan" className="mx-auto mt-10 flex max-w-sm rounded-full border border-ink/10 bg-white p-1 md:hidden">
           {PLANS.map((plan, i) => (
-            <PlanCard key={plan.title} plan={plan} i={i} />
+            <button
+              key={plan.title}
+              type="button"
+              aria-pressed={shown === i}
+              aria-controls={'plan-' + i}
+              onClick={() => setShown(i)}
+              className={cn(
+                'min-h-11 flex-1 cursor-pointer rounded-full px-4 font-display text-[15px] font-semibold outline-none transition-colors focus-visible:ring-[3px] focus-visible:ring-ring/45',
+                shown === i ? 'bg-ink text-cream' : 'text-ink/70 hover:text-ink'
+              )}
+            >
+              {plan.title}
+            </button>
+          ))}
+        </div>
+        <div className="mx-auto mt-4 grid max-w-4xl gap-5 md:mt-14 md:grid-cols-2">
+          {PLANS.map((plan, i) => (
+            <PlanCard key={plan.title} plan={plan} id={'plan-' + i} hiddenOnPhones={i !== shown} />
           ))}
         </div>
         <p className="mt-10 text-center">

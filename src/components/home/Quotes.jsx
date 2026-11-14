@@ -9,14 +9,14 @@ export default function Quotes({ only, title = 'What our clients', accent = 'say
   const list = TESTIMONIALS.filter((t) => !only || t.client === only);
   if (!list.length) return null;
   return (
-    <section className="bg-background py-24 md:py-32">
+    <section className="bg-background py-16 md:py-32">
       <div className="mx-auto max-w-6xl px-5 md:px-8">
         <SectionHeading title={title} accent={accent} />
         <div className="mt-14 grid gap-5 md:grid-cols-2 lg:grid-cols-3">
           {list.map((t, i) => {
             const p = PORTFOLIO.find((x) => x.id === t.client);
             return (
-              <figure key={t.client + t.name} data-reveal style={{ '--reveal-i': i % 3 }} className="flex flex-col rounded-2xl border border-ink/10 bg-card p-7">
+              <figure key={t.client + t.name} className="flex flex-col rounded-2xl border border-ink/10 bg-card p-7">
                 <blockquote className="font-display text-lg font-medium leading-relaxed text-ink">“{t.quote}”</blockquote>
                 <figcaption className="mt-6 border-t border-ink/10 pt-5 text-[15px]">
                   <strong className="font-bold text-ink">{t.name}</strong>

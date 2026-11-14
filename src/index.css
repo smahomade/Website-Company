@@ -122,22 +122,6 @@
 }
 
 @layer components {
-  /* Sections fade up the first time they scroll into view (hooks/useReveal.js). Only things
-     below the fold are ever hidden, and only once the script runs, so the prebuilt page shows
-     everything. Calm: one soft fade, no bounce. */
-  [data-reveal] {
-    transition: opacity 0.7s ease, transform 0.7s cubic-bezier(0.2, 0.7, 0.2, 1);
-    transition-delay: calc(var(--reveal-i, 0) * 90ms);
-  }
-  [data-reveal][data-hidden] {
-    opacity: 0;
-    transform: translateY(18px);
-  }
-  @media (prefers-reduced-motion: reduce) {
-    [data-reveal] { transition: opacity 0.4s ease; transition-delay: 0ms; }
-    [data-reveal][data-hidden] { transform: none; }
-  }
-
   /* the dashed thread between the pinned steps (ui/how-it-works.jsx) creeps along slowly;
      -140 is a whole number of 8 + 6 dash repeats, so the loop has no jump */
   .pf-thread {

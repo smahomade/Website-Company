@@ -73,7 +73,7 @@ export default function PinnedSteps({ steps, className, children }) {
 
       <div className="relative z-10 mx-auto max-w-6xl">
         {children}
-        <div className="relative mx-auto mt-14 w-full max-w-[1000px] md:h-[var(--board-h)]" style={{ '--board-h': BOARD_HEIGHT + 'px' }}>
+        <div className="relative mx-auto mt-10 w-full md:mt-14 max-w-[1000px] md:h-[var(--board-h)]" style={{ '--board-h': BOARD_HEIGHT + 'px' }}>
           <svg
             aria-hidden="true"
             className="pointer-events-none absolute left-0 top-0 hidden h-full w-full md:block"

@@ -33,7 +33,9 @@ function Card({ p, i, count, progress, ground }) {
     for (let j = i + 1; j < count; j++) n += arrived(j, v, count);
     return Math.min(3, n);
   };
-  const y = useTransform(progress, (v) => `${(1 - arrived(i, v, count)) * 108 - above(v) * 5}svh`); // covered cards lift so their edges show
+  /* --rise (set on the stage) is how far below a card starts: less on phones, where the stage is shorter.
+     Covered cards lift so their edges show. */
+  const y = useTransform(progress, (v) => `calc(${(1 - arrived(i, v, count)).toFixed(4)} * var(--rise) - ${(above(v) * 5).toFixed(3)}svh)`);
   const rotateX = useTransform(progress, (v) => -(1 - arrived(i, v, count)) * 30 + above(v) * 5);
   const scale = useTransform(progress, (v) => 0.9 + 0.1 * arrived(i, v, count) - above(v) * 0.05);
   const filter = useTransform(progress, (v) => `blur(${((1 - arrived(i, v, count)) ** 2 * 12 + above(v) * 1.1).toFixed(2)}px)`);
@@ -58,10 +60,18 @@ function Deck({ projects, ground }) {
   const { scrollYProgress } = useScroll({ target: deck, offset: ['start start', 'end end'] });
   const progress = useSpring(scrollYProgress, { stiffness: 380, damping: 48, mass: 0.35 });
   return (
-    /* one screen of scroll per card; the stage stays pinned while they are dealt onto it */
+    /* The stage stays pinned while the cards are dealt onto it: one screen of scroll per card from
+       sm up. A phone's card is small, so there the stage is shorter, sits mid-screen, and each
+       card takes under a third of a screen. */
     <LazyMotion features={domMin}>
-    <div ref={deck} className="relative w-full" style={{ height: Math.max(1, count) * 100 + 'svh' }} role="region" aria-label="Projects">
-      <div className="sticky top-0 grid h-[100svh] place-items-center overflow-hidden px-5 pt-16 [perspective:1800px] sm:px-10 md:pt-20 lg:px-14">
+    <div
+      ref={deck}
+      className="relative h-[calc(100svh_+_(var(--n)_-_1)_*_30svh)] w-full sm:h-[calc(var(--n)_*_100svh)]"
+      style={{ '--n': Math.max(1, count) }}
+      role="region"
+      aria-label="Projects"
+    >
+      <div className="sticky top-[18svh] grid h-[64svh] place-items-center overflow-hidden px-5 [--rise:56svh] [perspective:1800px] sm:top-0 sm:h-[100svh] sm:px-10 sm:pt-16 sm:[--rise:108svh] md:pt-20 lg:px-14">
         {projects.map((p, i) => (
           <Card key={p.id} p={p} i={i} count={count} progress={progress} ground={ground} />
         ))}
