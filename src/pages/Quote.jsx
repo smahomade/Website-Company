@@ -392,8 +392,7 @@ export default function Quote() {
       <PageHeader
         title="Tell us about"
         accent="your project."
-        sub="A short brief, about two minutes. We’ll come back within 24 hours with a clear scope, timeline and quote. No obligation."
-        chips={['100% free', 'Quoted per project', 'Reply within 24 hours', 'No commitment']}
+        sub="It’s free and takes about two minutes. We’ll come back within 24 hours with a clear scope, timeline and quote. No obligation."
       />
 
       <section className="bg-background pb-24 md:pb-32">

@@ -1,9 +1,9 @@
 import { useRef } from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowRight } from 'lucide-react';
+import { ArrowRight, Check } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogClose, DialogContent, DialogDescription, DialogTitle } from '@/components/ui/dialog';
-import { FEATURE_ICON, FEATURE_TONE, KIND_ICON, META_ICON } from './packageIcons.js';
+import { KIND_ICON, META_ICON } from './packageIcons.js';
 
 /* "Read more" for one package (data/services.js): what it is, who it suits, everything included
    and the small print. `service` is null when closed; the last one stays on screen while the
@@ -18,14 +18,11 @@ export default function ServiceDialog({ service, onClose }) {
     <Dialog open={!!service} onOpenChange={(open) => !open && onClose()}>
       {d && (
         <DialogContent className="max-w-xl">
-          <div className="flex items-start gap-4 pr-10">
+          <div className="flex items-center gap-4 pr-10">
             <span className="grid size-12 shrink-0 place-items-center rounded-xl bg-orange-tint text-orange-ink">
               <Icon aria-hidden="true" className="size-6" />
             </span>
-            <div>
-              <p className="font-display text-xs font-bold uppercase tracking-[0.16em] text-orange-ink">{d.tag}</p>
-              <DialogTitle className="mt-1">{d.title}</DialogTitle>
-            </div>
+            <DialogTitle>{d.title}</DialogTitle>
           </div>
           <DialogDescription className="mt-4">{d.desc}</DialogDescription>
 
@@ -43,19 +40,16 @@ export default function ServiceDialog({ service, onClose }) {
             </ul>
           )}
 
-          <p className="mt-6 font-display text-sm font-bold uppercase tracking-[0.14em] text-ink/65">What’s included</p>
+          <h3 className="mt-6 font-display text-lg font-bold text-ink">What’s included</h3>
           <ul className="mt-3 space-y-2.5">
-            {(d.features || []).map((f) => {
-              const FIcon = FEATURE_ICON[f.type] || FEATURE_ICON.standard;
-              return (
-                <li key={f.text} className="flex items-start gap-3 text-[15px] font-semibold text-ink">
-                  <span className={'mt-0.5 grid size-5 shrink-0 place-items-center rounded-full ' + (FEATURE_TONE[f.type] || FEATURE_TONE.standard)}>
-                    <FIcon aria-hidden="true" className="size-3" strokeWidth={3} />
-                  </span>
-                  {f.text}
-                </li>
-              );
-            })}
+            {(d.features || []).map((f) => (
+              <li key={f.text} className="flex items-start gap-3 text-[15px] font-semibold text-ink">
+                <span className="mt-0.5 grid size-5 shrink-0 place-items-center rounded-full bg-ink text-cream">
+                  <Check aria-hidden="true" className="size-3" strokeWidth={3} />
+                </span>
+                {f.text}
+              </li>
+            ))}
           </ul>
 
           {d.note && <p className="mt-5 rounded-2xl bg-sand px-4 py-3 text-sm leading-relaxed text-muted-foreground">{d.note}</p>}

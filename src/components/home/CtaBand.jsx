@@ -18,13 +18,13 @@ export default function CtaBand() {
             <p className="mt-5 max-w-xl text-lg leading-relaxed text-ink">
               Tell us about your business and what you need. The first conversation is free, and you’ll get a clear quote in writing.
             </p>
-            <div className="mt-9 flex flex-wrap gap-3">
-              <Button asChild size="lg" variant="dark">
+            <div className="mt-9 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
+              <Button asChild size="lg" variant="dark" className="max-sm:w-full">
                 <Link to="/quote">
                   Get a free quote <ArrowRight />
                 </Link>
               </Button>
-              <Button asChild size="lg" variant="outline-dark">
+              <Button asChild size="lg" variant="outline-dark" className="max-sm:w-full">
                 <a href={CONTACT.whatsapp} target="_blank" rel="noopener noreferrer">
                   <WhatsAppIcon size={18} /> WhatsApp us
                 </a>

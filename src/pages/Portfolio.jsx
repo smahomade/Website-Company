@@ -87,7 +87,6 @@ export default function Portfolio() {
         title="Real websites for"
         accent="real businesses."
         sub="All of them live today. Open any one to flick through every page, or read the case study behind it."
-        chips={['Live client sites', 'Hand-built', 'Mobile-friendly', 'UK-based']}
       />
 
       <section className="bg-background pb-24 md:pb-32">

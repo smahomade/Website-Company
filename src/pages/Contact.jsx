@@ -100,7 +100,6 @@ export default function Contact() {
         title="Let’s talk about"
         accent="your website."
         sub="Need a new site, or help with the one you’ve got? Send a message and we’ll reply within 24 hours. Every conversation starts with a free, no-obligation chat."
-        chips={['Reply within 24 hours', 'No obligation', 'Free consultation']}
       />
 
       <section className="bg-background pb-24 md:pb-32">

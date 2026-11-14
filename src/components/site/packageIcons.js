@@ -1,7 +1,6 @@
 import {
   Building2,
   CalendarDays,
-  Check,
   Cloud,
   FileText,
   KeyRound,
@@ -9,7 +8,6 @@ import {
   Layers,
   LayoutTemplate,
   Package,
-  Plus,
   Puzzle,
   RefreshCw,
   Rocket,
@@ -46,13 +44,4 @@ export const META_ICON = {
   '🛠️': Wrench,
   '🧩': Puzzle,
   '🧰': Wrench,
-};
-
-/* a feature line's mark: standard (tick), bonus (plus), priority (bolt) or backend (gear) */
-export const FEATURE_ICON = { standard: Check, bonus: Plus, priority: Zap, backend: Settings2 };
-export const FEATURE_TONE = {
-  standard: 'bg-ink text-cream',
-  bonus: 'bg-primary text-ink',
-  priority: 'bg-orange-tint text-orange-ink',
-  backend: 'border border-ink/20 bg-sand text-ink',
 };

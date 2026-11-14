@@ -1,10 +1,10 @@
 import { useLayoutEffect, useRef, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { ArrowRight, Check, Mail, MessagesSquare, Pause, Play } from 'lucide-react';
+import { ArrowRight, Check, Mail, MessagesSquare, Minus, Pause, Play } from 'lucide-react';
 import Seo from '@/components/Seo.jsx';
 import PageHeader from '@/components/site/PageHeader.jsx';
 import ServiceDialog from '@/components/site/ServiceDialog.jsx';
-import { FEATURE_ICON, FEATURE_TONE, KIND_ICON } from '@/components/site/packageIcons.js';
+import { KIND_ICON } from '@/components/site/packageIcons.js';
 import SectionHeading from '@/components/home/SectionHeading.jsx';
 import BrowserFrame from '@/components/home/BrowserFrame.jsx';
 import { Badge } from '@/components/ui/badge';
@@ -16,7 +16,7 @@ import { HERO_CARDS } from '@/data/heroCards.js';
 import { CONTACT } from '@/lib/site.js';
 import { cn } from '@/lib/utils';
 
-/* Recent builds, shown beside the packages of the tab they were: real client sites, each under the
+/* Recent builds, shown under the packages of the tab they were: real client sites, each under the
    package it actually was (`pack`). There has been no Starter build, so that tab shows none. */
 const EXAMPLES = [
   { name: 'Change Work Therapies', short: 'Change Work', pack: 'business', note: 'A seven-page site for a therapy practice, calm and trust-led.' },
@@ -29,12 +29,217 @@ const EXAMPLES = [
 
 const INCLUDED = ['Mobile-first design', 'Basic on-page SEO', 'Contact form', 'Handover explained in plain English'];
 
+/* The same four stages as the home page and How it works */
 const EXPECT = [
-  { t: 'Free consultation', d: 'A short conversation about your business and what you need.' },
-  { t: 'Quote within 24 hours', d: 'Scope, timeline and price, agreed before any work starts.' },
-  { t: 'Progress as it happens', d: 'You see the site take shape rather than waiting for a big reveal.' },
-  { t: 'Launch and handover', d: 'We put it live and walk you through domain, hosting and security.' },
+  { t: 'Consultation', d: 'A free conversation about your business and what you need, then a clear scope, timeline and quote within 24 hours.' },
+  { t: 'Design', d: 'We sketch your layout first, then design it around your brand. You see it before it’s built.' },
+  { t: 'Build', d: 'Hand-built, fast and tested on real phones. You see it take shape as it happens.' },
+  { t: 'Launch', d: 'We put it live and walk you through the domain, hosting and security.' },
 ];
+
+/* The site is the same at every level of a Starter or Business package; this is what changes.
+   `adds` is what a level adds to the one before it (the phone layout lists only that). */
+const LEVELS = {
+  'tier-base': { plan: 'One-off build', planNote: 'Yours outright', hosting: false, changes: false, accounts: false },
+  'tier-managed': {
+    plan: 'Monthly plan',
+    hosting: true,
+    changes: 'Minor, within 48 hours',
+    accounts: false,
+    adds: ['Hosting and domain, handled for you', 'Minor changes, within 48 hours'],
+  },
+  'tier-priority': { plan: 'Monthly plan', hosting: true, changes: 'Major and minor, under 48 hours', accounts: false, adds: ['Major changes too, under 48 hours'] },
+  'tier-advanced': {
+    plan: 'Monthly plan',
+    hosting: true,
+    changes: 'Major and minor, under 48 hours',
+    accounts: 'Log-in and sign-up features',
+    adds: ['Log-in and sign-up features'],
+  },
+};
+const ROWS = [
+  { key: 'plan', label: 'Plan' },
+  { key: 'hosting', label: 'Hosting and domain', yes: 'Handled for you', no: 'You arrange them' },
+  { key: 'changes', label: 'Changes after launch' },
+  { key: 'accounts', label: 'Log-in and accounts' },
+];
+const SITE = { starter: 'a 1-page site', business: 'a 3–6 page site' };
+
+function Tick({ className }) {
+  return (
+    <span className={cn('grid size-5 shrink-0 place-items-center rounded-full bg-ink text-cream', className)}>
+      <Check aria-hidden="true" className="size-3" strokeWidth={3} />
+    </span>
+  );
+}
+
+function PackageIcon({ s, className }) {
+  const Icon = KIND_ICON[s.iconKind] || KIND_ICON.key;
+  return (
+    <span className={cn('grid size-11 shrink-0 place-items-center rounded-xl bg-orange-tint text-orange-ink', className)}>
+      <Icon aria-hidden="true" className="size-5" />
+    </span>
+  );
+}
+
+/* "Most Popular" from the data; "Own it outright" is the Plan row instead */
+function Ribbon({ s }) {
+  return s.ribbon && !s.ribbon.own ? <Badge variant="primary">{s.ribbon.text}</Badge> : null;
+}
+
+function Cell({ row, level }) {
+  const v = level[row.key];
+  if (row.key === 'plan') {
+    return (
+      <>
+        <span className="font-semibold text-ink">{v}</span>
+        {level.planNote && <span className="block text-sm text-muted-foreground">{level.planNote}</span>}
+      </>
+    );
+  }
+  if (!v) {
+    return row.no ? (
+      <span className="text-muted-foreground">{row.no}</span>
+    ) : (
+      <span className="text-ink/40">
+        <Minus aria-hidden="true" className="size-4" />
+        <span className="sr-only">Not included</span>
+      </span>
+    );
+  }
+  return (
+    <span className="flex items-start gap-2.5 font-semibold text-ink">
+      <Tick className="mt-0.5" />
+      {v === true ? row.yes : v}
+    </span>
+  );
+}
+
+/* From md up: one table, the levels across and what changes between them down the side */
+function Compare({ packs, tab, onDetails }) {
+  return (
+    <div className="hidden overflow-hidden rounded-[24px] border border-ink/10 bg-card md:block">
+      <table className="w-full table-fixed border-collapse text-left text-[15px] leading-snug">
+        <caption className="sr-only">{tab.label} packages compared</caption>
+        <colgroup>
+          <col className="w-[19%]" />
+          {packs.map((s) => (
+            <col key={s.key} />
+          ))}
+        </colgroup>
+        <thead>
+          <tr>
+            <td />
+            {packs.map((s) => (
+              <th key={s.key} scope="col" className="border-l border-ink/10 px-5 pb-5 pt-6 align-top font-normal">
+                <span className="flex items-center justify-between gap-2">
+                  <PackageIcon s={s} />
+                  <Ribbon s={s} />
+                </span>
+                <span className="mt-4 block font-display text-lg font-bold leading-tight tracking-[-0.01em] text-ink">{s.title}</span>
+                <span className="mt-1 block text-sm leading-relaxed text-muted-foreground">{s.tagline}</span>
+              </th>
+            ))}
+          </tr>
+        </thead>
+        <tbody>
+          {ROWS.map((r) => (
+            <tr key={r.key} className="border-t border-ink/10">
+              <th scope="row" className="px-5 py-4 align-top font-display font-bold text-ink">
+                {r.label}
+              </th>
+              {packs.map((s) => (
+                <td key={s.key} className="border-l border-ink/10 px-5 py-4 align-top">
+                  <Cell row={r} level={LEVELS[s.tier]} />
+                </td>
+              ))}
+            </tr>
+          ))}
+          <tr className="border-t border-ink/10">
+            <td />
+            {packs.map((s) => (
+              <td key={s.key} className="border-l border-ink/10 px-3 py-3">
+                <Button variant="ghost" size="sm" onClick={() => onDetails(s.key)} aria-haspopup="dialog">
+                  Read more <span className="sr-only">about {s.title}</span>
+                </Button>
+              </td>
+            ))}
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  );
+}
+
+/* Phones: one card per level, each listing only what it adds to the one before */
+function Levels({ packs, onDetails }) {
+  return (
+    <ol className="space-y-4 md:hidden">
+      {packs.map((s, i) => {
+        const level = LEVELS[s.tier];
+        return (
+          <li key={s.key} className="rounded-[24px] border border-ink/10 bg-card p-5">
+            <div className="flex items-start gap-4">
+              <PackageIcon s={s} />
+              <div className="min-w-0 flex-1">
+                <h3 className="font-display text-xl font-bold leading-tight tracking-[-0.01em] text-ink">{s.title}</h3>
+                <p className="mt-1 text-[15px] text-muted-foreground">
+                  {level.plan}
+                  {level.planNote && ', ' + level.planNote.toLowerCase()}
+                </p>
+                {s.ribbon && !s.ribbon.own && (
+                  <div className="mt-2">
+                    <Ribbon s={s} />
+                  </div>
+                )}
+              </div>
+            </div>
+            {i === 0 ? (
+              <p className="mt-4 text-[15px] leading-relaxed text-ink/80">You arrange hosting and the domain yourself.</p>
+            ) : (
+              <>
+                <p className="mt-4 text-[15px] text-ink/70">{i === 1 ? 'The same site, plus:' : 'Everything in ' + packs[i - 1].title + ', plus:'}</p>
+                <ul className="mt-2.5 space-y-2">
+                  {level.adds.map((a) => (
+                    <li key={a} className="flex items-start gap-2.5 text-[15px] font-semibold text-ink">
+                      <Tick className="mt-0.5" />
+                      {a}
+                    </li>
+                  ))}
+                </ul>
+              </>
+            )}
+            <Button variant="ghost" size="sm" className="-ml-3 mt-3" onClick={() => onDetails(s.key)} aria-haspopup="dialog">
+              Read more <span className="sr-only">about {s.title}</span>
+            </Button>
+          </li>
+        );
+      })}
+    </ol>
+  );
+}
+
+/* The Custom tab's two packages aren't levels of one another, so they stay as cards */
+function CustomCard({ s, onDetails }) {
+  return (
+    <article className="flex flex-col rounded-[24px] border border-ink/10 bg-card p-6 md:p-7">
+      <PackageIcon s={s} />
+      <h3 className="mt-5 font-display text-2xl font-bold tracking-[-0.02em] text-ink">{s.title}</h3>
+      <p className="mt-1 text-muted-foreground">{s.tagline}</p>
+      <ul className="mt-5 flex-1 space-y-2.5">
+        {s.features.map((f) => (
+          <li key={f} className="flex items-start gap-2.5 text-[15px] font-semibold text-ink">
+            <Tick className="mt-0.5" />
+            {f}
+          </li>
+        ))}
+      </ul>
+      <Button variant="ghost" size="sm" className="-ml-3 mt-5 self-start" onClick={() => onDetails(s.key)} aria-haspopup="dialog">
+        Read more <span className="sr-only">about {s.title}</span>
+      </Button>
+    </article>
+  );
+}
 
 /* One recent build in a browser window, with the others of its package a click away. Its tour
    plays only when asked: the mouse over the window, or the button (touch and keyboard). The video
@@ -63,7 +268,7 @@ function ExampleBuild({ list, tab }) {
   };
 
   return (
-    <div className="rounded-[24px] border border-ink/10 bg-card p-4">
+    <div className="grid items-center gap-5 rounded-[24px] border border-ink/10 bg-card p-4 md:grid-cols-[1.25fr_1fr] md:gap-8 md:p-5">
       <div
         onPointerEnter={(e) => e.pointerType === 'mouse' && play()}
         onPointerLeave={(e) => e.pointerType === 'mouse' && stop()}
@@ -83,7 +288,7 @@ function ExampleBuild({ list, tab }) {
           </div>
         </BrowserFrame>
       </div>
-      <div className="px-2 pb-2 pt-5">
+      <div className="px-2 pb-2 md:px-0 md:pb-0 md:pr-4">
         <p className="font-display text-xl font-bold text-ink">{ex.name}</p>
         <p className="mt-0.5 text-sm font-semibold text-orange-ink">A recent {tab} build</p>
         <p className="mt-1 text-[15px] leading-relaxed text-muted-foreground">{ex.note}</p>
@@ -107,67 +312,32 @@ function ExampleBuild({ list, tab }) {
   );
 }
 
+/* Shared by every tab, so it sits under them: what any package comes with, and the one booking button */
 function Included() {
   return (
-    <div className="rounded-[24px] border border-ink/10 bg-sand/70 p-6">
-      <h2 className="font-display text-lg font-bold text-ink">Every package includes</h2>
-      <ul className="mt-4 space-y-2.5">
-        {INCLUDED.map((x) => (
-          <li key={x} className="flex items-center gap-3 font-semibold text-ink">
-            <span className="grid size-5 place-items-center rounded-full bg-ink text-cream">
-              <Check aria-hidden="true" className="size-3" strokeWidth={3} />
-            </span>
-            {x}
-          </li>
-        ))}
-      </ul>
-      <p className="mt-5 border-t border-ink/10 pt-4 text-sm leading-relaxed text-muted-foreground">
-        No fixed price list. Each package is scoped and quoted around your project, and agreed before any work starts.
-      </p>
-    </div>
-  );
-}
-
-function PackageCard({ s, onDetails }) {
-  const Icon = KIND_ICON[s.iconKind] || KIND_ICON.key;
-  return (
-    <article className="rounded-[24px] border border-ink/10 bg-card p-6 transition-shadow hover:shadow-md md:p-7">
-      <div className="flex items-start gap-4">
-        <span className="grid size-12 shrink-0 place-items-center rounded-xl bg-orange-tint text-orange-ink">
-          <Icon aria-hidden="true" className="size-6" />
-        </span>
-        <div className="min-w-0 flex-1">
-          <div className="flex flex-wrap items-center gap-2">
-            <span className="font-display text-xs font-bold uppercase tracking-[0.16em] text-ink/65">{s.tierLabel}</span>
-            {s.ribbon && <Badge variant={s.ribbon.own ? 'dark' : 'primary'}>{s.ribbon.text}</Badge>}
-          </div>
-          <h3 className="mt-1 font-display text-2xl font-bold tracking-[-0.02em] text-ink">{s.title}</h3>
-          <p className="mt-1 text-muted-foreground">{s.tagline}</p>
-        </div>
-      </div>
-      <ul className="mt-5 grid gap-x-6 gap-y-2.5 sm:grid-cols-2">
-        {s.features.map((f) => {
-          const item = typeof f === 'string' ? { text: f, type: 'standard' } : f;
-          const FIcon = FEATURE_ICON[item.type] || FEATURE_ICON.standard;
-          return (
-            <li key={item.text} className="flex items-start gap-2.5 text-[15px] font-semibold text-ink">
-              <span className={cn('mt-0.5 grid size-5 shrink-0 place-items-center rounded-full', FEATURE_TONE[item.type] || FEATURE_TONE.standard)}>
-                <FIcon aria-hidden="true" className="size-3" strokeWidth={3} />
-              </span>
-              {item.text}
+    <div className="mt-10 grid gap-6 rounded-[24px] bg-sand/70 p-6 md:mt-12 md:p-8 lg:grid-cols-[1.3fr_1fr] lg:items-center lg:gap-12">
+      <div>
+        <h2 className="font-display text-xl font-bold text-ink">Every package includes</h2>
+        <ul className="mt-4 grid gap-x-6 gap-y-2.5 sm:grid-cols-2">
+          {INCLUDED.map((x) => (
+            <li key={x} className="flex items-start gap-3 font-semibold text-ink">
+              <Tick className="mt-0.5" />
+              {x}
             </li>
-          );
-        })}
-      </ul>
-      <div className="mt-6 flex flex-wrap items-center gap-3 border-t border-ink/10 pt-5">
-        <Button asChild>
-          <Link to="/quote">Book a consultation</Link>
-        </Button>
-        <Button variant="ghost" onClick={() => onDetails(s.key)} aria-haspopup="dialog">
-          Read more <span className="sr-only">about {s.title}</span>
+          ))}
+        </ul>
+      </div>
+      <div className="border-t border-ink/10 pt-6 lg:border-l lg:border-t-0 lg:pl-12 lg:pt-0">
+        <p className="leading-relaxed text-muted-foreground">
+          No fixed price list. Each package is scoped and quoted around your project, and agreed before any work starts. Not sure which suits you? Ask in the free consultation.
+        </p>
+        <Button asChild className="mt-5">
+          <Link to="/quote">
+            Book a consultation <ArrowRight />
+          </Link>
         </Button>
       </div>
-    </article>
+    </div>
   );
 }
 
@@ -196,7 +366,6 @@ export default function Services() {
         title="Websites built around"
         accent="your business."
         sub="Websites for small businesses across the UK. Every project is scoped and quoted around what you actually need."
-        chips={['Quoted per project', 'Mobile-first design', 'UK-based', 'Plain English']}
       />
 
       <section id="services" className="bg-background pb-24 md:pb-32">
@@ -220,22 +389,33 @@ export default function Services() {
             </TabsList>
 
             {SERVICE_TABS.map((t) => {
+              const packs = SERVICES.filter((s) => s.category === t.id);
               const builds = EXAMPLES.filter((e) => e.pack === t.id);
+              const levelled = packs.every((s) => LEVELS[s.tier]);
               return (
-                <TabsContent key={t.id} value={t.id} forceMount className="mt-8 grid gap-6 data-[state=inactive]:hidden lg:grid-cols-[0.8fr_1.2fr] lg:gap-8">
-                  <aside className="space-y-6 lg:sticky lg:top-28 lg:self-start">
-                    {builds.length > 0 && <ExampleBuild list={builds} tab={t.id} />}
-                    <Included />
-                  </aside>
-                  <div className="space-y-5">
-                    {SERVICES.filter((s) => s.category === t.id).map((s) => (
-                      <PackageCard key={s.key} s={s} onDetails={setModalKey} />
-                    ))}
-                  </div>
+                <TabsContent key={t.id} value={t.id} forceMount className="mt-8 space-y-6 data-[state=inactive]:hidden">
+                  {levelled ? (
+                    <>
+                      <p className="max-w-2xl text-lg leading-relaxed text-muted-foreground">
+                        Every {t.label} package is {SITE[t.id]}, designed for phones first, with a contact form and Google Maps. Here’s what changes between them.
+                      </p>
+                      <Compare packs={packs} tab={t} onDetails={setModalKey} />
+                      <Levels packs={packs} onDetails={setModalKey} />
+                    </>
+                  ) : (
+                    <div className="grid gap-5 md:grid-cols-2">
+                      {packs.map((s) => (
+                        <CustomCard key={s.key} s={s} onDetails={setModalKey} />
+                      ))}
+                    </div>
+                  )}
+                  {builds.length > 0 && <ExampleBuild list={builds} tab={t.id} />}
                 </TabsContent>
               );
             })}
           </Tabs>
+
+          <Included />
         </div>
       </section>
 
