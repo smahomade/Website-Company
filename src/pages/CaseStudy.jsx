@@ -35,7 +35,7 @@ export default function CaseStudy() {
   return (
     <div className="leading-normal">
       <Seo title={p.title + ' case study — PixelFold'} description={cs.summary} path={'/portfolio/' + p.id} />
-      <PageHeader label="Case study" title={cs.title} accent={cs.accent} sub={cs.summary} chips={[p.industry, cs.pages, p.typeLabel.replace(' Build', ' build')]}>
+      <PageHeader title={cs.title} accent={cs.accent} sub={cs.summary} chips={[p.industry, cs.pages, p.typeLabel.replace(' Build', ' build')]}>
         {p.liveUrl && (
           <Button asChild size="lg">
             <a href={p.liveUrl} target="_blank" rel="noopener noreferrer">
@@ -104,14 +104,13 @@ export default function CaseStudy() {
         </div>
       </section>
 
-      <Quotes only={p.id} label={'What ' + p.title + ' say'} title="In their" accent="own words." />
+      <Quotes only={p.id} title={'What ' + p.title} accent="say." />
 
       <section className="bg-espresso py-20 md:py-24">
         <div className="mx-auto grid max-w-6xl items-center gap-8 px-5 md:px-8 lg:grid-cols-[1.2fr_0.8fr]">
           <div>
-            <p className="font-display text-sm font-bold uppercase tracking-[0.16em] text-orange-soft">Want something like this?</p>
-            <h2 className="mt-3 font-display text-[clamp(2rem,4vw,3rem)] font-bold leading-[1.06] tracking-[-0.03em] text-cream">Tell us about your project.</h2>
-            <p className="mt-4 text-lg leading-relaxed text-cream/70">We come back within 24 hours with a clear scope, timeline and quote.</p>
+            <h2 className="font-display text-[clamp(2rem,4vw,3rem)] font-bold leading-[1.06] tracking-[-0.03em] text-cream">Want something like this?</h2>
+            <p className="mt-4 text-lg leading-relaxed text-cream/70">Tell us about your project and we’ll come back within 24 hours with a clear scope, timeline and quote.</p>
             <Button asChild size="lg" className="mt-8">
               <Link to="/quote">
                 Book a free consultation <ArrowRight />

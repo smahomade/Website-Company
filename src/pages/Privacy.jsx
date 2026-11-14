@@ -29,7 +29,6 @@ export default function Privacy() {
         path="/privacy"
       />
       <PageHeader
-        label="Privacy and cookies"
         title="Your details,"
         accent="handled properly."
         sub="What PixelFold collects through this website, why, and what you can do about it. If anything here is unclear, email us and we’ll explain."
@@ -39,7 +38,7 @@ export default function Privacy() {
       <div className="max-w-3xl [&_a]:font-semibold [&_a]:text-ink [&_a]:underline [&_a]:underline-offset-2 [&_a:hover]:text-orange-ink [&_h2]:mt-12 [&_h2]:font-display [&_h2]:text-2xl [&_h2]:font-bold [&_h2]:tracking-[-0.02em] [&_h2]:text-ink [&_p]:mt-4 [&_p]:text-[17px] [&_p]:leading-relaxed [&_p]:text-ink/80 [&_ul]:mt-4 [&_ul]:list-disc [&_ul]:space-y-2 [&_ul]:pl-6 [&_ul]:text-[17px] [&_ul]:leading-relaxed [&_ul]:text-ink/80 [&_ul]:marker:text-orange-ink">
         <p className="!mt-0 text-sm !text-muted-foreground">Last updated {UPDATED}</p>
 
-        <div className="mt-6 flex flex-col gap-4 rounded-[24px] border border-ink/10 bg-card p-6 shadow-sm sm:flex-row sm:items-center sm:justify-between">
+        <div className="mt-6 flex flex-col gap-4 rounded-[24px] border border-ink/10 bg-card p-6 sm:flex-row sm:items-center sm:justify-between">
           <div>
             <h2 className="!mt-0 !text-xl">Your cookie choice</h2>
             <p className="!mt-1.5 !text-[15px]">

@@ -34,7 +34,6 @@ export default function Process() {
       <PinnedSteps steps={STEPS}>
         <SectionHeading
           align="center"
-          label="How it works"
           title="From first chat"
           accent="to launch day."
           sub="Four steps, and we explain each one in plain English as we go."

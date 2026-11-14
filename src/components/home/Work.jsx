@@ -36,7 +36,6 @@ export default function Work() {
       <div className="mx-auto flex max-w-6xl flex-col gap-6 px-5 pt-24 md:flex-row md:items-end md:justify-between md:px-8 md:pt-32">
         <SectionHeading
           tone="dark"
-          label="Recent work"
           title="Websites already working"
           accent="for real businesses."
           sub="Every one is live today. Scroll through them, then open any of them to read the case study."

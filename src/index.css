@@ -28,6 +28,8 @@
   }
   html {
     scroll-padding-top: 96px; /* anchors land below the floating nav */
+    scrollbar-color: rgba(17, 17, 17, 0.32) #fffdf8;
+    accent-color: #ff6a00;
   }
   @media (prefers-reduced-motion: no-preference) {
     html { scroll-behavior: smooth; }
@@ -47,6 +49,14 @@
   ::selection {
     background: #ff6a00;
     color: #111111;
+  }
+  input,
+  textarea,
+  select {
+    caret-color: #ff6a00;
+  }
+  a {
+    text-underline-offset: 0.2em;
   }
   /* the skip link moves focus here; no ring round the whole page */
   #main:focus {

@@ -11,7 +11,7 @@ const STEPS = [
 export default function NextSteps({ title = 'What happens next', className }) {
   return (
     <div className={cn('rounded-[24px] border border-ink/10 bg-sand/70 p-6 md:p-7', className)}>
-      <p className="font-display text-sm font-bold uppercase tracking-[0.16em] text-orange-ink">{title}</p>
+      <h2 className="font-display text-lg font-bold text-ink">{title}</h2>
       <ol className="mt-5 space-y-5">
         {STEPS.map((s, i) => (
           <li key={s.t} className="flex gap-4">

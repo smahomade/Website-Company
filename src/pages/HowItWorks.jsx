@@ -34,7 +34,7 @@ const STEPS = [
   {
     stage: 'Build',
     title: 'Then we build it properly.',
-    body: 'Clean, fast and mobile-first, tested on real devices until it’s right. You see progress as it happens, not a big reveal at the end.',
+    body: 'Clean, fast and mobile-first, and tested on real devices. You see progress as it happens, not a big reveal at the end.',
     visual: (
       <BeforeAfter
         before={R2 + '/screenshots/Raza/FullWebsiteScreenieRaza-old/razaacademy.co.uk_.jpg'}
@@ -51,7 +51,7 @@ const STEPS = [
     visual: (
       <ul className="grid gap-4">
         {PILLARS.map(({ icon: Icon, title, text }) => (
-          <li key={title} className="flex items-center gap-4 rounded-[22px] border border-ink/10 bg-card p-5 shadow-sm">
+          <li key={title} className="flex items-center gap-4 rounded-[22px] border border-ink/10 bg-card p-5">
             <span className="grid size-12 shrink-0 place-items-center rounded-xl bg-orange-tint text-orange-ink">
               <Icon aria-hidden="true" className="size-6" />
             </span>
@@ -66,15 +66,14 @@ const STEPS = [
   },
 ];
 
+/* The two places people start from: the question is the heading */
 const STARTS = [
   {
-    label: 'Already have a site?',
-    title: 'We’ll tell you whether to fix it or start over.',
-    text: 'Bring the link. We’ll look at what’s working, what isn’t, and give you a straight answer before any work begins.',
+    title: 'Already have a site?',
+    text: 'Bring the link. We’ll look at what’s working and what isn’t, and tell you whether to fix it or start over before any work begins.',
   },
   {
-    label: 'Starting from scratch?',
-    title: 'Easier than you think.',
+    title: 'Starting from scratch?',
     text: 'A logo if you have one, a couple of sites you like the look of, and a few sentences about what you do. That’s enough to begin.',
   },
 ];
@@ -91,7 +90,6 @@ export default function HowItWorks() {
         path="/how-it-works"
       />
       <PageHeader
-        label="How it works"
         title="Three steps."
         accent="Plain English."
         sub="A conversation, a build you can watch take shape, and a handover that’s actually explained."
@@ -109,8 +107,7 @@ export default function HowItWorks() {
             <article key={s.stage} data-reveal className="grid items-center gap-10 lg:grid-cols-2 lg:gap-16">
               <div className={cn(i % 2 && 'lg:order-2')}>
                 <span aria-hidden="true" className="font-hand text-6xl font-bold leading-none text-orange-ink">{'0' + (i + 1)}</span>
-                <p className="mt-4 font-display text-sm font-bold uppercase tracking-[0.16em] text-orange-ink">{s.stage}</p>
-                <h2 className="mt-2 font-display text-[clamp(2rem,4vw,3rem)] font-bold leading-[1.06] tracking-[-0.03em] text-ink text-balance">{s.title}</h2>
+                <h2 className="mt-4 font-display text-[clamp(2rem,4vw,3rem)] font-bold leading-[1.06] tracking-[-0.03em] text-ink text-balance">{s.title}</h2>
                 <p className="mt-5 max-w-lg text-lg leading-relaxed text-muted-foreground">{s.body}</p>
               </div>
               <div className={cn(i % 2 && 'lg:order-1')}>{s.visual}</div>
@@ -122,9 +119,8 @@ export default function HowItWorks() {
       <section className="bg-espresso py-24 md:py-28">
         <div className="mx-auto grid max-w-6xl gap-5 px-5 md:grid-cols-2 md:px-8">
           {STARTS.map((s, i) => (
-            <div key={s.label} data-reveal style={{ '--reveal-i': i }} className="rounded-[28px] border border-cream/10 bg-[#24211d] p-8 md:p-10">
-              <p className="font-display text-sm font-bold uppercase tracking-[0.16em] text-orange-soft">{s.label}</p>
-              <h2 className="mt-3 font-display text-3xl font-bold leading-tight tracking-[-0.02em] text-cream text-balance">{s.title}</h2>
+            <div key={s.title} data-reveal style={{ '--reveal-i': i }} className="rounded-[28px] border border-cream/10 bg-[#24211d] p-8 md:p-10">
+              <h2 className="font-display text-3xl font-bold leading-tight tracking-[-0.02em] text-cream text-balance">{s.title}</h2>
               <p className="mt-4 text-lg leading-relaxed text-cream/70">{s.text}</p>
             </div>
           ))}

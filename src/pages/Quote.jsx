@@ -390,7 +390,6 @@ export default function Quote() {
         path="/quote"
       />
       <PageHeader
-        label="Free quote"
         title="Tell us about"
         accent="your project."
         sub="A short brief, about two minutes. We’ll come back within 24 hours with a clear scope, timeline and quote. No obligation."
@@ -420,7 +419,7 @@ export default function Quote() {
               </div>
             </fieldset>
 
-            <div className="rounded-[28px] border border-ink/10 bg-card p-6 shadow-sm md:p-9">
+            <div className="rounded-[28px] border border-ink/10 bg-card p-6 md:p-9">
               <div hidden={intent !== 'new'}>
                 <NewWebsiteBrief />
               </div>
@@ -432,7 +431,7 @@ export default function Quote() {
 
           <aside className="space-y-6 lg:sticky lg:top-28 lg:self-start">
             <NextSteps title="After you send your brief" />
-            <div className="rounded-[24px] border border-ink/10 bg-card p-6 shadow-sm">
+            <div className="rounded-[24px] border border-ink/10 bg-card p-6">
               <p className="font-display text-lg font-bold text-ink">Rather talk it through?</p>
               <p className="mt-1 text-[15px] leading-relaxed text-muted-foreground">Send a message and we’ll arrange a quick call when it suits you.</p>
               <div className="mt-5 flex flex-col gap-2">

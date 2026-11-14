@@ -14,7 +14,7 @@ const SUBJECTS = ['I need a new website', 'I want to redesign my existing site',
 /* The ways to reach us besides the form. WhatsApp first: calls from unknown numbers often get
    lost among spam. */
 function Ways() {
-  const card = 'flex gap-4 rounded-[22px] border border-ink/10 bg-card p-5 shadow-sm';
+  const card = 'flex gap-4 rounded-[22px] border border-ink/10 bg-card p-5';
   const icon = 'grid size-11 shrink-0 place-items-center rounded-xl';
   return (
     <ul className="space-y-3">
@@ -97,7 +97,6 @@ export default function Contact() {
         path="/contact"
       />
       <PageHeader
-        label="Contact"
         title="Let’s talk about"
         accent="your website."
         sub="Need a new site, or help with the one you’ve got? Send a message and we’ll reply within 24 hours. Every conversation starts with a free, no-obligation chat."
@@ -113,7 +112,7 @@ export default function Contact() {
           </div>
 
           {/* the form first on phones; beside the other ways from lg up */}
-          <div className="max-lg:order-first rounded-[28px] border border-ink/10 bg-card p-6 shadow-sm md:p-9">
+          <div className="max-lg:order-first rounded-[28px] border border-ink/10 bg-card p-6 md:p-9">
             {status === 'sent' ? (
               <SentPanel title="Message sent!" text="Thanks for getting in touch. We’ll get back to you within 24 hours, usually the same day." />
             ) : (

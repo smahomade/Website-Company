@@ -2,10 +2,10 @@ import { Check } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 /* The top of every inner page, in the home hero's style: the faint dot grid and warm glow, a
-   small label, the heading with its accent words under an orange highlighter stroke (it wraps
+   heading with its accent words under an orange highlighter stroke (it wraps
    with the words), a line underneath, ticks, any buttons (children), and an optional picture on
    the right (aside). */
-export default function PageHeader({ label, title, accent, sub, chips = [], aside, className, children }) {
+export default function PageHeader({ title, accent, sub, chips = [], aside, className, children }) {
   return (
     <section className={cn('relative isolate overflow-hidden bg-background pb-14 pt-32 leading-normal md:pb-20 md:pt-40', className)}>
       <div
@@ -18,8 +18,7 @@ export default function PageHeader({ label, title, accent, sub, chips = [], asid
       />
       <div className={cn('mx-auto max-w-6xl px-5 md:px-8', aside && 'grid items-center gap-12 lg:grid-cols-[1.1fr_0.9fr]')}>
         <div className="max-w-3xl">
-          <p className="font-display text-sm font-bold uppercase tracking-[0.16em] text-orange-ink">{label}</p>
-          <h1 className="mt-4 font-display text-[clamp(2.6rem,6vw,4.6rem)] font-bold leading-[1.02] tracking-[-0.04em] text-ink text-balance">
+          <h1 className="font-display text-[clamp(2.6rem,6vw,4.6rem)] font-bold leading-[1.02] tracking-[-0.035em] text-ink text-balance">
             {title}
             {accent && (
               <>

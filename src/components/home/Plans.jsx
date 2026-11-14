@@ -9,7 +9,6 @@ import SectionHeading from './SectionHeading.jsx';
 const PLANS = [
   {
     icon: KeyRound,
-    tag: 'Build only',
     title: 'One-off build',
     desc: 'We build your website and hand it over completely. You own it outright.',
     points: ['Full design and build', 'One round of revisions', 'Full ownership, yours to keep', 'Domain and hosting guidance'],
@@ -18,7 +17,6 @@ const PLANS = [
   },
   {
     icon: LifeBuoy,
-    tag: 'Managed for you',
     title: 'Monthly plan',
     desc: 'We build your site and look after it afterwards: hosting, security and updates.',
     points: ['Everything in the one-off build', 'Hosting and security managed', 'Ongoing changes and updates', 'Priority support'],
@@ -36,7 +34,7 @@ function PlanCard({ plan, i }) {
       style={{ '--reveal-i': i }}
       className={cn(
         'relative flex flex-col rounded-[28px] border p-7 md:p-9',
-        featured ? 'border-ink bg-ink text-cream shadow-lg' : 'border-ink/10 bg-card text-ink shadow-sm'
+        featured ? 'border-ink bg-ink text-cream shadow-lg' : 'border-ink/10 bg-card text-ink'
       )}
     >
       <div className="flex items-start justify-between gap-4">
@@ -45,8 +43,7 @@ function PlanCard({ plan, i }) {
         </span>
         {featured && <Badge variant="primary">Most popular</Badge>}
       </div>
-      <p className={cn('mt-6 font-display text-xs font-bold uppercase tracking-[0.16em]', featured ? 'text-orange-soft' : 'text-orange-ink')}>{plan.tag}</p>
-      <h3 className={cn('mt-2 font-display text-3xl font-bold tracking-[-0.02em]', featured ? 'text-cream' : 'text-ink')}>{plan.title}</h3>
+      <h3 className={cn('mt-6 font-display text-3xl font-bold tracking-[-0.02em]', featured ? 'text-cream' : 'text-ink')}>{plan.title}</h3>
       <p className={cn('mt-3 leading-relaxed', featured ? 'text-cream/70' : 'text-muted-foreground')}>{plan.desc}</p>
 
       <ul className="mt-7 space-y-3">
@@ -85,7 +82,6 @@ export default function Plans() {
       <div className="mx-auto max-w-6xl px-5 md:px-8">
         <SectionHeading
           align="center"
-          label="Two ways to work with us"
           title="Own it outright,"
           accent="or let us keep it tidy."
           sub="We build your site either way. The difference is who looks after it afterwards. Both are quoted per project after a free consultation."

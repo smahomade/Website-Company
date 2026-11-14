@@ -17,7 +17,7 @@ const host = (url) => url.replace(/^https?:\/\//, '').replace(/\/$/, '');
 function ProjectCard({ p, i, onPages }) {
   const shot = p.caseStudy ? p.caseStudy.shots + '-1-' : null;
   return (
-    <article data-reveal style={{ '--reveal-i': i % 2 }} className="group flex flex-col overflow-hidden rounded-[28px] border border-ink/10 bg-card shadow-sm transition-shadow hover:shadow-lg">
+    <article data-reveal style={{ '--reveal-i': i % 2 }} className="group flex flex-col overflow-hidden rounded-[28px] border border-ink/10 bg-card transition-shadow hover:shadow-lg">
       <div className="relative overflow-hidden border-b border-ink/[0.08] bg-sand">
         <img
           src={shot ? shot + '1000.webp' : p.preview}
@@ -87,7 +87,6 @@ export default function Portfolio() {
         path="/portfolio"
       />
       <PageHeader
-        label="Portfolio"
         title="Real websites for"
         accent="real businesses."
         sub="All of them live today. Open any one to flick through every page, or read the case study behind it."
@@ -104,8 +103,7 @@ export default function Portfolio() {
             <span className="grid size-20 place-items-center rounded-[24px] bg-cream p-2.5 shadow-sm">
               <img src={LOGO.mark} alt="" width="202" height="205" className="h-auto w-full" />
             </span>
-            <p className="mt-6 font-display text-sm font-bold uppercase tracking-[0.16em] text-orange-ink">Next up</p>
-            <h2 className="mt-2 font-display text-3xl font-bold tracking-[-0.02em] text-ink">Your website could be here.</h2>
+            <h2 className="mt-6 font-display text-3xl font-bold tracking-[-0.02em] text-ink">Your website could be here.</h2>
             <p className="mt-3 max-w-md leading-relaxed text-muted-foreground">
               We’re taking on new projects. Tell us what you need and we’ll come back within 24 hours with a plan.
             </p>

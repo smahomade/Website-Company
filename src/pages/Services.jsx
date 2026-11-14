@@ -64,7 +64,7 @@ function ExampleBuild({ list, tab }) {
   };
 
   return (
-    <div className="rounded-[24px] border border-ink/10 bg-card p-4 shadow-sm">
+    <div className="rounded-[24px] border border-ink/10 bg-card p-4">
       <div
         onPointerEnter={(e) => e.pointerType === 'mouse' && play()}
         onPointerLeave={(e) => e.pointerType === 'mouse' && stop()}
@@ -85,10 +85,8 @@ function ExampleBuild({ list, tab }) {
         </BrowserFrame>
       </div>
       <div className="px-2 pb-2 pt-5">
-        <p className="font-display text-xs font-bold uppercase tracking-[0.16em] text-orange-ink">
-          Recent {tab} build{list.length > 1 ? 's' : ''}
-        </p>
-        <p className="mt-1.5 font-display text-xl font-bold text-ink">{ex.name}</p>
+        <p className="font-display text-xl font-bold text-ink">{ex.name}</p>
+        <p className="mt-0.5 text-sm font-semibold text-orange-ink">A recent {tab} build</p>
         <p className="mt-1 text-[15px] leading-relaxed text-muted-foreground">{ex.note}</p>
         {list.length > 1 && (
           <div role="group" aria-label="Choose a build" className="mt-4 flex flex-wrap gap-2">
@@ -113,7 +111,7 @@ function ExampleBuild({ list, tab }) {
 function Included() {
   return (
     <div className="rounded-[24px] border border-ink/10 bg-sand/70 p-6">
-      <p className="font-display text-sm font-bold uppercase tracking-[0.16em] text-orange-ink">Every package includes</p>
+      <h2 className="font-display text-lg font-bold text-ink">Every package includes</h2>
       <ul className="mt-4 space-y-2.5">
         {INCLUDED.map((x) => (
           <li key={x} className="flex items-center gap-3 font-semibold text-ink">
@@ -134,7 +132,7 @@ function Included() {
 function PackageCard({ s, onDetails }) {
   const Icon = KIND_ICON[s.iconKind] || KIND_ICON.key;
   return (
-    <article className="rounded-[24px] border border-ink/10 bg-card p-6 shadow-sm transition-shadow hover:shadow-md md:p-7">
+    <article className="rounded-[24px] border border-ink/10 bg-card p-6 transition-shadow hover:shadow-md md:p-7">
       <div className="flex items-start gap-4">
         <span className="grid size-12 shrink-0 place-items-center rounded-xl bg-orange-tint text-orange-ink">
           <Icon aria-hidden="true" className="size-6" />
@@ -198,7 +196,6 @@ export default function Services() {
         path="/services"
       />
       <PageHeader
-        label="Services"
         title="Websites built around"
         accent="your business."
         sub="Websites for small businesses across the UK. Every project is scoped and quoted around what you actually need."
@@ -247,10 +244,10 @@ export default function Services() {
 
       <section className="bg-sand/70 py-24 md:py-32">
         <div className="mx-auto max-w-6xl px-5 md:px-8">
-          <SectionHeading label="What to expect" title="How a project runs," accent="start to finish." />
+          <SectionHeading title="How a project runs," accent="start to finish." />
           <ol className="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
             {EXPECT.map((e, i) => (
-              <li key={e.t} data-reveal style={{ '--reveal-i': i }} className="rounded-[24px] border border-ink/10 bg-card p-6 shadow-sm">
+              <li key={e.t} data-reveal style={{ '--reveal-i': i }} className="rounded-[24px] border border-ink/10 bg-card p-6">
                 <span aria-hidden="true" className="font-hand text-[42px] font-bold leading-none text-orange-ink">{'0' + (i + 1)}</span>
                 <p className="mt-3 font-display text-lg font-bold text-ink">{e.t}</p>
                 <p className="mt-1.5 text-[15px] leading-relaxed text-muted-foreground">{e.d}</p>
@@ -262,7 +259,7 @@ export default function Services() {
 
       <section className="bg-espresso py-24 text-cream md:py-32">
         <div className="mx-auto max-w-6xl px-5 md:px-8">
-          <SectionHeading tone="dark" label="Ready when you are" title="Tell us about" accent="your project." />
+          <SectionHeading tone="dark" title="Tell us about" accent="your project." />
           <div className="mt-12 grid gap-5 md:grid-cols-3">
             <div data-reveal className="flex flex-col rounded-[24px] bg-primary p-7 text-ink">
               <span className="grid size-12 place-items-center rounded-xl bg-ink text-cream">

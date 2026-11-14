@@ -46,10 +46,11 @@ export default function SiteFooter() {
   return (
     <footer className="relative overflow-hidden bg-ink leading-normal text-cream/70">
       <div className="relative mx-auto max-w-6xl px-5 pt-16 pb-8 md:px-8 md:pt-20">
-        <div className="grid gap-12 sm:grid-cols-2 lg:grid-cols-[1.5fr_1fr_1.15fr_1.15fr]">
-          <div>
+        <div className="grid grid-cols-2 gap-x-6 gap-y-12 lg:grid-cols-[1.5fr_1fr_1.15fr_1.15fr]">
+          <div className="col-span-2 lg:col-span-1">
             <Logo tone="dark" />
-            <p className="mt-5 max-w-xs text-[15px] leading-relaxed">
+            <p className="mt-5 font-display text-lg font-semibold text-cream">Little files. Big ideas.</p>
+            <p className="mt-2 max-w-xs text-[15px] leading-relaxed">
               Websites for small businesses that want to look professional and get more enquiries.
             </p>
             <div className="mt-6 flex gap-2">

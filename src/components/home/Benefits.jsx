@@ -3,50 +3,40 @@ import { LOGO } from '@/lib/site.js';
 import { cn } from '@/lib/utils';
 import SectionHeading from './SectionHeading.jsx';
 
-/* A tiny page drawn in blocks: three columns on the desktop, stacked on the phone */
-function MiniSite({ phone }) {
-  return (
-    <div className="flex h-full flex-col gap-1.5 p-2">
-      <div className="flex items-center justify-between">
-        <span className="h-1.5 w-6 rounded-full bg-ink/70" />
-        {phone ? (
-          <span className="h-1.5 w-3 rounded-full bg-ink/25" />
-        ) : (
-          <span className="flex gap-1">
-            <span className="h-1 w-4 rounded-full bg-ink/20" />
-            <span className="h-1 w-4 rounded-full bg-ink/20" />
-            <span className="h-1 w-4 rounded-full bg-ink/20" />
-          </span>
-        )}
-      </div>
-      <div className="rounded-md bg-orange-tint p-2">
-        <span className="block h-1.5 w-3/4 rounded-full bg-ink/70" />
-        <span className="mt-1 block h-1.5 w-1/2 rounded-full bg-ink/30" />
-        <span className="mt-2 block h-2.5 w-8 rounded-full bg-primary" />
-      </div>
-      <div className={cn('grid gap-1.5', phone ? 'grid-cols-1' : 'grid-cols-3')}>
-        {[0, 1, 2].map((i) => (
-          <span key={i} className={cn('rounded-md bg-sand', phone ? 'h-5' : 'h-9')} />
-        ))}
-      </div>
-    </div>
-  );
-}
+/* The same client site in a browser window and on a phone: real screenshots, not a drawing */
+const CWT = '/images/home/site-change-work-therapies';
 
 function ScreensVisual() {
   return (
-    <div aria-hidden="true" className="relative h-[210px]">
-      <div className="absolute left-0 top-2 w-[74%] overflow-hidden rounded-xl border border-ink/10 bg-white shadow-md">
+    <div aria-hidden="true" className="relative h-[220px]">
+      <div className="absolute left-0 top-0 w-[82%] overflow-hidden rounded-xl border border-ink/10 bg-white">
         <div className="flex h-6 items-center gap-1 border-b border-ink/[0.08] bg-sand px-2.5">
           <span className="size-1.5 rounded-full bg-ink/20" />
           <span className="size-1.5 rounded-full bg-ink/20" />
           <span className="size-1.5 rounded-full bg-ink/20" />
         </div>
-        <div className="h-[150px]"><MiniSite /></div>
+        <img
+          src={CWT + '-480.webp'}
+          srcSet={CWT + '-480.webp 480w, ' + CWT + '-800.webp 800w'}
+          sizes="(min-width: 1024px) 560px, 80vw"
+          alt=""
+          width="800"
+          height="450"
+          loading="lazy"
+          decoding="async"
+          className="h-[176px] w-full object-cover object-top"
+        />
       </div>
-      <div className="absolute bottom-0 right-[6%] w-[23%] min-w-[92px] overflow-hidden rounded-[18px] border-[5px] border-ink bg-white shadow-lg">
-        <div className="mx-auto mt-1 h-1 w-6 rounded-full bg-ink/80" />
-        <div className="h-[150px]"><MiniSite phone /></div>
+      <div className="absolute bottom-0 right-[3%] w-24 overflow-hidden rounded-[18px] border-4 border-ink bg-ink shadow-lg">
+        <img
+          src="/images/home/phone-change-work-therapies.webp"
+          alt=""
+          width="220"
+          height="476"
+          loading="lazy"
+          decoding="async"
+          className="block h-auto w-full rounded-[13px]"
+        />
       </div>
     </div>
   );
@@ -54,7 +44,7 @@ function ScreensVisual() {
 
 function SearchVisual() {
   return (
-    <div aria-hidden="true" className="rounded-xl border border-ink/10 bg-white p-4 shadow-sm">
+    <div aria-hidden="true" className="rounded-xl border border-ink/10 bg-white p-4">
       <div className="flex items-center gap-2.5">
         <span className="grid size-7 place-items-center rounded-full bg-orange-tint">
           <img src={LOGO.mark} alt="" width="202" height="205" className="size-5" />
@@ -126,7 +116,6 @@ export default function Benefits() {
     <section className="bg-background py-24 md:py-32">
       <div className="mx-auto max-w-6xl px-5 md:px-8">
         <SectionHeading
-          label="Why PixelFold"
           title="What you get"
           accent="with PixelFold."
           sub="The parts of a website that matter most to a small business, and how we handle them."
@@ -138,7 +127,7 @@ export default function Benefits() {
               data-reveal
               style={{ '--reveal-i': i % 3 }}
               className={cn(
-                'flex flex-col justify-between gap-8 rounded-2xl border border-ink/10 bg-card p-6 shadow-sm md:p-7',
+                'flex flex-col justify-between gap-8 rounded-2xl border border-ink/10 bg-card p-6 md:p-7',
                 t.wide && 'md:col-span-2'
               )}
             >

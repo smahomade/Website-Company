@@ -132,11 +132,7 @@ export default function Hero() {
 
       <div className="mx-auto grid max-w-6xl items-center gap-16 px-5 md:px-8 lg:grid-cols-[1.02fr_1fr] lg:gap-12">
         <div>
-          <p className="inline-flex items-center gap-2 rounded-full border border-ink/10 bg-white/70 py-1 pl-1 pr-3.5 font-display text-sm font-semibold text-ink shadow-sm backdrop-blur">
-            <img src={LOGO.mark} alt="" width="202" height="205" className="size-7 rounded-full bg-orange-tint object-contain p-0.5" />
-            Little files. Big ideas.
-          </p>
-          <h1 className="mt-6 font-display text-[clamp(2.9rem,7vw,5.4rem)] font-bold leading-[0.98] tracking-[-0.04em] text-ink">
+          <h1 className="font-display text-[clamp(2.9rem,7vw,5.4rem)] font-bold leading-[0.98] tracking-[-0.035em] text-ink">
             We’ll build
             <br />
             <span className="relative inline-block whitespace-nowrap">
