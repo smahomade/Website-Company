@@ -23,11 +23,11 @@ export const SERVICES = [
     imgClass: 'static',
     tierLabel: 'One-Off',
     title: 'Starter Build',
-    tagline: 'We build it — you take it from there.',
+    tagline: 'We build it, you own it.',
     features: ['1-page website', 'Mobile-friendly design', 'Contact form', 'Google Maps embed'],
     modal: {
       icon: '💻',
-      tag: 'Starter · One-Off',
+      tag: 'Starter · Build',
       title: 'Starter Build',
       desc: 'A clean single-page website built to your brand — handed over to you as finished files with full ownership.',
       meta: [{ icon: '👤', text: 'Ideal for: freelancers, sole traders, new businesses' }],
@@ -48,11 +48,11 @@ export const SERVICES = [
     iconKind: 'cloud',
     category: 'starter',
     tier: 'tier-managed',
-    ribbon: { text: 'Most Popular' },
+    ribbon: { text: 'Recommended' },
     emoji: '📦',
     imgClass: 'static',
     tierLabel: 'Managed',
-    title: 'Starter — We Manage',
+    title: 'Starter Managed',
     tagline: 'Built, hosted, and maintained for you.',
     features: [
       '1-page website',
@@ -65,7 +65,7 @@ export const SERVICES = [
     modal: {
       icon: '📦',
       tag: 'Starter · Managed',
-      title: 'Starter — We Manage',
+      title: 'Starter Managed',
       desc: 'We build your site, put it live, and keep everything running — you just focus on your business.',
       meta: [
         { icon: '👤', text: 'Ideal for: busy owners who’d rather not handle the technical side' },
@@ -92,7 +92,7 @@ export const SERVICES = [
     emoji: '🚀',
     imgClass: 'static',
     tierLabel: 'Priority',
-    title: 'Starter+ — Priority',
+    title: 'Starter Priority',
     tagline: 'Faster support, bigger changes welcome.',
     features: [
       '1-page website',
@@ -104,8 +104,8 @@ export const SERVICES = [
     ],
     modal: {
       icon: '🚀',
-      tag: 'Starter+ · Priority',
-      title: 'Starter+ — Priority',
+      tag: 'Starter · Priority',
+      title: 'Starter Priority',
       desc: 'Everything in Managed, with faster turnarounds and bigger change requests welcome.',
       meta: [
         { icon: '⚡', text: 'Changes turned around under 48 hours' },
@@ -132,8 +132,8 @@ export const SERVICES = [
     emoji: '🧩',
     imgClass: 'dynamic',
     tierLabel: 'Advanced',
-    title: 'Starter+++ — Backend',
-    tagline: 'Full management plus backend features.',
+    title: 'Starter Pro',
+    tagline: 'Everything in Priority, plus customer log-ins.',
     features: [
       '1-page website',
       'Mobile-friendly design',
@@ -145,9 +145,9 @@ export const SERVICES = [
     ],
     modal: {
       icon: '🧩',
-      tag: 'Starter+++ · Backend',
-      title: 'Starter+++ — Backend',
-      desc: 'All priority management perks, plus ongoing backend features like user accounts and login flows.',
+      tag: 'Starter · Pro',
+      title: 'Starter Pro',
+      desc: 'Everything in Priority, plus log-in and sign-up for your customers, and a dashboard or data features where you need them.',
       meta: [
         { icon: '⚡', text: 'Changes under 48 hours' },
         { icon: '⚙', text: 'Backend features supported' },
@@ -178,11 +178,11 @@ export const SERVICES = [
     imgClass: 'dynamic',
     tierLabel: 'One-Off',
     title: 'Business Build',
-    tagline: 'A full multi-page site — yours to keep.',
+    tagline: 'A full multi-page site, yours to keep.',
     features: ['3–6 page website', 'Mobile-friendly design', 'Contact form', 'Google Maps embed'],
     modal: {
       icon: '🏢',
-      tag: 'Business · One-Off',
+      tag: 'Business · Build',
       title: 'Business Build',
       desc: 'A structured multi-page site for your business — built to your brand and handed over in full.',
       meta: [
@@ -206,11 +206,11 @@ export const SERVICES = [
     iconKind: 'cloud',
     category: 'business',
     tier: 'tier-managed',
-    ribbon: { text: 'Most Popular' },
+    ribbon: { text: 'Recommended' },
     emoji: '📦',
     imgClass: 'dynamic',
     tierLabel: 'Managed',
-    title: 'Business — We Manage',
+    title: 'Business Managed',
     tagline: 'Your full site built, hosted, and cared for.',
     features: [
       '3–6 page website',
@@ -223,7 +223,7 @@ export const SERVICES = [
     modal: {
       icon: '📦',
       tag: 'Business · Managed',
-      title: 'Business — We Manage',
+      title: 'Business Managed',
       desc: 'Your full business site built, hosted, and managed end-to-end.',
       meta: [
         { icon: '📄', text: '3–6 pages included' },
@@ -250,7 +250,7 @@ export const SERVICES = [
     emoji: '🚀',
     imgClass: 'dynamic',
     tierLabel: 'Priority',
-    title: 'Business+ — Priority',
+    title: 'Business Priority',
     tagline: 'Fast-tracked updates for your growing business.',
     features: [
       '3–6 page website',
@@ -262,8 +262,8 @@ export const SERVICES = [
     ],
     modal: {
       icon: '🚀',
-      tag: 'Business+ · Priority',
-      title: 'Business+ — Priority',
+      tag: 'Business · Priority',
+      title: 'Business Priority',
       desc: 'Full business site management with priority turnarounds on all change requests.',
       meta: [
         { icon: '⚡', text: 'Changes under 48 hours' },
@@ -290,8 +290,8 @@ export const SERVICES = [
     emoji: '🧩',
     imgClass: 'dynamic',
     tierLabel: 'Advanced',
-    title: 'Business+++ — Backend',
-    tagline: 'Full management with backend power unlocked.',
+    title: 'Business Pro',
+    tagline: 'Everything in Priority, plus customer log-ins.',
     features: [
       '3–6 page website',
       'Mobile-friendly design',
@@ -303,9 +303,9 @@ export const SERVICES = [
     ],
     modal: {
       icon: '🧩',
-      tag: 'Business+++ · Backend',
-      title: 'Business+++ — Backend',
-      desc: 'Everything in Business+ with backend development included — accounts, admin panels, booking systems and more.',
+      tag: 'Business · Pro',
+      title: 'Business Pro',
+      desc: 'Everything in Business Priority, plus the parts behind the scenes: customer accounts, admin panels, booking systems and more.',
       meta: [
         { icon: '⚡', text: 'Changes under 48 hours' },
         { icon: '⚙', text: 'Backend features included' },

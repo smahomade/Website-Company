@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button';
 import { CONTACT } from '@/lib/site.js';
 import { askAgain, getChoice, GA_ID, onChoiceChange } from '@/lib/consent.js';
 
-const UPDATED = '30 October 2026';
+const UPDATED = '14 November 2026';
 
 /* What this site collects, why, for how long, and the visitor's rights, in plain English. Keep it
    in step with the code: the forms (lib/enquiry.js), analytics (lib/consent.js) and anything the
@@ -19,7 +19,7 @@ export default function Privacy() {
     read();
     return onChoiceChange(read);
   }, []);
-  const mail = <a href={'mailto:' + CONTACT.email}>{CONTACT.email}</a>;
+  const form = <Link to="/contact">contact form</Link>;
 
   return (
     <article className="leading-normal">
@@ -31,7 +31,7 @@ export default function Privacy() {
       <PageHeader
         title="Your details,"
         accent="handled properly."
-        sub="What PixelFold collects through this website, why, and what you can do about it. If anything here is unclear, email us and we’ll explain."
+        sub="What PixelFold collects through this website, why, and what you can do about it. If anything here is unclear, message us and we’ll explain."
       />
       {/* the text below is styled from here: headings, paragraphs, lists, links and the table */}
       <div className="mx-auto max-w-6xl px-5 pb-24 md:px-8 md:pb-32">
@@ -57,8 +57,8 @@ export default function Privacy() {
         <h2>Who we are</h2>
         <p>
           PixelFold is a web design studio based in London, UK. We are responsible for the personal information described on
-          this page (the “controller”, in data protection terms). You can reach us at {mail} or on{' '}
-          <a href={CONTACT.phoneHref}>{CONTACT.phone}</a>.
+          this page (the “controller”, in data protection terms). You can reach us through the {form}, or on{' '}
+          <a href={CONTACT.phoneHref}>{CONTACT.phone}</a> by WhatsApp or phone.
         </p>
 
         <h2>When you send us an enquiry</h2>
@@ -73,7 +73,7 @@ export default function Privacy() {
           and on our legitimate interest in answering the people who contact us.
         </p>
 
-        <h2>When you email, call or message us</h2>
+        <h2>When you call or message us</h2>
         <p>
           We use what you send in the same way. WhatsApp messages go through WhatsApp, which is run by Meta under its own
           privacy policy.
@@ -142,8 +142,8 @@ export default function Privacy() {
         <h2>Your rights</h2>
         <p>
           You can ask for a copy of what we hold about you, ask us to correct or delete it, object to how we use it or ask us
-          to limit it, ask for it in a form you can take elsewhere, and withdraw your consent to analytics at any time. Email{' '}
-          {mail} and we’ll reply within one month.
+          to limit it, ask for it in a form you can take elsewhere, and withdraw your consent to analytics at any time. Ask through the{' '}
+          {form} or on WhatsApp and we’ll reply within one month.
         </p>
         <p>
           If you’re unhappy with how we’ve handled your information, you can complain to the Information Commissioner’s Office

@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { Mail, Phone } from 'lucide-react';
+import { Phone } from 'lucide-react';
 import { CONTACT } from '@/lib/site.js';
 import { askAgain } from '@/lib/consent.js';
 import { WhatsAppIcon } from '@/components/Icons.jsx';
@@ -57,9 +57,6 @@ export default function SiteFooter() {
               <a href={CONTACT.whatsapp} target="_blank" rel="noopener noreferrer" aria-label="WhatsApp" className={iconLink}>
                 <WhatsAppIcon size={20} />
               </a>
-              <a href={'mailto:' + CONTACT.email} aria-label="Email" className={iconLink}>
-                <Mail className="size-5" />
-              </a>
               <a href={CONTACT.phoneHref} aria-label="Phone" className={iconLink}>
                 <Phone className="size-5" />
               </a>
@@ -71,7 +68,6 @@ export default function SiteFooter() {
             <h2 className={headingClass}>Contact</h2>
             <ul className="mt-5 space-y-3 text-[15px]">
               <li><a href={CONTACT.phoneHref} className={linkClass}>{CONTACT.phone}</a></li>
-              <li><a href={'mailto:' + CONTACT.email} className={linkClass}>{CONTACT.email}</a></li>
               <li>London, UK</li>
             </ul>
           </div>

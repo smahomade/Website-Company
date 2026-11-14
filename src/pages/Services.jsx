@@ -1,6 +1,6 @@
 import { useLayoutEffect, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { ArrowRight, Check, Mail, MessagesSquare, Minus } from 'lucide-react';
+import { ArrowRight, Check, MessagesSquare, Minus, PenLine } from 'lucide-react';
 import Seo from '@/components/Seo.jsx';
 import PageHeader from '@/components/site/PageHeader.jsx';
 import ServiceDialog from '@/components/site/ServiceDialog.jsx';
@@ -73,7 +73,7 @@ function Tick({ className }) {
   );
 }
 
-/* "Most Popular" from the data; "Own it outright" is the Plan row instead */
+/* "Recommended" from the data; "Own it outright" is the Plan row instead */
 function Ribbon({ s }) {
   return s.ribbon && !s.ribbon.own ? <Badge variant="primary">{s.ribbon.text}</Badge> : null;
 }
@@ -419,12 +419,12 @@ export default function Services() {
             </div>
             <div className="flex flex-col rounded-[24px] border border-cream/10 bg-[#24211d] p-7">
               <span className="grid size-12 place-items-center rounded-xl bg-cream/10 text-cream">
-                <Mail aria-hidden="true" className="size-6" />
+                <PenLine aria-hidden="true" className="size-6" />
               </span>
-              <h3 className="mt-5 font-display text-2xl font-bold text-cream">Send an email</h3>
-              <p className="mt-2 flex-1 leading-relaxed text-cream/70">Email what you need and we’ll reply within 24 hours with next steps.</p>
+              <h3 className="mt-5 font-display text-2xl font-bold text-cream">Send a message</h3>
+              <p className="mt-2 flex-1 leading-relaxed text-cream/70">Write down what you need and we’ll reply within 24 hours with next steps.</p>
               <Button asChild variant="outline-light" className="mt-6 self-start">
-                <a href={'mailto:' + CONTACT.email}>Email us</a>
+                <Link to="/contact">Open the contact form</Link>
               </Button>
             </div>
           </div>

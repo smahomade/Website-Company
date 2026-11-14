@@ -92,8 +92,7 @@ export function ErrorSummary({ errors, summaryRef }) {
 export function SendError() {
   return (
     <p role="alert" className="rounded-2xl border border-destructive/30 bg-destructive/[0.06] p-4 text-[15px] leading-relaxed text-ink">
-      <strong className="font-bold text-destructive">That didn’t send.</strong> Please try again, or email{' '}
-      <a href={'mailto:' + CONTACT.email} className="font-semibold underline underline-offset-2">{CONTACT.email}</a> or{' '}
+      <strong className="font-bold text-destructive">That didn’t send.</strong> Please try again, or{' '}
       <a href={CONTACT.whatsapp} target="_blank" rel="noopener noreferrer" className="font-semibold underline underline-offset-2">
         message us on WhatsApp
       </a>

@@ -40,7 +40,6 @@ export default function Layout() {
       const from = window.location.pathname;
       if (/^\/quote(\/|\?|#|$)/.test(href)) trackEvent('quote_click', { from, label: (a.textContent || '').trim().slice(0, 60) });
       else if (href.startsWith('https://wa.me/')) trackEvent('contact_click', { method: 'whatsapp', from });
-      else if (href.startsWith('mailto:')) trackEvent('contact_click', { method: 'email', from });
       else if (href.startsWith('tel:')) trackEvent('contact_click', { method: 'phone', from });
     };
     document.addEventListener('click', onClick);

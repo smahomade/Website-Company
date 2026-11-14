@@ -1,5 +1,4 @@
 import { Link } from 'react-router-dom';
-import { Mail } from 'lucide-react';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { Button } from '@/components/ui/button';
 import { WhatsAppIcon } from '@/components/Icons.jsx';
@@ -38,9 +37,7 @@ export default function Faq() {
               </a>
             </Button>
             <Button asChild variant="ghost">
-              <a href={'mailto:' + CONTACT.email}>
-                <Mail /> {CONTACT.email}
-              </a>
+              <Link to="/contact">Send a message</Link>
             </Button>
           </div>
         </div>

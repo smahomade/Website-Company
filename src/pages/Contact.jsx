@@ -1,5 +1,5 @@
 import { useRef, useState } from 'react';
-import { ArrowUpRight, Clock, Mail } from 'lucide-react';
+import { ArrowUpRight, Clock } from 'lucide-react';
 import Seo from '@/components/Seo.jsx';
 import PageHeader from '@/components/site/PageHeader.jsx';
 import NextSteps from '@/components/site/NextSteps.jsx';
@@ -29,15 +29,6 @@ function Ways() {
             <span className="sr-only">(opens WhatsApp)</span>
           </a>
           <p className="text-sm leading-relaxed text-muted-foreground">A WhatsApp message is best: calls often get lost among spam.</p>
-        </div>
-      </li>
-      <li className={card}>
-        <span className={icon + ' text-ink'}><Mail aria-hidden="true" className="size-5" /></span>
-        <div className="min-w-0">
-          <p className="font-display font-bold text-ink">Email</p>
-          <a href={'mailto:' + CONTACT.email} className="inline-flex min-h-11 items-center break-all font-semibold text-ink underline-offset-4 hover:text-orange-ink hover:underline">
-            {CONTACT.email}
-          </a>
         </div>
       </li>
       <li className={card}>

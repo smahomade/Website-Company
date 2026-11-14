@@ -1,5 +1,5 @@
 import { useRef, useState } from 'react';
-import { ArrowLeft, ArrowRight, Check, Layers, LayoutTemplate, Mail, PanelsTopLeft, Puzzle, Wrench } from 'lucide-react';
+import { ArrowLeft, ArrowRight, Check, Layers, LayoutTemplate, PanelsTopLeft, Puzzle, Wrench } from 'lucide-react';
 import Seo from '@/components/Seo.jsx';
 import PageHeader from '@/components/site/PageHeader.jsx';
 import NextSteps from '@/components/site/NextSteps.jsx';
@@ -20,16 +20,16 @@ const CATEGORIES = [
 /* The packages under each type; the value is what arrives in the email */
 const TIERS = {
   Starter: [
-    ['Starter — One-Off Build', 'One-off build (you host it)'],
-    ['Starter — We Manage', 'We manage it (hosting included)'],
-    ['Starter+ — Priority', 'Starter+ Priority (fast changes)'],
-    ['Starter+++ — Backend', 'Starter+++ Backend (login features)'],
+    ['Starter Build', 'Starter Build (one-off, you host it)'],
+    ['Starter Managed', 'Starter Managed (hosting included)'],
+    ['Starter Priority', 'Starter Priority (major changes too)'],
+    ['Starter Pro', 'Starter Pro (customer log-ins)'],
   ],
   Business: [
-    ['Business — One-Off Build', 'One-off build (you host it)'],
-    ['Business — We Manage', 'We manage it (hosting included)'],
-    ['Business+ — Priority', 'Business+ Priority (fast changes)'],
-    ['Business+++ — Backend', 'Business+++ Backend (login features)'],
+    ['Business Build', 'Business Build (one-off, you host it)'],
+    ['Business Managed', 'Business Managed (hosting included)'],
+    ['Business Priority', 'Business Priority (major changes too)'],
+    ['Business Pro', 'Business Pro (customer log-ins)'],
   ],
   Custom: [
     ['Custom — Help With Existing Site', 'Help with my existing site (fixes, improvements, support)'],
@@ -433,18 +433,11 @@ export default function Quote() {
             <div className="rounded-[24px] border border-ink/10 bg-card p-6">
               <p className="font-display text-lg font-bold text-ink">Rather talk it through?</p>
               <p className="mt-1 text-[15px] leading-relaxed text-muted-foreground">Send a message and we’ll arrange a quick call when it suits you.</p>
-              <div className="mt-5 flex flex-col gap-2">
-                <Button asChild variant="outline">
-                  <a href={CONTACT.whatsapp} target="_blank" rel="noopener noreferrer">
-                    <WhatsAppIcon size={18} /> WhatsApp us
-                  </a>
-                </Button>
-                <Button asChild variant="ghost">
-                  <a href={'mailto:' + CONTACT.email}>
-                    <Mail /> {CONTACT.email}
-                  </a>
-                </Button>
-              </div>
+              <Button asChild variant="outline" className="mt-5 w-full">
+                <a href={CONTACT.whatsapp} target="_blank" rel="noopener noreferrer">
+                  <WhatsAppIcon size={18} /> WhatsApp us
+                </a>
+              </Button>
             </div>
           </aside>
         </div>

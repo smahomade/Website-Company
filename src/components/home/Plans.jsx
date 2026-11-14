@@ -38,7 +38,7 @@ function PlanCard({ plan, id, hiddenOnPhones }) {
     >
       <div className="flex items-start justify-between gap-4">
         <h3 className={cn('font-display text-3xl font-bold tracking-[-0.02em]', featured ? 'text-cream' : 'text-ink')}>{plan.title}</h3>
-        {featured && <Badge variant="primary" className="mt-2">Most popular</Badge>}
+        {featured && <Badge variant="primary" className="mt-2">Recommended</Badge>}
       </div>
       <p className={cn('mt-3 leading-relaxed', featured ? 'text-cream/70' : 'text-muted-foreground')}>{plan.desc}</p>
 

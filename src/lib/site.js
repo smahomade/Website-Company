@@ -16,7 +16,8 @@ export const CONTACT = {
   phone: '+44 7469 469 061',
   phoneHref: 'tel:+447469469061',
   whatsapp: 'https://wa.me/447469469061',
-  email: 'info@pixelfold.co.uk',
+  /* no email address anywhere on the site, to keep it off spam lists: the forms (EmailJS) and
+     WhatsApp instead */
 };
 export const EMAILJS = {
   publicKey: 'lIvXq3M_cI0eN71RJ',
