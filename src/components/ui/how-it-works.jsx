@@ -17,9 +17,10 @@ function Pin({ className }) {
   );
 }
 
+/* every note is on the logo's yellow note paper; the pins and numbers alternate */
 const THEMES = {
-  orange: { bg: 'bg-orange-tint', text: 'text-orange-ink', border: 'border-primary/15', pin: 'text-primary' },
-  ink: { bg: 'bg-sand', text: 'text-ink', border: 'border-ink/10', pin: 'text-ink' },
+  orange: { bg: 'bg-note', text: 'text-orange-ink', border: 'border-folder/45', pin: 'text-primary' },
+  ink: { bg: 'bg-note', text: 'text-ink', border: 'border-folder/45', pin: 'text-ink' },
 };
 
 /* Where each note sits on wide screens, and its tilt; the thread below is drawn to match */

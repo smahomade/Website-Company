@@ -7,7 +7,7 @@ import { cn } from '@/lib/utils';
    the right (aside). */
 export default function PageHeader({ title, accent, sub, chips = [], aside, className, children }) {
   return (
-    <section className={cn('relative isolate overflow-hidden bg-background pb-14 pt-32 leading-normal md:pb-20 md:pt-40', className)}>
+    <section className={cn('relative isolate overflow-hidden bg-background pb-12 pt-28 leading-normal md:pb-16 md:pt-36', className)}>
       <div
         aria-hidden="true"
         className="pointer-events-none absolute inset-0 -z-10 [background-image:radial-gradient(rgba(17,17,17,0.09)_1px,transparent_1px)] [background-size:22px_22px] [mask-image:radial-gradient(ellipse_75%_70%_at_40%_30%,#000_30%,transparent_100%)]"
@@ -18,7 +18,12 @@ export default function PageHeader({ title, accent, sub, chips = [], aside, clas
       />
       <div className={cn('mx-auto max-w-6xl px-5 md:px-8', aside && 'grid items-center gap-12 lg:grid-cols-[1.1fr_0.9fr]')}>
         <div className="max-w-3xl">
-          <h1 className="font-display text-[clamp(2.6rem,6vw,4.6rem)] font-bold leading-[1.02] tracking-[-0.035em] text-ink text-balance">
+          <h1
+            className={cn(
+              'font-display font-bold leading-[1.02] tracking-[-0.035em] text-ink text-balance',
+              aside ? 'text-[clamp(2.6rem,5vw,3.9rem)]' : 'text-[clamp(2.6rem,6vw,4.6rem)]'
+            )}
+          >
             {title}
             {accent && (
               <>

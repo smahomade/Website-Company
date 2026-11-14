@@ -14,12 +14,14 @@ const SUBJECTS = ['I need a new website', 'I want to redesign my existing site',
 /* The ways to reach us besides the form. WhatsApp first: calls from unknown numbers often get
    lost among spam. */
 function Ways() {
-  const card = 'flex gap-4 rounded-[22px] border border-ink/10 bg-card p-5';
-  const icon = 'grid size-11 shrink-0 place-items-center rounded-xl';
+  const card = 'flex gap-4 rounded-[22px] border border-ink/10 bg-card p-4 md:px-5';
+  const icon = 'grid size-11 shrink-0 place-items-center rounded-full border border-ink/10 bg-white';
   return (
-    <ul className="space-y-3">
+    <div>
+    <h2 className="sr-only">Other ways to reach us</h2>
+    <ul className="space-y-2.5">
       <li className={card}>
-        <span className={icon + ' bg-[#25D366]/15 text-[#128C4B]'}><WhatsAppIcon size={22} /></span>
+        <span className={icon + ' text-[#128C4B]'}><WhatsAppIcon size={20} /></span>
         <div className="min-w-0">
           <p className="font-display font-bold text-ink">WhatsApp or phone</p>
           <a href={CONTACT.whatsapp} target="_blank" rel="noopener noreferrer" className="inline-flex min-h-11 items-center gap-1 font-semibold text-ink underline-offset-4 hover:text-orange-ink hover:underline">
@@ -30,7 +32,7 @@ function Ways() {
         </div>
       </li>
       <li className={card}>
-        <span className={icon + ' bg-orange-tint text-orange-ink'}><Mail aria-hidden="true" className="size-5" /></span>
+        <span className={icon + ' text-ink'}><Mail aria-hidden="true" className="size-5" /></span>
         <div className="min-w-0">
           <p className="font-display font-bold text-ink">Email</p>
           <a href={'mailto:' + CONTACT.email} className="inline-flex min-h-11 items-center break-all font-semibold text-ink underline-offset-4 hover:text-orange-ink hover:underline">
@@ -39,7 +41,7 @@ function Ways() {
         </div>
       </li>
       <li className={card}>
-        <span className={icon + ' bg-sand text-ink'}><Clock aria-hidden="true" className="size-5" /></span>
+        <span className={icon + ' text-ink'}><Clock aria-hidden="true" className="size-5" /></span>
         <div>
           <p className="font-display font-bold text-ink">Hours</p>
           <p className="font-semibold text-ink">Flexible: message any time</p>
@@ -47,6 +49,7 @@ function Ways() {
         </div>
       </li>
     </ul>
+    </div>
   );
 }
 
@@ -100,18 +103,12 @@ export default function Contact() {
         title="Let’s talk about"
         accent="your website."
         sub="Need a new site, or help with the one you’ve got? Send a message and we’ll reply within 24 hours. Every conversation starts with a free, no-obligation chat."
+        aside={<Ways />}
       />
 
       <section className="bg-background pb-24 md:pb-32">
-        <div className="mx-auto grid max-w-6xl gap-10 px-5 md:px-8 lg:grid-cols-[0.85fr_1.15fr] lg:gap-14">
-          <div className="space-y-6">
-            <h2 className="font-display text-2xl font-bold tracking-[-0.02em] text-ink">Other ways to reach us</h2>
-            <Ways />
-            <NextSteps />
-          </div>
-
-          {/* the form first on phones; beside the other ways from lg up */}
-          <div className="max-lg:order-first rounded-[28px] border border-ink/10 bg-card p-6 md:p-9">
+        <div className="mx-auto grid max-w-6xl gap-10 px-5 md:px-8 lg:grid-cols-[1.15fr_0.85fr] lg:gap-14">
+          <div className="rounded-[28px] border border-ink/10 bg-card p-6 md:p-9">
             {status === 'sent' ? (
               <SentPanel title="Message sent!" text="Thanks for getting in touch. We’ll get back to you within 24 hours, usually the same day." />
             ) : (
@@ -157,6 +154,7 @@ export default function Contact() {
               </form>
             )}
           </div>
+          <NextSteps className="lg:sticky lg:top-28 lg:self-start" />
         </div>
       </section>
     </div>

@@ -3,11 +3,10 @@ import { ArrowRight, Cloud, Globe, ShieldCheck } from 'lucide-react';
 import Seo from '@/components/Seo.jsx';
 import PageHeader from '@/components/site/PageHeader.jsx';
 import BeforeAfter from '@/components/site/BeforeAfter.jsx';
-import BrowserFrame from '@/components/home/BrowserFrame.jsx';
+import SiteFan from '@/components/site/SiteFan.jsx';
 import Faq from '@/components/home/Faq.jsx';
 import CtaBand from '@/components/home/CtaBand.jsx';
 import { Button } from '@/components/ui/button';
-import { HERO_CARDS } from '@/data/heroCards.js';
 import { R2 } from '@/lib/site.js';
 import { cn } from '@/lib/utils';
 
@@ -30,7 +29,7 @@ function FirstChat() {
   return (
     <figure>
       <div className="rounded-[25px] border border-ink/[0.06] bg-white p-2 shadow-[0_14px_30px_-10px_rgba(60,40,0,0.28)]">
-        <div className="rounded-[18px] border border-primary/15 bg-orange-tint px-6 pb-6 pt-6 md:px-8">
+        <div className="rounded-[18px] border border-folder/45 bg-note px-6 pb-6 pt-6 md:px-8">
           <p className="font-display text-lg font-bold text-ink">What we’ll ask</p>
           {/* ruled like a notepad: one line under each question */}
           <ul className="mt-2 bg-[linear-gradient(transparent_43px,rgba(17,17,17,0.12)_43px)] bg-[length:100%_44px]">
@@ -47,33 +46,10 @@ function FirstChat() {
   );
 }
 
-/* Three client sites, each designed around its own brand: fanned out, the latest on top */
-const LOOKS = ['Raza Academy', 'Top One Salon', 'Change Work Therapies'].map((name) => {
-  const card = HERO_CARDS.find((c) => c.name === name);
-  const id = name.toLowerCase().replace(/ /g, '-');
-  return { name, url: card.url, small: '/images/home/site-' + id };
-});
-const FAN = ['left-0 top-0', 'left-[11%] top-[18%]', 'left-[22%] top-[36%]'];
-
 function ThreeLooks() {
   return (
     <figure>
-      <div className="relative aspect-[16/13]">
-        {LOOKS.map((l, i) => (
-          <BrowserFrame key={l.name} url={l.url} className={cn('absolute w-[78%]', FAN[i])}>
-            <img
-              src={l.small + '-800.webp'}
-              srcSet={l.small + '-480.webp 480w, ' + l.small + '-800.webp 800w'}
-              sizes="(min-width: 1024px) 420px, 78vw"
-              width="800"
-              height="450"
-              alt={l.name + '’s home page'}
-              loading="lazy"
-              className="aspect-video w-full object-cover object-top"
-            />
-          </BrowserFrame>
-        ))}
-      </div>
+      <SiteFan />
       <figcaption className="mt-3 text-sm text-muted-foreground">Three clients, three looks: each design starts from the business’s own brand.</figcaption>
     </figure>
   );
@@ -114,9 +90,7 @@ const STEPS = [
       <ul className="grid gap-4">
         {PILLARS.map(({ icon: Icon, title, text }) => (
           <li key={title} className="flex items-center gap-4 rounded-[22px] border border-ink/10 bg-card p-5">
-            <span className="grid size-12 shrink-0 place-items-center rounded-xl bg-orange-tint text-orange-ink">
-              <Icon aria-hidden="true" className="size-6" />
-            </span>
+            <Icon aria-hidden="true" className="size-6 shrink-0 text-orange-ink" />
             <div>
               <p className="font-display text-lg font-bold text-ink">{title}</p>
               <p className="text-[15px] leading-relaxed text-muted-foreground">{text}</p>

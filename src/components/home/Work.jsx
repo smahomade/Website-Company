@@ -36,8 +36,7 @@ export default function Work() {
       <div className="mx-auto flex max-w-6xl flex-col gap-6 px-5 pt-16 md:flex-row md:items-end md:justify-between md:px-8 md:pt-32">
         <SectionHeading
           tone="dark"
-          title="Websites already working"
-          accent="for real businesses."
+          title="Websites already working for real businesses."
           sub="Every one is live today. Scroll through them, then open any of them to read the case study."
         />
         <Button asChild variant="outline-light" className="self-start md:self-auto">

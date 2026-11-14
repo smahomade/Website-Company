@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { ArrowRight, Check } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogClose, DialogContent, DialogDescription, DialogTitle } from '@/components/ui/dialog';
-import { KIND_ICON, META_ICON } from './packageIcons.js';
+import { META_ICON } from './packageIcons.js';
 
 /* "Read more" for one package (data/services.js): what it is, who it suits, everything included
    and the small print. `service` is null when closed; the last one stays on screen while the
@@ -13,17 +13,11 @@ export default function ServiceDialog({ service, onClose }) {
   if (service) last.current = service;
   const s = last.current;
   const d = s?.modal;
-  const Icon = (s && KIND_ICON[s.iconKind]) || KIND_ICON.key;
   return (
     <Dialog open={!!service} onOpenChange={(open) => !open && onClose()}>
       {d && (
         <DialogContent className="max-w-xl">
-          <div className="flex items-center gap-4 pr-10">
-            <span className="grid size-12 shrink-0 place-items-center rounded-xl bg-orange-tint text-orange-ink">
-              <Icon aria-hidden="true" className="size-6" />
-            </span>
-            <DialogTitle>{d.title}</DialogTitle>
-          </div>
+          <DialogTitle className="pr-10">{d.title}</DialogTitle>
           <DialogDescription className="mt-4">{d.desc}</DialogDescription>
 
           {d.meta?.length > 0 && (

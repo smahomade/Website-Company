@@ -147,6 +147,7 @@ const TILES = [
     title: 'Plain English',
     text: 'We explain what’s happening, what’s next and why, without the jargon.',
     visual: <ChatVisual />,
+    folder: true, /* the grid's one tile in the logo's yellow */
   },
   {
     title: 'Quoted per project',
@@ -160,8 +161,7 @@ export default function Benefits() {
     <section className="bg-background py-16 md:py-32">
       <div className="mx-auto max-w-6xl px-5 md:px-8">
         <SectionHeading
-          title="What you get"
-          accent="with PixelFold."
+          title="What you get with PixelFold."
           sub="The parts of a website that matter most to a small business, and how we handle them."
         />
         <div className="mt-10 grid gap-4 md:mt-14 md:grid-cols-2 md:gap-5 lg:grid-cols-3">
@@ -169,14 +169,15 @@ export default function Benefits() {
             <div
               key={t.title}
               className={cn(
-                'flex flex-col justify-between gap-6 rounded-2xl border border-ink/10 bg-card p-5 md:gap-8 md:p-7',
+                'flex flex-col justify-between gap-6 rounded-2xl border p-5 md:gap-8 md:p-7',
+                t.folder ? 'border-transparent bg-folder' : 'border-ink/10 bg-card',
                 t.wide && 'md:col-span-2'
               )}
             >
               <div>{t.visual}</div>
               <div>
                 <h3 className="font-display text-xl font-bold leading-snug tracking-[-0.01em] text-ink">{t.title}</h3>
-                <p className="mt-2 leading-relaxed text-muted-foreground">{t.text}</p>
+                <p className={cn('mt-2 leading-relaxed', t.folder ? 'text-ink/80' : 'text-muted-foreground')}>{t.text}</p>
               </div>
             </div>
           ))}

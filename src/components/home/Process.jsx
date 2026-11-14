@@ -36,6 +36,7 @@ export default function Process() {
           align="center"
           title="From first chat"
           accent="to launch day."
+          hand
           sub="Four steps, and we explain each one in plain English as we go."
         />
       </PinnedSteps>

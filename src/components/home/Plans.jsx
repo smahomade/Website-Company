@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowRight, Check, KeyRound, LifeBuoy } from 'lucide-react';
+import { ArrowRight, Check } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
@@ -9,7 +9,6 @@ import SectionHeading from './SectionHeading.jsx';
 /* The two ways to work with us. No prices: every project is quoted after a consultation. */
 const PLANS = [
   {
-    icon: KeyRound,
     title: 'One-off build',
     desc: 'We build your website and hand it over completely. You own it outright.',
     points: ['Full design and build', 'One round of revisions', 'Full ownership, yours to keep', 'Domain and hosting guidance'],
@@ -17,7 +16,6 @@ const PLANS = [
     extra: ['Full source code and all project files', 'A handover call to walk you through everything', 'Step-by-step hosting set-up instructions'],
   },
   {
-    icon: LifeBuoy,
     title: 'Monthly plan',
     desc: 'We build your site and look after it afterwards: hosting, security and updates.',
     points: ['Everything in the one-off build', 'Hosting and security managed', 'Ongoing changes and updates', 'Priority support'],
@@ -28,7 +26,7 @@ const PLANS = [
 ];
 
 function PlanCard({ plan, id, hiddenOnPhones }) {
-  const { icon: Icon, featured } = plan;
+  const { featured } = plan;
   return (
     <div
       id={id}
@@ -39,12 +37,9 @@ function PlanCard({ plan, id, hiddenOnPhones }) {
       )}
     >
       <div className="flex items-start justify-between gap-4">
-        <span className={cn('grid size-12 place-items-center rounded-xl', featured ? 'bg-primary text-ink' : 'bg-orange-tint text-orange-ink')}>
-          <Icon className="size-6" strokeWidth={2.2} />
-        </span>
-        {featured && <Badge variant="primary">Most popular</Badge>}
+        <h3 className={cn('font-display text-3xl font-bold tracking-[-0.02em]', featured ? 'text-cream' : 'text-ink')}>{plan.title}</h3>
+        {featured && <Badge variant="primary" className="mt-2">Most popular</Badge>}
       </div>
-      <h3 className={cn('mt-6 font-display text-3xl font-bold tracking-[-0.02em]', featured ? 'text-cream' : 'text-ink')}>{plan.title}</h3>
       <p className={cn('mt-3 leading-relaxed', featured ? 'text-cream/70' : 'text-muted-foreground')}>{plan.desc}</p>
 
       <ul className="mt-7 space-y-3">

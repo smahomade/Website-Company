@@ -93,6 +93,8 @@
   --color-orange-soft: #ff8a3d;
   --color-orange-ink: #b54708; /* orange for small text on cream (AA) */
   --color-orange-tint: #fff1e6;
+  --color-folder: #fec84a; /* the folder in the logo: one tile, nothing small */
+  --color-note: #fff3cc;   /* the same yellow as note paper */
 
   --font-sans: 'Nunito', ui-sans-serif, system-ui, sans-serif;
   --font-display: 'Outfit', 'Nunito', ui-sans-serif, system-ui, sans-serif;

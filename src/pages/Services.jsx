@@ -1,12 +1,12 @@
-import { useLayoutEffect, useRef, useState } from 'react';
+import { useLayoutEffect, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { ArrowRight, Check, Mail, MessagesSquare, Minus, Pause, Play } from 'lucide-react';
+import { ArrowRight, Check, Mail, MessagesSquare, Minus } from 'lucide-react';
 import Seo from '@/components/Seo.jsx';
 import PageHeader from '@/components/site/PageHeader.jsx';
 import ServiceDialog from '@/components/site/ServiceDialog.jsx';
+import TourFrame from '@/components/site/TourFrame.jsx';
 import { KIND_ICON } from '@/components/site/packageIcons.js';
 import SectionHeading from '@/components/home/SectionHeading.jsx';
-import BrowserFrame from '@/components/home/BrowserFrame.jsx';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -73,15 +73,6 @@ function Tick({ className }) {
   );
 }
 
-function PackageIcon({ s, className }) {
-  const Icon = KIND_ICON[s.iconKind] || KIND_ICON.key;
-  return (
-    <span className={cn('grid size-11 shrink-0 place-items-center rounded-xl bg-orange-tint text-orange-ink', className)}>
-      <Icon aria-hidden="true" className="size-5" />
-    </span>
-  );
-}
-
 /* "Most Popular" from the data; "Own it outright" is the Plan row instead */
 function Ribbon({ s }) {
   return s.ribbon && !s.ribbon.own ? <Badge variant="primary">{s.ribbon.text}</Badge> : null;
@@ -132,11 +123,10 @@ function Compare({ packs, tab, onDetails }) {
             <td />
             {packs.map((s) => (
               <th key={s.key} scope="col" className="border-l border-ink/10 px-5 pb-5 pt-6 align-top font-normal">
-                <span className="flex items-center justify-between gap-2">
-                  <PackageIcon s={s} />
+                <span className="flex h-6 items-center">
                   <Ribbon s={s} />
                 </span>
-                <span className="mt-4 block font-display text-lg font-bold leading-tight tracking-[-0.01em] text-ink">{s.title}</span>
+                <span className="mt-2 block font-display text-lg font-bold leading-tight tracking-[-0.01em] text-ink">{s.title}</span>
                 <span className="mt-1 block text-sm leading-relaxed text-muted-foreground">{s.tagline}</span>
               </th>
             ))}
@@ -179,9 +169,7 @@ function Levels({ packs, onDetails }) {
         const level = LEVELS[s.tier];
         return (
           <li key={s.key} className="rounded-[24px] border border-ink/10 bg-card p-5">
-            <div className="flex items-start gap-4">
-              <PackageIcon s={s} />
-              <div className="min-w-0 flex-1">
+            <div>
                 <h3 className="font-display text-xl font-bold leading-tight tracking-[-0.01em] text-ink">{s.title}</h3>
                 <p className="mt-1 text-[15px] text-muted-foreground">
                   {level.plan}
@@ -192,7 +180,6 @@ function Levels({ packs, onDetails }) {
                     <Ribbon s={s} />
                   </div>
                 )}
-              </div>
             </div>
             {i === 0 ? (
               <p className="mt-4 text-[15px] leading-relaxed text-ink/80">You arrange hosting and the domain yourself.</p>
@@ -223,8 +210,7 @@ function Levels({ packs, onDetails }) {
 function CustomCard({ s, onDetails }) {
   return (
     <article className="flex flex-col rounded-[24px] border border-ink/10 bg-card p-6 md:p-7">
-      <PackageIcon s={s} />
-      <h3 className="mt-5 font-display text-2xl font-bold tracking-[-0.02em] text-ink">{s.title}</h3>
+      <h3 className="font-display text-2xl font-bold tracking-[-0.02em] text-ink">{s.title}</h3>
       <p className="mt-1 text-muted-foreground">{s.tagline}</p>
       <ul className="mt-5 flex-1 space-y-2.5">
         {s.features.map((f) => (
@@ -241,53 +227,14 @@ function CustomCard({ s, onDetails }) {
   );
 }
 
-/* One recent build in a browser window, with the others of its package a click away. Its tour
-   plays only when asked: the mouse over the window, or the button (touch and keyboard). The video
-   isn't fetched until then. */
+/* One recent build in a browser window, its tour playing only when asked (the mouse over it, or
+   the button), with the others of its package a click away */
 function ExampleBuild({ list, tab }) {
   const [index, setIndex] = useState(0);
-  const [playing, setPlaying] = useState(false);
-  const videoRef = useRef(null);
   const ex = list[Math.min(index, list.length - 1)];
-
-  const play = () => {
-    setPlaying(true);
-    requestAnimationFrame(() => videoRef.current?.play()?.catch(() => setPlaying(false)));
-  };
-  const stop = () => {
-    const v = videoRef.current;
-    if (v) {
-      v.pause();
-      v.currentTime = 0;
-    }
-    setPlaying(false);
-  };
-  const pick = (i) => {
-    stop();
-    setIndex(i);
-  };
-
   return (
     <div className="grid items-center gap-5 rounded-[24px] border border-ink/10 bg-card p-4 md:grid-cols-[1.25fr_1fr] md:gap-8 md:p-5">
-      <div
-        onPointerEnter={(e) => e.pointerType === 'mouse' && play()}
-        onPointerLeave={(e) => e.pointerType === 'mouse' && stop()}
-      >
-        <BrowserFrame url={ex.url} className="shadow-md">
-          <div className="relative aspect-video bg-sand">
-            <img src={ex.still} alt={ex.name + '’s website'} loading="lazy" className="absolute inset-0 size-full object-cover object-top" />
-            {playing && <video key={ex.tour} ref={videoRef} src={ex.tour} muted loop playsInline aria-hidden="true" tabIndex={-1} className="absolute inset-0 size-full object-cover" />}
-            <button
-              type="button"
-              onClick={playing ? stop : play}
-              aria-label={(playing ? 'Stop the ' : 'Play the ') + ex.name + ' tour'}
-              className="absolute bottom-3 right-3 grid size-11 cursor-pointer place-items-center rounded-full bg-cream/95 text-ink shadow-md outline-none transition-colors hover:bg-white focus-visible:ring-[3px] focus-visible:ring-ring/60"
-            >
-              {playing ? <Pause className="size-4" /> : <Play className="size-4" />}
-            </button>
-          </div>
-        </BrowserFrame>
-      </div>
+      <TourFrame key={ex.name} name={ex.name} url={ex.url} still={ex.still} tour={ex.tour} hoverPlay />
       <div className="px-2 pb-2 md:px-0 md:pb-0 md:pr-4">
         <p className="font-display text-xl font-bold text-ink">{ex.name}</p>
         <p className="mt-0.5 text-sm font-semibold text-orange-ink">A recent {tab} build</p>
@@ -299,7 +246,7 @@ function ExampleBuild({ list, tab }) {
                 key={e.name}
                 type="button"
                 aria-pressed={e === ex}
-                onClick={() => pick(i)}
+                onClick={() => setIndex(i)}
                 className="min-h-10 cursor-pointer rounded-full border border-ink/15 px-4 text-sm font-semibold text-ink/75 outline-none transition-colors hover:border-ink/40 focus-visible:ring-[3px] focus-visible:ring-ring/45 aria-pressed:border-ink aria-pressed:bg-ink aria-pressed:text-cream"
               >
                 {e.short}
@@ -312,31 +259,39 @@ function ExampleBuild({ list, tab }) {
   );
 }
 
-/* Shared by every tab, so it sits under them: what any package comes with, and the one booking button */
+/* What any package comes with, whichever tab: beside the page heading */
 function Included() {
   return (
-    <div className="mt-10 grid gap-6 rounded-[24px] bg-sand/70 p-6 md:mt-12 md:p-8 lg:grid-cols-[1.3fr_1fr] lg:items-center lg:gap-12">
-      <div>
-        <h2 className="font-display text-xl font-bold text-ink">Every package includes</h2>
-        <ul className="mt-4 grid gap-x-6 gap-y-2.5 sm:grid-cols-2">
-          {INCLUDED.map((x) => (
-            <li key={x} className="flex items-start gap-3 font-semibold text-ink">
-              <Tick className="mt-0.5" />
-              {x}
-            </li>
-          ))}
-        </ul>
-      </div>
-      <div className="border-t border-ink/10 pt-6 lg:border-l lg:border-t-0 lg:pl-12 lg:pt-0">
-        <p className="leading-relaxed text-muted-foreground">
-          No fixed price list. Each package is scoped and quoted around your project, and agreed before any work starts. Not sure which suits you? Ask in the free consultation.
-        </p>
-        <Button asChild className="mt-5">
-          <Link to="/quote">
-            Book a consultation <ArrowRight />
-          </Link>
-        </Button>
-      </div>
+    <div className="rounded-[24px] bg-sand/80 p-6 md:p-7">
+      <h2 className="font-display text-xl font-bold text-ink">Every package includes</h2>
+      <ul className="mt-4 space-y-2.5">
+        {INCLUDED.map((x) => (
+          <li key={x} className="flex items-start gap-3 font-semibold text-ink">
+            <Tick className="mt-0.5" />
+            {x}
+          </li>
+        ))}
+      </ul>
+      <p className="mt-5 border-t border-ink/10 pt-4 text-[15px] leading-relaxed text-muted-foreground">
+        No fixed price list. Each package is scoped and quoted around your project, and agreed before any work starts.
+      </p>
+    </div>
+  );
+}
+
+/* Under the tabs, for every tab: the one booking button */
+function NotSure() {
+  return (
+    <div className="mt-10 flex flex-col gap-4 rounded-[24px] border border-ink/10 bg-card p-6 sm:flex-row sm:items-center sm:justify-between md:mt-12 md:px-8">
+      <p className="text-lg leading-relaxed text-ink">
+        <span className="font-display font-bold">Not sure which suits you?</span>{' '}
+        <span className="text-muted-foreground">Ask in the free consultation.</span>
+      </p>
+      <Button asChild className="shrink-0 self-start sm:self-auto">
+        <Link to="/quote">
+          Book a consultation <ArrowRight />
+        </Link>
+      </Button>
     </div>
   );
 }
@@ -366,6 +321,7 @@ export default function Services() {
         title="Websites built around"
         accent="your business."
         sub="Websites for small businesses across the UK. Every project is scoped and quoted around what you actually need."
+        aside={<Included />}
       />
 
       <section id="services" className="bg-background pb-24 md:pb-32">
@@ -415,13 +371,13 @@ export default function Services() {
             })}
           </Tabs>
 
-          <Included />
+          <NotSure />
         </div>
       </section>
 
       <section className="bg-sand/70 py-24 md:py-32">
         <div className="mx-auto max-w-6xl px-5 md:px-8">
-          <SectionHeading title="How a project runs," accent="start to finish." />
+          <SectionHeading title="How a project runs, start to finish." />
           <ol className="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
             {EXPECT.map((e, i) => (
               <li key={e.t} className="rounded-[24px] border border-ink/10 bg-card p-6">
@@ -436,7 +392,7 @@ export default function Services() {
 
       <section className="bg-espresso py-24 text-cream md:py-32">
         <div className="mx-auto max-w-6xl px-5 md:px-8">
-          <SectionHeading tone="dark" title="Tell us about" accent="your project." />
+          <SectionHeading tone="dark" title="Tell us about your project." />
           <div className="mt-12 grid gap-5 md:grid-cols-3">
             <div className="flex flex-col rounded-[24px] bg-primary p-7 text-ink">
               <span className="grid size-12 place-items-center rounded-xl bg-ink text-cream">

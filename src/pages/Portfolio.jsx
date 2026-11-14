@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { ArrowRight, ArrowUpRight, Images } from 'lucide-react';
 import Seo from '@/components/Seo.jsx';
 import PageHeader from '@/components/site/PageHeader.jsx';
+import SiteFan from '@/components/site/SiteFan.jsx';
 import ProjectViewer from '@/components/site/ProjectViewer.jsx';
 import Quotes from '@/components/home/Quotes.jsx';
 import CtaBand from '@/components/home/CtaBand.jsx';
@@ -87,6 +88,7 @@ export default function Portfolio() {
         title="Real websites for"
         accent="real businesses."
         sub="All of them live today. Open any one to flick through every page, or read the case study behind it."
+        aside={<SiteFan eager className="max-lg:hidden" />}
       />
 
       <section className="bg-background pb-24 md:pb-32">

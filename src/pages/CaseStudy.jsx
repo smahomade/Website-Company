@@ -5,9 +5,11 @@ import Seo from '@/components/Seo.jsx';
 import PageHeader from '@/components/site/PageHeader.jsx';
 import ProjectViewer from '@/components/site/ProjectViewer.jsx';
 import BrowserFrame from '@/components/home/BrowserFrame.jsx';
+import TourFrame from '@/components/site/TourFrame.jsx';
 import Quotes from '@/components/home/Quotes.jsx';
 import { Button } from '@/components/ui/button';
 import { PORTFOLIO } from '@/data/portfolio.js';
+import { HERO_CARDS } from '@/data/heroCards.js';
 import NotFound from './NotFound.jsx';
 
 /* One client's project (/portfolio/<id>): what they needed, what we built, where it is now, with a
@@ -29,13 +31,21 @@ export default function CaseStudy() {
     const at = (w) => `${cs.shots}-${i + 1}-${w}.webp`;
     return { key: full, src: at(1000), srcSet: `${at(600)} 600w, ${at(1000)} 1000w`, label };
   });
+  const card = HERO_CARDS.find((c) => c.name === p.title);
+  const pages = card ? shots.slice(1) : shots; /* the home page is in the header already */
   const host = p.liveUrl ? p.liveUrl.replace(/^https?:\/\//, '').replace(/\/$/, '') : null;
   const h2 = 'font-display text-2xl font-bold tracking-[-0.02em] text-ink';
 
   return (
     <div className="leading-normal">
       <Seo title={p.title + ' case study — PixelFold'} description={cs.summary} path={'/portfolio/' + p.id} />
-      <PageHeader title={cs.title} accent={cs.accent} sub={cs.summary} chips={[p.industry, cs.pages, p.typeLabel.replace(' Build', ' build')]}>
+      <PageHeader
+        title={cs.title}
+        accent={cs.accent}
+        sub={cs.summary}
+        chips={[p.industry, cs.pages, p.typeLabel.replace(' Build', ' build')]}
+        aside={card && <TourFrame name={p.title} url={card.url} still={card.tourPoster || card.img} tour={card.tour} eager />}
+      >
         {p.liveUrl && (
           <Button asChild size="lg">
             <a href={p.liveUrl} target="_blank" rel="noopener noreferrer">
@@ -78,7 +88,7 @@ export default function CaseStudy() {
           </div>
 
           <div className="space-y-6">
-            {shots.map((s, i) => (
+            {pages.map((s, i) => (
               <figure key={s.key}>
                 <BrowserFrame url={host}>
                   <img
@@ -88,7 +98,7 @@ export default function CaseStudy() {
                     width="1000"
                     height="625"
                     alt={p.title + (s.label ? ', ' + s.label + ' page' : ', page ' + (i + 1))}
-                    loading={i ? 'lazy' : 'eager'}
+                    loading={i || card ? 'lazy' : 'eager'}
                     className="block aspect-[16/10] w-full object-cover object-top"
                   />
                 </BrowserFrame>
