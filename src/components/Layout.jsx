@@ -3,6 +3,7 @@ import { Outlet, useLocation } from 'react-router-dom';
 import SiteNav from './site/SiteNav.jsx';
 import SiteFooter from './site/SiteFooter.jsx';
 import CookieBanner from './CookieBanner.jsx';
+import ChatButton from './site/ChatButton.jsx';
 import { trackEvent, trackPageView } from '../lib/routeChange.js'; /* not named analytics.js: ad blockers refuse that address, which blanked the page in dev */
 import { PREFERS_REDUCED_MOTION } from '../lib/site.js';
 
@@ -53,6 +54,7 @@ export default function Layout() {
         <Outlet />
       </main>
       <SiteFooter />
+      <ChatButton />
       <CookieBanner />
     </>
   );

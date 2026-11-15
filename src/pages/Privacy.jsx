@@ -6,11 +6,11 @@ import { Button } from '@/components/ui/button';
 import { CONTACT } from '@/lib/site.js';
 import { askAgain, getChoice, GA_ID, onChoiceChange } from '@/lib/consent.js';
 
-const UPDATED = '14 November 2026';
+const UPDATED = '15 November 2026';
 
 /* What this site collects, why, for how long, and the visitor's rights, in plain English. Keep it
-   in step with the code: the forms (lib/enquiry.js), analytics (lib/consent.js) and anything the
-   site keeps in the browser. */
+   in step with the code: the forms (lib/enquiry.js), analytics (lib/consent.js), the live chat
+   (components/site/ChatButton.jsx) and anything the site keeps in the browser. */
 export default function Privacy() {
   /* read after the first render: the prebuilt page can't know this browser's answer */
   const [choice, setChoice] = useState(undefined);
@@ -79,6 +79,19 @@ export default function Privacy() {
           privacy policy.
         </p>
 
+        <h2>When you use the live chat</h2>
+        <p>
+          The chat button in the corner of each page opens a live chat run by tawk.to, a US company, under{' '}
+          <a href="https://www.tawk.to/privacy-policy/" target="_blank" rel="noopener noreferrer">its own privacy policy</a>.
+          Nothing loads from tawk.to until you open the chat.
+        </p>
+        <p>
+          An automated assistant answers first, using information about our services that we give it, and you can ask for a
+          person at any point. tawk.to keeps what you type, anything you choose to share such as your name or email address,
+          your IP address and basic details of your browser, so the conversation can carry on and we can reply. It processes
+          this in the United States. We use it the same way as an enquiry: to answer you and, if you ask, to prepare a quote.
+        </p>
+
         <h2>Analytics, only if you say yes</h2>
         <p>
           With your permission we use Google Analytics to see which pages are visited, how people found the site (a search or
@@ -111,6 +124,24 @@ export default function Privacy() {
                 <td>Remembers your answer to the cookie question. Kept in your browser, never sent to us.</td>
                 <td>Until you clear it</td>
               </tr>
+              <tr>
+                <td><code>{'twk_uuid_…'}</code></td>
+                <td>Set by tawk.to only when you open the chat, so your conversation carries on from page to page and on a later visit.</td>
+                <td>6 months</td>
+              </tr>
+              <tr>
+                <td><code>twk_idm_key</code>, <code>TawkConnectionTime</code></td>
+                <td>Set by tawk.to only when you open the chat, to keep it connected.</td>
+                <td>Until you close the browser</td>
+              </tr>
+              <tr>
+                <td><code>{'twk_…'}</code>, <code>pf-chat</code></td>
+                <td>
+                  Kept in your browser once you’ve used the chat: tawk.to’s own settings, and a note that you’ve sent a message,
+                  so the chat loads straight away next time and a reply can reach you.
+                </td>
+                <td>Until you clear it</td>
+              </tr>
             </tbody>
           </table>
         </div>
@@ -125,7 +156,7 @@ export default function Privacy() {
 
         <h2>How long we keep things</h2>
         <ul>
-          <li>Enquiries that don’t become a project: deleted within 12 months.</li>
+          <li>Enquiries that don’t become a project, including chat conversations: deleted within 12 months.</li>
           <li>
             Client projects: kept while we work together, and invoices and accounts for as long as UK tax law requires
             (normally six years).

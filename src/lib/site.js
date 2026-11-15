@@ -19,6 +19,11 @@ export const CONTACT = {
   /* no email address anywhere on the site, to keep it off spam lists: the forms (EmailJS) and
      WhatsApp instead */
 };
+/* live chat (components/site/ChatButton.jsx): the ids from tawk.to's embed code, which is public */
+export const TAWK = {
+  property: '6af9fffed9f7b63c46b292dd',
+  widget: 'default',
+};
 export const EMAILJS = {
   publicKey: 'lIvXq3M_cI0eN71RJ',
   service: 'service_wpmt56n',

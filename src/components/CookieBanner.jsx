@@ -6,7 +6,8 @@ import { getChoice, onAskAgain, setChoice } from '@/lib/consent.js';
 /* Asks once whether Google Analytics may run (lib/consent.js), with "No thanks" as easy as yes.
    It appears on the visitor's first scroll, tap or key press rather than on load: a banner
    arriving with the page would become the page's largest paint on phones and hold up its load
-   score, and nothing is tracked before the answer anyway. "Cookie settings" opens it again. */
+   score, and nothing is tracked before the answer anyway. "Cookie settings" opens it again.
+   A tap on the chat button doesn't count (ChatButton.jsx). */
 export default function CookieBanner() {
   const [open, setOpen] = useState(false);
   const yesRef = useRef(null);
@@ -14,7 +15,9 @@ export default function CookieBanner() {
 
   useEffect(() => {
     const events = ['scroll', 'pointerdown', 'keydown', 'touchstart'];
-    const show = () => {
+    const show = (e) => {
+      /* not for a tap on the chat button: the banner would come up over the chat it opens */
+      if (e && e.target && e.target.closest && e.target.closest('[data-chat]')) return;
       events.forEach((e) => window.removeEventListener(e, show, true));
       setOpen(true);
     };
