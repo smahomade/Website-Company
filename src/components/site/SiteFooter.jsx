@@ -67,7 +67,7 @@ export default function SiteFooter() {
           <div>
             <h2 className={headingClass}>Contact</h2>
             <ul className="mt-5 space-y-3 text-[15px]">
-              <li><a href={CONTACT.phoneHref} className={linkClass}>{CONTACT.phone}</a></li>
+              <li><Link to="/contact" className={linkClass}>Send a message</Link></li>
               <li>London, UK</li>
             </ul>
           </div>

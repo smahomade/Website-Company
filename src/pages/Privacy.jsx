@@ -57,8 +57,9 @@ export default function Privacy() {
         <h2>Who we are</h2>
         <p>
           PixelFold is a web design studio based in London, UK. We are responsible for the personal information described on
-          this page (the “controller”, in data protection terms). You can reach us through the {form}, or on{' '}
-          <a href={CONTACT.phoneHref}>{CONTACT.phone}</a> by WhatsApp or phone.
+          this page (the “controller”, in data protection terms). You can reach us through the {form}, or by{' '}
+          <a href={CONTACT.whatsapp} target="_blank" rel="noopener noreferrer">WhatsApp</a> or{' '}
+          <a href={CONTACT.phoneHref}>phone</a>.
         </p>
 
         <h2>When you send us an enquiry</h2>

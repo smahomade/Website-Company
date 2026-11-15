@@ -25,10 +25,13 @@ function Ways() {
         <div className="min-w-0">
           <p className="font-display font-bold text-ink">WhatsApp or phone</p>
           <a href={CONTACT.whatsapp} target="_blank" rel="noopener noreferrer" className="inline-flex min-h-11 items-center gap-1 font-semibold text-ink underline-offset-4 hover:text-orange-ink hover:underline">
-            {CONTACT.phone} <ArrowUpRight aria-hidden="true" className="size-4" />
+            Message us on WhatsApp <ArrowUpRight aria-hidden="true" className="size-4" />
             <span className="sr-only">(opens WhatsApp)</span>
           </a>
-          <p className="text-sm leading-relaxed text-muted-foreground">A WhatsApp message is best: calls often get lost among spam.</p>
+          <p className="text-sm leading-relaxed text-muted-foreground">
+            A WhatsApp message is best: calls often get lost among spam. You can also{' '}
+            <a href={CONTACT.phoneHref} className="font-semibold text-ink underline underline-offset-2 hover:text-orange-ink">call us</a>.
+          </p>
         </div>
       </li>
       <li className={card}>

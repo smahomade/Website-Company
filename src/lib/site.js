@@ -17,7 +17,8 @@ export const CONTACT = {
   phoneHref: 'tel:+447469469061',
   whatsapp: 'https://wa.me/447469469061',
   /* no email address anywhere on the site, to keep it off spam lists: the forms (EmailJS) and
-     WhatsApp instead */
+     WhatsApp instead. The phone number is never shown as text either, only behind the WhatsApp
+     and phone links and icons. */
 };
 /* live chat (components/site/ChatButton.jsx): the ids from tawk.to's embed code, which is public */
 export const TAWK = {
