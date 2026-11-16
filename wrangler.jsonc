@@ -1,0 +1,20 @@
+/* Cloudflare Workers: how pixelfold.co.uk is published.
+   Cloudflare runs `npm run build` (set in the project's Build settings), which writes every page
+   prebuilt into dist/ (scripts/prerender.mjs), then `npx wrangler deploy` publishes that folder as
+   static files. No server code.
+   - html_handling: /services serves services.html; /services.html sends people to /services
+   - not_found_handling: unknown addresses get dist/404.html with a real 404 status
+   - dist/_redirects (from public/) keeps the old static-site addresses working */
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "website-company",
+  "compatibility_date": "2026-07-22",
+  "assets": {
+    "directory": "./dist",
+    "html_handling": "auto-trailing-slash",
+    "not_found_handling": "404-page"
+  },
+  "observability": {
+    "enabled": true
+  }
+}
