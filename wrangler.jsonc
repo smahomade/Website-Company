@@ -4,11 +4,16 @@
    static files. No server code.
    - html_handling: /services serves services.html; /services.html sends people to /services
    - not_found_handling: unknown addresses get dist/404.html with a real 404 status
-   - dist/_redirects (from public/) keeps the old static-site addresses working */
+   - dist/_redirects (from public/) keeps the old static-site addresses working
+   - workers_dev off: the live site is only at pixelfold.co.uk, not a second workers.dev address
+   - preview_urls on: each branch build gets its own test address on workers.dev, to check before
+     anything changes on the live site */
 {
   "$schema": "node_modules/wrangler/config-schema.json",
   "name": "website-company",
   "compatibility_date": "2026-07-22",
+  "workers_dev": false,
+  "preview_urls": true,
   "assets": {
     "directory": "./dist",
     "html_handling": "auto-trailing-slash",
