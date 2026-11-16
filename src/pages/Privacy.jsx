@@ -146,6 +146,11 @@ export default function Privacy() {
                 <td>Until you clear it</td>
               </tr>
               <tr>
+                <td><code>pf-theme</code></td>
+                <td>Remembers whether you picked light or dark mode. Kept in your browser, never sent to us.</td>
+                <td>Until you clear it</td>
+              </tr>
+              <tr>
                 <td><code>{'twk_uuid_…'}</code></td>
                 <td>Set by tawk.to only when you open the chat, so your conversation carries on from page to page and on a later visit.</td>
                 <td>6 months</td>

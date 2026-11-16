@@ -10,9 +10,9 @@ const buttonVariants = cva(
     variants: {
       variant: {
         default: 'bg-primary text-primary-foreground hover:bg-orange-soft',
-        dark: 'bg-ink text-cream hover:bg-espresso',
-        outline: 'border border-ink/15 bg-white/60 text-ink hover:border-ink/30 hover:bg-white',
-        'outline-dark': 'border border-ink/80 text-ink hover:bg-ink hover:text-cream',
+        dark: 'bg-coal text-cream hover:bg-espresso dark:ring-1 dark:ring-cream/15',
+        outline: 'border border-ink/15 bg-surface/60 text-ink hover:border-ink/30 hover:bg-surface',
+        'outline-dark': 'border border-ink/80 text-ink hover:bg-coal hover:text-cream',
         'outline-light': 'border border-cream/25 text-cream hover:border-cream/50 hover:bg-cream/10',
         ghost: 'text-ink hover:bg-ink/5',
       },

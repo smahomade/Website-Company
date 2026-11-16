@@ -53,7 +53,7 @@ function Visit({ p, ground }) {
             {host(p.url)} · case study
           </span>
         </span>
-        <span className="grid size-11 place-items-center rounded-full bg-primary text-ink transition-transform duration-200 ease-out group-hover:translate-x-0.5 group-active:scale-90 group-focus-visible:outline-2 group-focus-visible:outline-offset-2 group-focus-visible:outline-primary max-sm:size-10 sm:size-[52px]">
+        <span className="theme-light grid size-11 place-items-center rounded-full bg-primary text-ink transition-transform duration-200 ease-out group-hover:translate-x-0.5 group-active:scale-90 group-focus-visible:outline-2 group-focus-visible:outline-offset-2 group-focus-visible:outline-primary max-sm:size-10 sm:size-[52px]">
           <ArrowRight className="size-5 sm:size-6" strokeWidth={2.2} />
         </span>
       </Link>

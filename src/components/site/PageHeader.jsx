@@ -38,7 +38,7 @@ export default function PageHeader({ title, accent, sub, chips = [], aside, clas
           {chips.length > 0 && (
             <ul className="mt-7 flex flex-wrap gap-2">
               {chips.map((c) => (
-                <li key={c} className="inline-flex items-center gap-1.5 rounded-full border border-ink/10 bg-white/70 px-3 py-1.5 text-sm font-semibold text-ink/75">
+                <li key={c} className="inline-flex items-center gap-1.5 rounded-full border border-ink/10 bg-surface/70 px-3 py-1.5 text-sm font-semibold text-ink/75">
                   <Check aria-hidden="true" className="size-3.5 text-orange-ink" strokeWidth={3} />
                   {c}
                 </li>

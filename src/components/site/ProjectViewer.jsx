@@ -42,7 +42,7 @@ function ComparePage({ slide, pct, onDrag }) {
     window.addEventListener('pointerup', up);
   };
 
-  const band = 'pointer-events-none absolute flex h-9 items-center justify-center bg-ink/80 text-xs font-bold uppercase tracking-[0.12em] text-cream';
+  const band = 'pointer-events-none absolute flex h-9 items-center justify-center bg-coal/80 text-xs font-bold uppercase tracking-[0.12em] text-cream';
   return (
     <div ref={wrapRef} className="relative cursor-ew-resize touch-pan-y select-none" onPointerDown={dragFrom}>
       <div style={layout.height ? { height: layout.height } : { minHeight: 400 }} />
@@ -108,7 +108,7 @@ export default function ProjectViewer({ project, onClose }) {
   }, [project, current, goTo]);
 
   const slide = slides[current];
-  const navBtn = 'grid size-11 shrink-0 cursor-pointer place-items-center rounded-full border border-ink/15 bg-white text-ink outline-none transition-colors hover:border-ink/40 focus-visible:ring-[3px] focus-visible:ring-ring/45';
+  const navBtn = 'grid size-11 shrink-0 cursor-pointer place-items-center rounded-full border border-ink/15 bg-surface text-ink outline-none transition-colors hover:border-ink/40 focus-visible:ring-[3px] focus-visible:ring-ring/45';
 
   return (
     <Dialog open={!!project} onOpenChange={(open) => !open && onClose()}>
@@ -162,7 +162,7 @@ export default function ProjectViewer({ project, onClose }) {
               if (Math.abs(dx) > 40) goTo(current + (dx > 0 ? 1 : -1));
             }}
           >
-            <div className="mx-auto max-w-5xl bg-white">
+            <div className="mx-auto max-w-5xl bg-surface">
               {slide &&
                 (compare ? (
                   <ComparePage key={current} slide={slide} pct={pct} onDrag={setPct} />
@@ -172,7 +172,7 @@ export default function ProjectViewer({ project, onClose }) {
                       <p className="absolute inset-x-0 top-32 text-center text-sm font-semibold text-muted-foreground">Loading the page…</p>
                       <img key={current} src={slide} alt={p.title + ', ' + labelOf(slide, current)} className="relative block w-full" />
                     </div>
-                    <p className="bg-ink/80 py-2.5 text-center text-xs font-bold uppercase tracking-[0.12em] text-cream">End of page</p>
+                    <p className="bg-coal/80 py-2.5 text-center text-xs font-bold uppercase tracking-[0.12em] text-cream">End of page</p>
                   </>
                 ))}
             </div>
@@ -191,7 +191,7 @@ export default function ProjectViewer({ project, onClose }) {
                   onClick={() => goTo(i)}
                   className={cn(
                     'min-h-10 shrink-0 cursor-pointer rounded-full px-3.5 text-sm font-semibold outline-none transition-colors focus-visible:ring-[3px] focus-visible:ring-ring/45',
-                    i === current ? 'bg-ink text-cream' : 'text-ink/65 hover:bg-ink/5 hover:text-ink'
+                    i === current ? 'bg-ink text-paper' : 'text-ink/65 hover:bg-ink/5 hover:text-ink'
                   )}
                 >
                   {compare ? labelOf(s, i) : i + 1}

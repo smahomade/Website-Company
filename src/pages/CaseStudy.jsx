@@ -73,7 +73,7 @@ export default function CaseStudy() {
               <ul className="mt-4 space-y-3">
                 {cs.built.map((b) => (
                   <li key={b} className="flex items-start gap-3 leading-relaxed text-ink">
-                    <span className="mt-1 grid size-5 shrink-0 place-items-center rounded-full bg-primary text-ink">
+                    <span className="theme-light mt-1 grid size-5 shrink-0 place-items-center rounded-full bg-primary text-ink">
                       <Check aria-hidden="true" className="size-3" strokeWidth={3} />
                     </span>
                     {b}

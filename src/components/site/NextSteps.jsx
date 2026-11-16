@@ -15,7 +15,7 @@ export default function NextSteps({ title = 'What happens next', className }) {
       <ol className="mt-5 space-y-5">
         {STEPS.map((s, i) => (
           <li key={s.t} className="flex gap-4">
-            <span aria-hidden="true" className="grid size-8 shrink-0 place-items-center rounded-full bg-ink font-display text-sm font-bold text-cream">
+            <span aria-hidden="true" className="grid size-8 shrink-0 place-items-center rounded-full bg-coal font-display text-sm font-bold text-cream">
               {i + 1}
             </span>
             <div>

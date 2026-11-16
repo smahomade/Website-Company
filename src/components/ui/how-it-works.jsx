@@ -37,7 +37,7 @@ function Note({ number, stage, title, body, points, theme, position }) {
   const t = THEMES[theme] || THEMES.orange;
   return (
     <li className={cn('relative w-full transition-transform duration-300 hover:z-30 hover:scale-[1.03] motion-reduce:transition-none md:w-[310px]', position.rotate, position.className)}>
-      <div className="rounded-[25px] border border-ink/[0.06] bg-white p-2 shadow-[0_14px_30px_-10px_rgba(60,40,0,0.28)]">
+      <div className="theme-light rounded-[25px] border border-ink/[0.06] bg-surface p-2 shadow-[0_14px_30px_-10px_rgba(60,40,0,0.28)]">
         <Pin className={cn('mx-auto mb-4 mt-1 size-8', t.pin)} />
         <div className={cn('relative flex flex-col overflow-hidden rounded-[15px] border p-4', t.bg, t.border)}>
           <span aria-hidden="true" className={cn("mb-2 font-hand text-[42px] font-bold leading-none", t.text)}>
@@ -49,7 +49,7 @@ function Note({ number, stage, title, body, points, theme, position }) {
           {points && (
             <ul className="mt-4 flex flex-wrap gap-1.5">
               {points.map((pt) => (
-                <li key={pt} className="rounded-full border border-ink/15 bg-white/70 px-2.5 py-1 text-xs font-bold text-ink/80">{pt}</li>
+                <li key={pt} className="rounded-full border border-ink/15 bg-surface/70 px-2.5 py-1 text-xs font-bold text-ink/80">{pt}</li>
               ))}
             </ul>
           )}
@@ -67,7 +67,7 @@ export default function PinnedSteps({ steps, className, children }) {
       <div
         aria-hidden="true"
         className="pointer-events-none absolute inset-0 opacity-[0.07]"
-        style={{ backgroundImage: 'linear-gradient(#111 1px, transparent 1px)', backgroundSize: '100% 32px', marginTop: '4px' }}
+        style={{ backgroundImage: 'linear-gradient(var(--ink) 1px, transparent 1px)', backgroundSize: '100% 32px', marginTop: '4px' }}
       />
       <div aria-hidden="true" className="pointer-events-none absolute inset-y-0 left-0 w-1/3 bg-gradient-to-r from-background" />
       <div aria-hidden="true" className="pointer-events-none absolute inset-y-0 right-0 w-1/3 bg-gradient-to-l from-background" />

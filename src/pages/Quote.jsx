@@ -39,7 +39,7 @@ const TIERS = {
 
 /* A row of choice cards (radio buttons underneath, so arrow keys and screen readers work) */
 const choiceCard =
-  'group relative flex cursor-pointer rounded-2xl border border-ink/12 bg-white p-4 transition-[border-color,box-shadow,background-color] hover:border-ink/30 has-[:checked]:border-ink has-[:checked]:shadow-md has-[:focus-visible]:ring-[3px] has-[:focus-visible]:ring-ring/45';
+  'group relative flex cursor-pointer rounded-2xl border border-ink/12 bg-surface p-4 transition-[border-color,box-shadow,background-color] hover:border-ink/30 has-[:checked]:border-coal has-[:checked]:shadow-md has-[:focus-visible]:ring-[3px] has-[:focus-visible]:ring-ring/45';
 
 function YourDetails({ prefix, errs }) {
   return (
@@ -224,7 +224,7 @@ function NewWebsiteBrief() {
                     <span className="block font-display text-lg font-bold text-ink">{value}</span>
                     <span className="block text-sm text-muted-foreground">{hint}</span>
                   </span>
-                  <Check aria-hidden="true" className="absolute right-3 top-3 size-5 rounded-full bg-ink p-1 text-cream opacity-0 transition-opacity group-has-[:checked]:opacity-100" strokeWidth={3} />
+                  <Check aria-hidden="true" className="absolute right-3 top-3 size-5 rounded-full bg-coal p-1 text-cream opacity-0 transition-opacity group-has-[:checked]:opacity-100" strokeWidth={3} />
                 </label>
               ))}
             </div>
@@ -412,7 +412,7 @@ export default function Quote() {
                       <span className="block font-display text-lg font-bold text-ink">{title}</span>
                       <span className="block text-sm text-muted-foreground">{text}</span>
                     </span>
-                    <Check aria-hidden="true" className="absolute right-3 top-3 size-5 rounded-full bg-ink p-1 text-cream opacity-0 transition-opacity group-has-[:checked]:opacity-100" strokeWidth={3} />
+                    <Check aria-hidden="true" className="absolute right-3 top-3 size-5 rounded-full bg-coal p-1 text-cream opacity-0 transition-opacity group-has-[:checked]:opacity-100" strokeWidth={3} />
                   </label>
                 ))}
               </div>

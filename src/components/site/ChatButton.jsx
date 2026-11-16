@@ -91,7 +91,7 @@ export default function ChatButton() {
       style={{ marginBottom: 'env(safe-area-inset-bottom)' }}
     >
       {state === 'failed' && (
-        <div role="alert" className="w-[min(320px,calc(100vw-2rem))] rounded-[20px] border border-ink/10 bg-cream p-4 text-[15px] leading-relaxed text-ink/80 shadow-lg">
+        <div role="alert" className="w-[min(320px,calc(100vw-2rem))] rounded-[20px] border border-ink/10 bg-paper p-4 text-[15px] leading-relaxed text-ink/80 shadow-lg">
           <div className="flex items-start justify-between gap-3">
             <p className="font-display font-bold text-ink">The chat didn’t load</p>
             <button
@@ -120,7 +120,7 @@ export default function ChatButton() {
         aria-label={opening ? 'Opening the chat' : 'Chat with us'}
         aria-busy={opening}
         title="Chat with us"
-        className="grid size-[60px] place-items-center rounded-full bg-ink text-cream shadow-lg ring-1 ring-cream/15 transition-colors duration-200 outline-none hover:bg-espresso focus-visible:ring-[3px] focus-visible:ring-ring/60 aria-busy:cursor-progress"
+        className="grid size-[60px] place-items-center rounded-full bg-coal text-cream shadow-lg ring-1 ring-cream/15 transition-colors duration-200 outline-none hover:bg-espresso focus-visible:ring-[3px] focus-visible:ring-ring/60 aria-busy:cursor-progress"
       >
         <MessageCircle aria-hidden="true" className={'size-7 transition-opacity duration-200' + (opening ? ' opacity-50' : '')} strokeWidth={2} />
       </button>

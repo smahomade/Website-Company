@@ -44,7 +44,7 @@ function Column({ title, links }) {
 export default function SiteFooter() {
   const iconLink = 'grid size-11 place-items-center rounded-full border border-cream/15 text-cream/80 transition-colors hover:border-cream/40 hover:text-cream outline-none focus-visible:ring-[3px] focus-visible:ring-ring/45';
   return (
-    <footer className="relative overflow-hidden bg-ink leading-normal text-cream/70">
+    <footer className="relative overflow-hidden bg-coal leading-normal text-cream/70 dark:border-t dark:border-cream/10">
       <div className="relative mx-auto max-w-6xl px-5 pt-16 pb-8 md:px-8 md:pt-20">
         <div className="grid grid-cols-2 gap-x-6 gap-y-12 lg:grid-cols-[1.5fr_1fr_1.15fr_1.15fr]">
           <div className="col-span-2 lg:col-span-1">

@@ -8,7 +8,7 @@ function Tabs({ className, ...props }) {
 }
 
 function TabsList({ className, ...props }) {
-  return <TabsPrimitive.List data-slot="tabs-list" className={cn('inline-flex w-fit items-center rounded-2xl border border-ink/10 bg-white p-1.5 shadow-sm', className)} {...props} />;
+  return <TabsPrimitive.List data-slot="tabs-list" className={cn('inline-flex w-fit items-center rounded-2xl border border-ink/10 bg-surface p-1.5 shadow-sm', className)} {...props} />;
 }
 
 function TabsTrigger({ className, ...props }) {
@@ -16,7 +16,7 @@ function TabsTrigger({ className, ...props }) {
     <TabsPrimitive.Trigger
       data-slot="tabs-trigger"
       className={cn(
-        'inline-flex min-h-11 cursor-pointer items-center justify-center gap-2 whitespace-nowrap rounded-xl px-4 font-display font-semibold text-ink/65 outline-none transition-colors hover:text-ink focus-visible:ring-[3px] focus-visible:ring-ring/45 data-[state=active]:bg-ink data-[state=active]:text-cream',
+        'inline-flex min-h-11 cursor-pointer items-center justify-center gap-2 whitespace-nowrap rounded-xl px-4 font-display font-semibold text-ink/65 outline-none transition-colors hover:text-ink focus-visible:ring-[3px] focus-visible:ring-ring/45 data-[state=active]:bg-ink data-[state=active]:text-paper',
         className
       )}
       {...props}

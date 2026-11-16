@@ -28,7 +28,7 @@ const QUESTIONS = [
 function FirstChat() {
   return (
     <figure>
-      <div className="rounded-[25px] border border-ink/[0.06] bg-white p-2 shadow-[0_14px_30px_-10px_rgba(60,40,0,0.28)]">
+      <div className="theme-light rounded-[25px] border border-ink/[0.06] bg-surface p-2 shadow-[0_14px_30px_-10px_rgba(60,40,0,0.28)]">
         <div className="rounded-[18px] border border-folder/45 bg-note px-6 pb-6 pt-6 md:px-8">
           <p className="font-display text-lg font-bold text-ink">What we’ll ask</p>
           {/* ruled like a notepad: one line under each question */}

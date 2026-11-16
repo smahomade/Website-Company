@@ -33,7 +33,7 @@ function PlanCard({ plan, id, hiddenOnPhones }) {
       className={cn(
         'relative flex flex-col rounded-[28px] border p-7 md:p-9',
         hiddenOnPhones && 'max-md:hidden',
-        featured ? 'border-ink bg-ink text-cream shadow-lg' : 'border-ink/10 bg-card text-ink'
+        featured ? 'border-coal bg-coal text-cream shadow-lg dark:border-cream/15' : 'border-ink/10 bg-card text-ink'
       )}
     >
       <div className="flex items-start justify-between gap-4">
@@ -45,7 +45,7 @@ function PlanCard({ plan, id, hiddenOnPhones }) {
       <ul className="mt-7 space-y-3">
         {plan.points.map((pt) => (
           <li key={pt} className="flex items-start gap-3 font-semibold">
-            <span className={cn('mt-0.5 grid size-5 shrink-0 place-items-center rounded-full', featured ? 'bg-primary text-ink' : 'bg-ink text-cream')}>
+            <span className={cn('mt-0.5 grid size-5 shrink-0 place-items-center rounded-full', featured ? 'theme-light bg-primary text-ink' : 'bg-coal text-cream')}>
               <Check className="size-3" strokeWidth={3} />
             </span>
             {pt}
@@ -84,7 +84,7 @@ export default function Plans() {
           sub="We build your site either way. The difference is who looks after it afterwards. Both are quoted per project after a free consultation."
         />
         {/* phones: a switch between the two plans, so the page isn't two long cards in a row */}
-        <div role="group" aria-label="Show a plan" className="mx-auto mt-10 flex max-w-sm rounded-full border border-ink/10 bg-white p-1 md:hidden">
+        <div role="group" aria-label="Show a plan" className="mx-auto mt-10 flex max-w-sm rounded-full border border-ink/10 bg-surface p-1 md:hidden">
           {PLANS.map((plan, i) => (
             <button
               key={plan.title}
@@ -94,7 +94,7 @@ export default function Plans() {
               onClick={() => setShown(i)}
               className={cn(
                 'min-h-11 flex-1 cursor-pointer rounded-full px-4 font-display text-[15px] font-semibold outline-none transition-colors focus-visible:ring-[3px] focus-visible:ring-ring/45',
-                shown === i ? 'bg-ink text-cream' : 'text-ink/70 hover:text-ink'
+                shown === i ? 'bg-ink text-paper' : 'text-ink/70 hover:text-ink'
               )}
             >
               {plan.title}

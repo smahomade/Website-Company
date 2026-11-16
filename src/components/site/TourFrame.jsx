@@ -41,7 +41,7 @@ export default function TourFrame({ name, url, still, tour, hoverPlay = false, e
               onClick={playing ? stop : play}
               aria-label={(playing ? 'Stop the ' : 'Play the ') + name + ' tour'}
               className={cn(
-                'absolute bottom-3 right-3 grid size-11 cursor-pointer place-items-center rounded-full bg-cream/95 text-ink shadow-md outline-none transition-colors hover:bg-white focus-visible:ring-[3px] focus-visible:ring-ring/60'
+                'absolute bottom-3 right-3 grid size-11 cursor-pointer place-items-center rounded-full bg-paper/95 text-ink shadow-md outline-none transition-colors hover:bg-surface focus-visible:ring-[3px] focus-visible:ring-ring/60'
               )}
             >
               {playing ? <Pause className="size-4" /> : <Play className="size-4" />}

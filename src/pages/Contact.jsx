@@ -15,7 +15,7 @@ const SUBJECTS = ['I need a new website', 'I want to redesign my existing site',
    lost among spam. */
 function Ways() {
   const card = 'flex gap-4 rounded-[22px] border border-ink/10 bg-card p-4 md:px-5';
-  const icon = 'grid size-11 shrink-0 place-items-center rounded-full border border-ink/10 bg-white';
+  const icon = 'grid size-11 shrink-0 place-items-center rounded-full border border-ink/10 bg-surface';
   return (
     <div>
     <h2 className="sr-only">Other ways to reach us</h2>

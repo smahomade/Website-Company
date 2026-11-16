@@ -67,7 +67,7 @@ const SITE = { starter: 'a 1-page site', business: 'a 3–6 page site' };
 
 function Tick({ className }) {
   return (
-    <span className={cn('grid size-5 shrink-0 place-items-center rounded-full bg-ink text-cream', className)}>
+    <span className={cn('grid size-5 shrink-0 place-items-center rounded-full bg-coal text-cream', className)}>
       <Check aria-hidden="true" className="size-3" strokeWidth={3} />
     </span>
   );
@@ -247,7 +247,7 @@ function ExampleBuild({ list, tab }) {
                 type="button"
                 aria-pressed={e === ex}
                 onClick={() => setIndex(i)}
-                className="min-h-10 cursor-pointer rounded-full border border-ink/15 px-4 text-sm font-semibold text-ink/75 outline-none transition-colors hover:border-ink/40 focus-visible:ring-[3px] focus-visible:ring-ring/45 aria-pressed:border-ink aria-pressed:bg-ink aria-pressed:text-cream"
+                className="min-h-10 cursor-pointer rounded-full border border-ink/15 px-4 text-sm font-semibold text-ink/75 outline-none transition-colors hover:border-ink/40 focus-visible:ring-[3px] focus-visible:ring-ring/45 aria-pressed:border-ink aria-pressed:bg-ink aria-pressed:text-paper"
               >
                 {e.short}
               </button>
@@ -394,8 +394,8 @@ export default function Services() {
         <div className="mx-auto max-w-6xl px-5 md:px-8">
           <SectionHeading tone="dark" title="Tell us about your project." />
           <div className="mt-12 grid gap-5 md:grid-cols-3">
-            <div className="flex flex-col rounded-[24px] bg-primary p-7 text-ink">
-              <span className="grid size-12 place-items-center rounded-xl bg-ink text-cream">
+            <div className="theme-light flex flex-col rounded-[24px] bg-primary p-7 text-ink">
+              <span className="grid size-12 place-items-center rounded-xl bg-coal text-cream">
                 <MessagesSquare aria-hidden="true" className="size-6" />
               </span>
               <Badge variant="dark" className="mt-5">Recommended</Badge>
