@@ -75,8 +75,9 @@ export default function SiteFooter() {
 
         <div className="mt-14 flex flex-col gap-3 border-t border-cream/10 pt-6 text-sm sm:flex-row sm:items-center sm:justify-between">
           <p>&copy; {new Date().getFullYear()} PixelFold. All rights reserved.</p>
-          <p className="flex gap-5">
+          <p className="flex flex-wrap gap-x-5 gap-y-2">
             <Link to="/privacy" className={linkClass}>Privacy</Link>
+            <Link to="/privacy#legal" className={linkClass}>Legal details</Link>
             <button type="button" onClick={askAgain} className={linkClass + ' cursor-pointer'}>Cookie settings</button>
           </p>
         </div>

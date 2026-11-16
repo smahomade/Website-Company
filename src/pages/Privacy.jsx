@@ -3,10 +3,18 @@ import { Link } from 'react-router-dom';
 import Seo from '@/components/Seo.jsx';
 import PageHeader from '@/components/site/PageHeader.jsx';
 import { Button } from '@/components/ui/button';
-import { CONTACT } from '@/lib/site.js';
+import { CONTACT, LEGAL } from '@/lib/site.js';
 import { askAgain, getChoice, GA_ID, onChoiceChange } from '@/lib/consent.js';
 
-const UPDATED = '15 November 2026';
+const UPDATED = '16 November 2026';
+
+/* the address, put together in the browser (lib/site.js LEGAL) so it isn't in the prebuilt HTML */
+function LegalEmail() {
+  const [address, setAddress] = useState(null);
+  useEffect(() => setAddress(LEGAL.email.join('@')), []);
+  if (!address) return <span>{LEGAL.email.join(' [at] ')}</span>;
+  return <a href={'mailto:' + address}>{address}</a>;
+}
 
 /* What this site collects, why, for how long, and the visitor's rights, in plain English. Keep it
    in step with the code: the forms (lib/enquiry.js), analytics (lib/consent.js), the live chat
@@ -56,11 +64,23 @@ export default function Privacy() {
 
         <h2>Who we are</h2>
         <p>
-          PixelFold is a web design studio based in London, UK. We are responsible for the personal information described on
-          this page (the “controller”, in data protection terms). You can reach us through the {form}, or by{' '}
-          <a href={CONTACT.whatsapp} target="_blank" rel="noopener noreferrer">WhatsApp</a> or{' '}
+          PixelFold is the trading name of {LEGAL.owner}, a {LEGAL.status} based in London, UK. We are responsible for the
+          personal information described on this page (the “controller”, in data protection terms). You can reach us through
+          the {form}, or by <a href={CONTACT.whatsapp} target="_blank" rel="noopener noreferrer">WhatsApp</a> or{' '}
           <a href={CONTACT.phoneHref}>phone</a>.
         </p>
+
+        <h2 id="legal">Legal details</h2>
+        <ul>
+          <li>Trading name: PixelFold</li>
+          <li>Run by: {LEGAL.owner}, {LEGAL.status}</li>
+          <li>Based in: {LEGAL.place}</li>
+          <li>Email: <LegalEmail /></li>
+          <li>
+            WhatsApp or phone: <a href={CONTACT.whatsapp} target="_blank" rel="noopener noreferrer">message us on WhatsApp</a> or{' '}
+            <a href={CONTACT.phoneHref}>call us</a>
+          </li>
+        </ul>
 
         <h2>When you send us an enquiry</h2>
         <p>

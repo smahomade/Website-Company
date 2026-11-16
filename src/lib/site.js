@@ -16,9 +16,20 @@ export const CONTACT = {
   phone: '+44 7469 469 061',
   phoneHref: 'tel:+447469469061',
   whatsapp: 'https://wa.me/447469469061',
-  /* no email address anywhere on the site, to keep it off spam lists: the forms (EmailJS) and
-     WhatsApp instead. The phone number is never shown as text either, only behind the WhatsApp
-     and phone links and icons. */
+  /* no email address on the site, to keep it off spam lists: the forms (EmailJS) and WhatsApp
+     instead (the one exception is the legal details, see LEGAL). The phone number is never shown
+     as text either, only behind the WhatsApp and phone links and icons. */
+};
+/* The legal details a business website has to show (Electronic Commerce Regulations 2002,
+   reg. 6): who runs it, where, and an email address. They live in one place, the privacy page's
+   "Legal details" (#legal), linked from every footer. The email is the one exception to "no email
+   on the site", and it's put together in the browser so it isn't sitting in the prebuilt HTML for
+   address-harvesting bots. Only the town is shown: the business is run from home. */
+export const LEGAL = {
+  owner: 'Safee Mahomade',
+  status: 'sole trader',
+  place: 'London, United Kingdom',
+  email: ['info', 'pixelfold.co.uk'],
 };
 /* live chat (components/site/ChatButton.jsx): the ids from tawk.to's embed code, which is public */
 export const TAWK = {
