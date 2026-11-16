@@ -36,7 +36,7 @@ function ProjectCard({ p, i, onPages }) {
           {p.caseStudy && <Badge variant="outline">{p.caseStudy.pages}</Badge>}
           <span className="text-sm font-semibold text-muted-foreground">{p.industry}</span>
           {p.status === 'live' && (
-            <span className="ml-auto inline-flex items-center gap-1.5 text-sm font-bold text-[#1f7a46]">
+            <span className="ml-auto inline-flex items-center gap-1.5 text-sm font-bold text-[#1f7a46] dark:text-[#5cc98a]">
               <span aria-hidden="true" className="size-2 rounded-full bg-[#22a35a]" />
               Live
             </span>
@@ -98,7 +98,7 @@ export default function Portfolio() {
           ))}
           {/* the open slot: invites the next project instead of showing a dummy card */}
           <div className="flex flex-col items-start justify-center rounded-[28px] border-2 border-dashed border-ink/15 bg-sand/60 p-8 md:p-10">
-            <span className="grid size-20 place-items-center rounded-[24px] bg-cream p-2.5 shadow-sm">
+            <span className="grid size-20 place-items-center rounded-[24px] bg-paper p-2.5 shadow-sm">
               <img src={LOGO.mark} alt="" width="202" height="205" className="h-auto w-full" />
             </span>
             <h2 className="mt-6 font-display text-3xl font-bold tracking-[-0.02em] text-ink">Your website could be here.</h2>

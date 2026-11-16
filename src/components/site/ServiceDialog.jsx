@@ -25,7 +25,7 @@ export default function ServiceDialog({ service, onClose }) {
               {d.meta.map((m) => {
                 const MetaIcon = META_ICON[m.icon];
                 return (
-                  <li key={m.text} className="inline-flex items-center gap-1.5 rounded-full border border-ink/10 bg-white px-3 py-1.5 text-sm font-semibold text-ink/80">
+                  <li key={m.text} className="inline-flex items-center gap-1.5 rounded-full border border-ink/10 bg-surface px-3 py-1.5 text-sm font-semibold text-ink/80">
                     {MetaIcon && <MetaIcon aria-hidden="true" className="size-4 text-orange-ink" />}
                     {m.text}
                   </li>
@@ -38,7 +38,7 @@ export default function ServiceDialog({ service, onClose }) {
           <ul className="mt-3 space-y-2.5">
             {(d.features || []).map((f) => (
               <li key={f.text} className="flex items-start gap-3 text-[15px] font-semibold text-ink">
-                <span className="mt-0.5 grid size-5 shrink-0 place-items-center rounded-full bg-ink text-cream">
+                <span className="mt-0.5 grid size-5 shrink-0 place-items-center rounded-full bg-coal text-cream">
                   <Check aria-hidden="true" className="size-3" strokeWidth={3} />
                 </span>
                 {f.text}

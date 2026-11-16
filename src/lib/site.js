@@ -11,6 +11,7 @@ export const LOGO = {
   icon: '/images/brand/pixelfold-icon.png',        /* rounded app icon */
   mono: '/images/brand/pixelfold-mono.png',
   strip: '/images/brand/pixelfold-strip.jpg',      /* footer brand strip */
+  watermark: '/images/brand/pixelfold-watermark.webp', /* the mono cat in cream line art, for the footer watermark */
 };
 export const CONTACT = {
   phone: '+44 7469 469 061',

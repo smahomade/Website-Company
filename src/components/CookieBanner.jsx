@@ -47,7 +47,7 @@ export default function CookieBanner() {
     <section
       role="region"
       aria-label="Cookie choice"
-      className="pf-rise fixed inset-x-3 bottom-3 z-[950] rounded-[22px] border border-ink/10 bg-cream p-5 leading-normal shadow-lg sm:inset-x-auto sm:bottom-5 sm:left-5 sm:w-[390px]"
+      className="pf-rise fixed inset-x-3 bottom-3 z-[950] rounded-[22px] border border-ink/10 bg-paper p-5 leading-normal shadow-lg sm:inset-x-auto sm:bottom-5 sm:left-5 sm:w-[390px]"
       data-state="open"
     >
       <p className="font-display text-lg font-bold text-ink">Can we count your visit?</p>

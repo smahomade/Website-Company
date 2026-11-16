@@ -9,7 +9,7 @@ const CWT = '/images/home/site-change-work-therapies';
 function ScreensVisual() {
   return (
     <div aria-hidden="true" className="relative h-[220px]">
-      <div className="absolute left-0 top-0 w-[82%] overflow-hidden rounded-xl border border-ink/10 bg-white">
+      <div className="absolute left-0 top-0 w-[82%] overflow-hidden rounded-xl border border-ink/10 bg-surface">
         <div className="flex h-6 items-center gap-1 border-b border-ink/[0.08] bg-sand px-2.5">
           <span className="size-1.5 rounded-full bg-ink/20" />
           <span className="size-1.5 rounded-full bg-ink/20" />
@@ -27,7 +27,7 @@ function ScreensVisual() {
           className="h-[176px] w-full object-cover object-top"
         />
       </div>
-      <div className="absolute bottom-0 right-[3%] w-24 overflow-hidden rounded-[18px] border-4 border-ink bg-ink shadow-lg">
+      <div className="absolute bottom-0 right-[3%] w-24 overflow-hidden rounded-[18px] border-4 border-coal bg-coal shadow-lg">
         <img
           src="/images/home/phone-change-work-therapies.webp"
           alt=""
@@ -44,7 +44,7 @@ function ScreensVisual() {
 
 function SearchVisual() {
   return (
-    <div aria-hidden="true" className="rounded-xl border border-ink/10 bg-white p-4">
+    <div aria-hidden="true" className="rounded-xl border border-ink/10 bg-surface p-4">
       <div className="flex items-center gap-2.5">
         <span className="grid size-7 place-items-center rounded-full bg-orange-tint">
           <img src={LOGO.mark} alt="" width="202" height="205" className="size-5" />
@@ -54,7 +54,7 @@ function SearchVisual() {
           <p className="text-[11px] text-ink/60">https://www.pixelfold.co.uk</p>
         </div>
       </div>
-      <p className="mt-2.5 font-display text-[15px] font-semibold leading-snug text-[#2c46b8]">Websites for small businesses | PixelFold</p>
+      <p className="mt-2.5 font-display text-[15px] font-semibold leading-snug text-[#2c46b8] dark:text-[#8ab4f8]">Websites for small businesses | PixelFold</p>
       <p className="mt-1 text-[12.5px] leading-snug text-ink/60">Fast, beautiful websites for small businesses, designed and built in London and explained in plain English.</p>
     </div>
   );
@@ -83,7 +83,7 @@ const HANDOVER = [
 
 function HandoverVisual() {
   return (
-    <div aria-hidden="true" className="rounded-xl border border-ink/10 bg-white p-3">
+    <div aria-hidden="true" className="rounded-xl border border-ink/10 bg-surface p-3">
       <p className="flex items-center gap-2 px-1 pb-2.5 font-display text-sm font-semibold text-ink">
         <FolderOpen className="size-4 text-orange-ink" strokeWidth={2.2} />
         your-website
@@ -109,7 +109,7 @@ const QUOTE_ROWS = [
 
 function QuoteVisual() {
   return (
-    <div aria-hidden="true" className="rounded-xl border border-ink/10 bg-white p-4">
+    <div aria-hidden="true" className="rounded-xl border border-ink/10 bg-surface p-4">
       <div className="flex items-baseline justify-between gap-3">
         <p className="font-display text-sm font-bold text-ink">Your quote</p>
         <p className="text-[11px] font-semibold uppercase tracking-[0.12em] text-ink/60">In writing</p>
@@ -170,7 +170,7 @@ export default function Benefits() {
               key={t.title}
               className={cn(
                 'flex flex-col justify-between gap-6 rounded-2xl border p-5 md:gap-8 md:p-7',
-                t.folder ? 'border-transparent bg-folder' : 'border-ink/10 bg-card',
+                t.folder ? 'theme-light border-transparent bg-folder' : 'border-ink/10 bg-card',
                 t.wide && 'md:col-span-2'
               )}
             >

@@ -2,11 +2,22 @@
    brand colours under the names those components expect, and the few site-wide rules below. */
 @import 'tailwindcss';
 
+/* dark: utilities follow the class on <html> (lib/theme.js), not only the device setting */
+@custom-variant dark (&:where(.dark, .dark *));
+
 /* Brand colours under the names shadcn and 21st.dev components expect (bg-primary,
    text-muted-foreground, border-border and so on). Text on orange is charcoal: white on
-   #FF6A00 is under 3:1. */
+   #FF6A00 is under 3:1.
+   Dark mode (.dark on <html>) swaps the light surfaces and the ink, and nothing else:
+   - ink (text, borders, tints) turns warm white; paper (the page) and surface (cards, fields)
+     turn warm near-black
+   - coal (the footer, dark cards, dark buttons), cream (text on those) and espresso stay as
+     they are, so the dark parts stay dark
+   - .theme-light puts things that are physically light (the orange cards, the yellow notes,
+     the folder) back on the light values, like paper on a dark desk */
 @layer base {
-  :root {
+  :root,
+  .theme-light {
     --background: #fffdf8;
     --foreground: #111111;
     --card: #ffffff;
@@ -25,11 +36,50 @@
     --border: rgba(17, 17, 17, 0.1);
     --input: rgba(17, 17, 17, 0.16);
     --ring: #ff6a00;
+    --ink: #111111;
+    --paper: #fffdf8;
+    --surface: #ffffff;
+    --sand: #f6f4f0;
+    --orange-ink: #b54708;
+    --orange-tint: #fff1e6;
+    color-scheme: light;
+  }
+  .dark {
+    --background: #14120f;
+    --foreground: #f2ede4;
+    --card: #1b1916;
+    --card-foreground: #f2ede4;
+    --popover: #1b1916;
+    --popover-foreground: #f2ede4;
+    --secondary: #221f1b;
+    --secondary-foreground: #f2ede4;
+    --muted: #221f1b;
+    --muted-foreground: #b3a99b;
+    --accent: #2b1b0f;
+    --accent-foreground: #f2ede4;
+    --destructive: #ff7a52;
+    --border: rgba(242, 237, 228, 0.12);
+    --input: rgba(242, 237, 228, 0.22);
+    --ink: #f2ede4;
+    --paper: #14120f;
+    --surface: #1b1916;
+    --sand: #201d19;
+    --orange-ink: #ff9a52;
+    --orange-tint: #2b1b0f;
+    color-scheme: dark;
+  }
+  .theme-light {
+    color: var(--foreground);
   }
   html {
     scroll-padding-top: 96px; /* anchors land below the floating nav */
-    scrollbar-color: rgba(17, 17, 17, 0.32) #fffdf8;
+    scrollbar-color: color-mix(in srgb, var(--ink) 32%, transparent) var(--background);
     accent-color: #ff6a00;
+  }
+  /* switching modes: a soft 0.3s crossfade (lib/theme.js skips it for reduced motion) */
+  ::view-transition-old(root),
+  ::view-transition-new(root) {
+    animation-duration: 0.3s;
   }
   @media (prefers-reduced-motion: no-preference) {
     html { scroll-behavior: smooth; }
@@ -85,14 +135,17 @@
   --color-input: var(--input);
   --color-ring: var(--ring);
 
-  --color-ink: #111111;
+  --color-ink: var(--ink);          /* text, borders and tints: flips in dark mode */
+  --color-paper: var(--paper);      /* the page and light panels: flips */
+  --color-surface: var(--surface);  /* cards and fields (white in light mode): flips */
+  --color-coal: #111111;            /* dark surfaces: the footer, dark cards and buttons */
   --color-espresso: #1c1a17;
-  --color-cream: #fffdf8;
-  --color-sand: #f6f4f0;
+  --color-cream: #fffdf8;           /* text on coal and espresso */
+  --color-sand: var(--sand);
   --color-orange: #ff6a00;
   --color-orange-soft: #ff8a3d;
-  --color-orange-ink: #b54708; /* orange for small text on cream (AA) */
-  --color-orange-tint: #fff1e6;
+  --color-orange-ink: var(--orange-ink); /* orange for small text: AA on cream and on the dark page */
+  --color-orange-tint: var(--orange-tint);
   --color-folder: #fec84a; /* the folder in the logo: one tile, nothing small */
   --color-note: #fff3cc;   /* the same yellow as note paper */
 

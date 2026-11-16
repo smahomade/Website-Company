@@ -4,6 +4,7 @@ import { ArrowRight, Menu, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import Logo from './Logo.jsx';
+import ThemeToggle from './ThemeToggle.jsx';
 
 const LINKS = [
   { to: '/how-it-works', label: 'How it works' },
@@ -52,7 +53,7 @@ export default function SiteNav() {
       {/* first stop for keyboard users; out of sight until it has focus */}
       <a
         href="#main"
-        className="absolute left-4 top-4 z-10 -translate-y-24 rounded-full bg-ink px-5 py-3 font-display text-sm font-semibold text-cream outline-none transition-transform focus:translate-y-0 focus-visible:ring-[3px] focus-visible:ring-ring/60"
+        className="absolute left-4 top-4 z-10 -translate-y-24 rounded-full bg-coal px-5 py-3 font-display text-sm font-semibold text-cream outline-none transition-transform focus:translate-y-0 focus-visible:ring-[3px] focus-visible:ring-ring/60"
       >
         Skip to content
       </a>
@@ -61,7 +62,7 @@ export default function SiteNav() {
         aria-label="Main"
         className={cn(
           'relative mx-auto flex h-[60px] max-w-6xl items-center justify-between gap-4 rounded-full border pl-4 pr-2 backdrop-blur-md transition-[background-color,box-shadow,border-color] duration-300',
-          scrolled || open ? 'border-ink/10 bg-cream/95 shadow-md' : 'border-ink/[0.06] bg-cream/90'
+          scrolled || open ? 'border-ink/10 bg-paper/95 shadow-md' : 'border-ink/[0.06] bg-paper/90'
         )}
       >
         <Logo />
@@ -75,6 +76,7 @@ export default function SiteNav() {
         </ul>
 
         <div className="flex items-center gap-1.5">
+          <ThemeToggle />
           <Button asChild size="sm" className="hidden h-11 px-5 sm:inline-flex">
             <Link to="/quote">Get a quote</Link>
           </Button>
@@ -94,7 +96,7 @@ export default function SiteNav() {
         <div
           id="site-menu"
           hidden={!open}
-          className="absolute inset-x-0 top-[calc(100%+8px)] rounded-[26px] border border-ink/10 bg-cream p-2 shadow-lg md:hidden"
+          className="absolute inset-x-0 top-[calc(100%+8px)] rounded-[26px] border border-ink/10 bg-paper p-2 shadow-lg md:hidden"
         >
           <ul>
             {LINKS.map((l) => (

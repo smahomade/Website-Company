@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
 import { Phone } from 'lucide-react';
-import { CONTACT } from '@/lib/site.js';
+import { CONTACT, LOGO } from '@/lib/site.js';
 import { askAgain } from '@/lib/consent.js';
 import { WhatsAppIcon } from '@/components/Icons.jsx';
 import Logo from './Logo.jsx';
@@ -23,7 +23,57 @@ const SERVICES = [
   ['/services?package=starter#services', 'Hosting and care plans'],
 ];
 
-const linkClass = 'rounded-sm text-[15px] text-cream/70 transition-colors hover:text-cream outline-none focus-visible:ring-[3px] focus-visible:ring-ring/45';
+/* The footer's watermark: the cat from the logo, very faint, rising out of the bottom-right corner,
+   and its paw prints wandering across the footer to it. Still, never animated. Positions are
+   percentages of the footer so the trail fits any width; the last print lands just short of the
+   cat (480px from the right on wide screens, 170px on phones). */
+function trail(n, endFromRight, endY) {
+  return Array.from({ length: n }, (_, i) => {
+    const t = i / (n - 1);
+    const top = 35 + t * (endY - 35) + Math.sin(t * 5) * 12;
+    return {
+      left: `calc(${(3 * (1 - t)).toFixed(2)}% + ${t.toFixed(3)} * (100% - ${endFromRight}px))`,
+      top: top.toFixed(1) + '%',
+      transform: `translateY(${i % 2 ? 12 : -12}px) rotate(${(100 + Math.cos(t * 5) * 25 + (i % 2 ? 10 : -10)).toFixed(0)}deg)`,
+    };
+  });
+}
+const PAWS_WIDE = trail(14, 480, 65);
+const PAWS_PHONE = trail(8, 170, 85);
+
+function Paw({ style, className }) {
+  return (
+    <svg viewBox="0 0 32 32" fill="currentColor" className={'absolute ' + className} style={style}>
+      <ellipse cx="16" cy="22" rx="8" ry="6.5" />
+      <ellipse cx="6.5" cy="13.5" rx="3" ry="4" />
+      <ellipse cx="12.5" cy="7.5" rx="3" ry="4" />
+      <ellipse cx="19.5" cy="7.5" rx="3" ry="4" />
+      <ellipse cx="25.5" cy="13.5" rx="3" ry="4" />
+    </svg>
+  );
+}
+
+function Watermark() {
+  return (
+    <div aria-hidden="true" className="pointer-events-none absolute inset-0 select-none print:hidden">
+      <div className="absolute inset-0 text-cream opacity-[0.06]">
+        {PAWS_WIDE.map((s, i) => <Paw key={'w' + i} style={s} className="hidden size-[30px] md:block" />)}
+        {PAWS_PHONE.map((s, i) => <Paw key={'p' + i} style={s} className="size-6 md:hidden" />)}
+      </div>
+      <img
+        src={LOGO.watermark}
+        alt=""
+        width="416"
+        height="424"
+        loading="lazy"
+        decoding="async"
+        className="absolute -right-[50px] -bottom-[82px] w-[240px] rotate-[-8deg] opacity-[0.09] md:right-4 md:-bottom-[112px] md:w-[330px] xl:right-10 xl:-bottom-[150px] xl:w-[440px]"
+      />
+    </div>
+  );
+}
+
+const linkClass ='rounded-sm text-[15px] text-cream/70 transition-colors hover:text-cream outline-none focus-visible:ring-[3px] focus-visible:ring-ring/45';
 const headingClass = 'font-display text-sm font-bold uppercase tracking-[0.14em] text-cream';
 
 function Column({ title, links }) {
@@ -44,8 +94,9 @@ function Column({ title, links }) {
 export default function SiteFooter() {
   const iconLink = 'grid size-11 place-items-center rounded-full border border-cream/15 text-cream/80 transition-colors hover:border-cream/40 hover:text-cream outline-none focus-visible:ring-[3px] focus-visible:ring-ring/45';
   return (
-    <footer className="relative overflow-hidden bg-ink leading-normal text-cream/70">
-      <div className="relative mx-auto max-w-6xl px-5 pt-16 pb-8 md:px-8 md:pt-20">
+    <footer className="relative overflow-hidden bg-coal leading-normal text-cream/70 dark:border-t dark:border-cream/10">
+      <Watermark />
+      <div className="relative mx-auto max-w-6xl px-5 pt-16 pb-14 md:px-8 md:pt-20 md:pb-16">
         <div className="grid grid-cols-2 gap-x-6 gap-y-12 lg:grid-cols-[1.5fr_1fr_1.15fr_1.15fr]">
           <div className="col-span-2 lg:col-span-1">
             <Logo tone="dark" />
@@ -82,12 +133,6 @@ export default function SiteFooter() {
           </p>
         </div>
       </div>
-      {/* drawn, not typed: it's decoration, and contrast checkers would read faint text as a fault */}
-      <svg aria-hidden="true" viewBox="0 0 1000 150" className="-mb-[1.5%] block w-full select-none text-cream/[0.05]">
-        <text x="500" y="146" textAnchor="middle" textLength="990" lengthAdjust="spacingAndGlyphs" fill="currentColor" fontFamily="Outfit, sans-serif" fontWeight="800" fontSize="196">
-          PIXELFOLD
-        </text>
-      </svg>
     </footer>
   );
 }

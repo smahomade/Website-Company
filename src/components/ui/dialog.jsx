@@ -19,11 +19,11 @@ function DialogContent({ className, children, closeLabel = 'Close', onOpenAutoFo
   const opener = useRef(null);
   return (
     <DialogPrimitive.Portal>
-      <DialogPrimitive.Overlay className="pf-fade fixed inset-0 z-[1000] bg-ink/60 backdrop-blur-[2px]" />
+      <DialogPrimitive.Overlay className="pf-fade fixed inset-0 z-[1000] bg-coal/60 backdrop-blur-[2px]" />
       <DialogPrimitive.Content
         data-slot="dialog-content"
         className={cn(
-          'pf-rise fixed left-1/2 top-1/2 z-[1001] grid max-h-[calc(100dvh-24px)] w-[calc(100vw-24px)] max-w-lg -translate-x-1/2 -translate-y-1/2 overflow-y-auto rounded-[28px] border border-ink/10 bg-cream p-6 leading-normal text-ink shadow-lg outline-none md:p-8',
+          'pf-rise fixed left-1/2 top-1/2 z-[1001] grid max-h-[calc(100dvh-24px)] w-[calc(100vw-24px)] max-w-lg -translate-x-1/2 -translate-y-1/2 overflow-y-auto rounded-[28px] border border-ink/10 bg-paper p-6 leading-normal text-ink shadow-lg outline-none md:p-8',
           className
         )}
         onOpenAutoFocus={(e) => {

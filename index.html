@@ -3,6 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <!-- light or dark before the first paint (src/lib/theme.js): the visitor's choice, else their device -->
+  <script>try{var t=localStorage.getItem('pf-theme');if(t==='dark'||(t!=='light'&&matchMedia('(prefers-color-scheme: dark)').matches))document.documentElement.classList.add('dark')}catch(e){}</script>
   <link rel="icon" type="image/png" sizes="64x64" href="/images/brand/favicon-64.png" />
   <link rel="icon" type="image/png" sizes="192x192" href="/images/brand/favicon-192.png" />
   <link rel="apple-touch-icon" href="/images/brand/favicon-192.png" />

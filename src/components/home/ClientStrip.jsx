@@ -31,7 +31,7 @@ export default function ClientStrip() {
                     height={logo.h}
                     alt={p.title + ' case study'}
                     loading="lazy"
-                    className={logo.className + ' w-auto opacity-70 grayscale transition-[filter,opacity] duration-300 group-hover:opacity-100 group-hover:grayscale-0 group-focus-visible:opacity-100 group-focus-visible:grayscale-0'}
+                    className={logo.className + ' w-auto opacity-70 grayscale dark:brightness-0 dark:invert transition-[filter,opacity] duration-300 group-hover:opacity-100 group-hover:grayscale-0 group-focus-visible:opacity-100 group-focus-visible:grayscale-0'}
                   />
                 </Link>
               </li>

@@ -57,7 +57,7 @@ function TourWindow({ className }) {
         <button
           type="button"
           onClick={toggle}
-          className="absolute right-3 top-3 inline-flex h-10 cursor-pointer items-center gap-2 rounded-full bg-cream/95 pl-3 pr-4 font-display text-[13px] font-semibold text-ink shadow-md backdrop-blur transition-colors outline-none hover:bg-white focus-visible:ring-[3px] focus-visible:ring-ring/60"
+          className="absolute right-3 top-3 inline-flex h-10 cursor-pointer items-center gap-2 rounded-full bg-paper/95 pl-3 pr-4 font-display text-[13px] font-semibold text-ink shadow-md backdrop-blur transition-colors outline-none hover:bg-surface focus-visible:ring-[3px] focus-visible:ring-ring/60"
         >
           {state === 'playing' ? <Pause className="size-4" /> : <Play className="size-4" />}
           {state === 'playing' ? 'Pause tour' : 'Watch the tour'}
@@ -96,14 +96,14 @@ function HeroFolder() {
         aria-hidden="true"
         className="absolute inset-x-0 bottom-0 z-30 h-[40%] rounded-[26px] bg-gradient-to-b from-[#FF7A1F] to-primary shadow-[inset_0_1px_0_rgba(255,255,255,0.35),0_-18px_40px_-24px_rgba(60,30,0,0.65)]"
       >
-        <p className="absolute bottom-[14%] left-[7%] font-display text-[clamp(30px,7.4vw,48px)] font-extrabold leading-none tracking-[-0.02em]">
+        <p className="theme-light absolute bottom-[14%] left-[7%] font-display text-[clamp(30px,7.4vw,48px)] font-extrabold leading-none tracking-[-0.02em]">
           <span className="text-cream [text-shadow:0_1px_0_rgba(120,50,0,0.35)]">PIXEL</span>
           <span className="text-ink">FOLD</span>
         </p>
       </div>
       <div
         aria-hidden="true"
-        className="absolute right-[7%] top-[51%] z-40 w-[clamp(76px,19%,108px)] rotate-6 rounded-[22px] border border-ink/5 bg-cream p-2.5 shadow-md"
+        className="theme-light absolute right-[7%] top-[51%] z-40 w-[clamp(76px,19%,108px)] rotate-6 rounded-[22px] border border-ink/5 bg-paper p-2.5 shadow-md"
       >
         <img src={LOGO.mark} alt="" width="202" height="205" className="h-auto w-full" />
       </div>
