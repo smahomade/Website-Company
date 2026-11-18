@@ -119,8 +119,8 @@ export default function HowItWorks() {
   return (
     <div className="leading-normal">
       <Seo
-        title="How It Works — PixelFold"
-        description="Getting a website with PixelFold: a conversation, a design you see first, a build you can watch take shape, and a handover that's explained properly."
+        title="How Our Web Design Process Works — PixelFold"
+        description="Getting a website with PixelFold in four steps: a conversation, a design you see first, a build you watch take shape, and a handover explained properly."
         path="/how-it-works"
       />
       <PageHeader

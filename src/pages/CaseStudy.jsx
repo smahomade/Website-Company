@@ -38,7 +38,7 @@ export default function CaseStudy() {
 
   return (
     <div className="leading-normal">
-      <Seo title={p.title + ' case study — PixelFold'} description={cs.summary} path={'/portfolio/' + p.id} />
+      <Seo title={p.title + ' website case study — PixelFold'} description={cs.summary} path={'/portfolio/' + p.id} />
       <PageHeader
         title={cs.title}
         accent={cs.accent}

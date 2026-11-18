@@ -80,8 +80,8 @@ export default function Portfolio() {
   return (
     <div className="leading-normal">
       <Seo
-        title="Portfolio — PixelFold"
-        description="Live websites PixelFold has designed and built for real UK businesses, from an education provider to a London salon, each with a case study of what we did and why."
+        title="Web Design Portfolio and Case Studies — PixelFold"
+        description="Live websites PixelFold has built for small businesses, from a Richmond salon to a therapy practice, each with a case study of what we did and why."
         path="/portfolio"
       />
       <PageHeader

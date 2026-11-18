@@ -3,6 +3,7 @@
    and so on, plus dist/404.html. Each gets its own title, description, canonical link and Open
    Graph tags, and its content already in place; the browser then picks it up (hydrateRoot). */
 import fs from 'node:fs';
+import { execSync } from 'node:child_process';
 import path from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 
@@ -52,6 +53,12 @@ console.log('prerendered 404');
 
 /* the sitemap, from the same list of pages */
 const priority = (url) => (url === '/' ? '1.0' : url === '/services' ? '0.9' : url.startsWith('/portfolio/') ? '0.7' : url === '/contact' ? '0.6' : url === '/privacy' ? '0.3' : '0.8');
-const urls = ROUTES.map((url) => `  <url><loc>${SITE_URL}${url}</loc><priority>${priority(url)}</priority></url>`);
+/* lastmod: the date of the latest commit (Cloudflare builds from a git checkout), else today */
+let lastmod;
+try {
+  lastmod = execSync('git log -1 --format=%cs', { cwd: root, stdio: ['ignore', 'pipe', 'ignore'] }).toString().trim();
+} catch {}
+if (!/^\d{4}-\d{2}-\d{2}$/.test(lastmod || '')) lastmod = new Date().toISOString().slice(0, 10);
+const urls = ROUTES.map((url) => `  <url><loc>${SITE_URL}${url}</loc><lastmod>${lastmod}</lastmod><priority>${priority(url)}</priority></url>`);
 write('sitemap.xml', `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${urls.join('\n')}\n</urlset>\n`);
 console.log('wrote sitemap.xml (' + ROUTES.length + ' pages)');

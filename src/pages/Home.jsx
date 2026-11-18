@@ -16,8 +16,8 @@ export default function Home() {
   return (
     <div className="leading-normal">
       <Seo
-        title="PixelFold — Little files, big ideas. Websites for small businesses"
-        description="PixelFold designs and builds fast, beautiful websites for small businesses, from the first conversation to launch day. Quoted per project and explained in plain English."
+        title="Web Design for Small Businesses in London — PixelFold"
+        description="PixelFold designs and builds websites for small businesses across London, from first chat to launch day. Quoted per project, explained in plain English."
         path="/"
       />
       <Hero />

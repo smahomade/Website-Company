@@ -385,8 +385,8 @@ export default function Quote() {
   return (
     <div className="leading-normal">
       <Seo
-        title="Get a Free Quote — PixelFold"
-        description="Get a free, no-obligation quote from PixelFold. Tell us about your project and we'll get back to you within 24 hours."
+        title="Get a Free Website Quote — PixelFold"
+        description="Tell us about your business and the website you need. We reply within 24 hours, and every PixelFold project is quoted individually around what it needs."
         path="/quote"
       />
       <PageHeader

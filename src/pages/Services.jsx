@@ -313,14 +313,14 @@ export default function Services() {
   return (
     <div className="leading-normal">
       <Seo
-        title="Services — PixelFold"
-        description="PixelFold builds single-page, multi-page and fully custom websites for small businesses, with managed hosting and support if you want it. Each project is scoped and quoted individually."
+        title="Website Design and Hosting Services in London — PixelFold"
+        description="Single-page, multi-page and custom websites for London small businesses, with hosting and care plans if you want them. Each project is quoted individually."
         path="/services"
       />
       <PageHeader
         title="Websites built around"
         accent="your business."
-        sub="Websites for small businesses across the UK. Every project is scoped and quoted around what you actually need."
+        sub="Websites for small businesses in London and across the UK. Every project is scoped and quoted around what you actually need."
         aside={<Included />}
       />
 

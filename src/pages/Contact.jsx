@@ -89,8 +89,8 @@ export default function Contact() {
   return (
     <div className="leading-normal">
       <Seo
-        title="Contact — PixelFold"
-        description="Get in touch with PixelFold. We build fast, beautiful websites for small businesses. Message us on WhatsApp, email, or fill in our contact form."
+        title="Contact PixelFold — Web Design in London"
+        description="Talk to PixelFold about a website for your London business. Message us on WhatsApp, use the live chat or send the contact form. We reply within 24 hours."
         path="/contact"
       />
       <PageHeader
