@@ -1,17 +1,36 @@
 import { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
-import { getChoice, onAskAgain, setChoice } from '@/lib/consent.js';
+import { getChoice, onAskAgain, setBannerOpen, setChoice } from '@/lib/consent.js';
 
 /* Asks once whether Google Analytics may run (lib/consent.js), with "No thanks" as easy as yes.
    It appears on the visitor's first scroll, tap or key press rather than on load: a banner
    arriving with the page would become the page's largest paint on phones and hold up its load
    score, and nothing is tracked before the answer anyway. "Cookie settings" opens it again.
-   A tap on the chat button doesn't count (ChatButton.jsx). */
+   A tap on the chat button doesn't count (ChatButton.jsx). While it's open on a phone the chat
+   button moves up above it. */
 export default function CookieBanner() {
   const [open, setOpen] = useState(false);
+  const boxRef = useRef(null);
   const yesRef = useRef(null);
   const asked = useRef(false);
+
+  /* tell the chat button the banner is up, and how tall it is (the text wraps differently per phone) */
+  useEffect(() => {
+    const box = boxRef.current;
+    if (!open || !box) return;
+    const root = document.documentElement;
+    const measure = () => root.style.setProperty('--pf-cookie-h', box.offsetHeight + 'px');
+    measure();
+    const ro = new ResizeObserver(measure);
+    ro.observe(box);
+    setBannerOpen(true);
+    return () => {
+      ro.disconnect();
+      root.style.removeProperty('--pf-cookie-h');
+      setBannerOpen(false);
+    };
+  }, [open]);
 
   useEffect(() => {
     const events = ['scroll', 'pointerdown', 'keydown', 'touchstart'];
@@ -45,6 +64,7 @@ export default function CookieBanner() {
   };
   return (
     <section
+      ref={boxRef}
       role="region"
       aria-label="Cookie choice"
       className="pf-rise fixed inset-x-3 bottom-3 z-[950] rounded-[22px] border border-ink/10 bg-paper p-5 leading-normal shadow-lg sm:inset-x-auto sm:bottom-5 sm:left-5 sm:w-[390px]"

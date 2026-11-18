@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { MessageCircle, X } from 'lucide-react';
 import { WhatsAppIcon } from '@/components/Icons.jsx';
 import { CONTACT, TAWK } from '@/lib/site.js';
+import { isBannerOpen, onBannerChange } from '@/lib/consent.js';
 import { trackEvent } from '@/lib/routeChange.js';
 
 /* Live chat through tawk.to: its AI answers first and hands over to us. tawk.to's script is heavy
@@ -10,8 +11,14 @@ import { trackEvent } from '@/lib/routeChange.js';
    the same size and in the same corner, takes over. Someone who has sent a message before gets
    the chat loaded straight away on later visits, so a reply waiting for them shows.
    The cookie banner ignores taps on this button (data-chat), so opening the chat doesn't bring
-   the banner up over it. */
+   the banner up over it.
+   On phones the banner spans the bottom of the screen, so while it's open this button moves up
+   above it. tawk.to's launcher can't be moved once loaded, so while the banner is open it's
+   hidden and this button stands in for it, raised the same way. */
 const CHATTED = 'pf-chat';
+const WINDOW = 'pf-chat-window';
+/* below Tailwind's sm: the width where the banner spans the screen (above it, it sits bottom left) */
+const NARROW = '(max-width: 639.98px)';
 
 let loading = null;
 function loadTawk() {
@@ -19,8 +26,12 @@ function loadTawk() {
   loading = new Promise((resolve, reject) => {
     const api = (window.Tawk_API = window.Tawk_API || {});
     window.Tawk_LoadStart = new Date();
-    api.customStyle = { zIndex: 940 }; /* under the cookie banner (950), over everything else */
+    /* over the cookie banner (950), so an open chat is never covered by it; its launcher is
+       hidden while the banner is up on phones (see above) */
+    api.customStyle = { zIndex: 960 };
     api.onLoad = () => resolve(api);
+    api.onChatMaximized = () => window.dispatchEvent(new CustomEvent(WINDOW, { detail: true }));
+    api.onChatMinimized = () => window.dispatchEvent(new CustomEvent(WINDOW, { detail: false }));
     api.onChatMessageVisitor = () => {
       try {
         window.localStorage.setItem(CHATTED, '1');
@@ -51,27 +62,66 @@ function hasChatted() {
   }
 }
 
+/* true while the cookie banner is open across the bottom of a phone screen */
+function useBannerInTheWay() {
+  const [inTheWay, setInTheWay] = useState(false);
+  useEffect(() => {
+    const narrow = window.matchMedia(NARROW);
+    const update = () => setInTheWay(isBannerOpen() && narrow.matches);
+    update();
+    const stop = onBannerChange(update);
+    narrow.addEventListener('change', update);
+    return () => {
+      stop();
+      narrow.removeEventListener('change', update);
+    };
+  }, []);
+  return inTheWay;
+}
+
 export default function ChatButton() {
   /* idle → opening → ready (tawk.to's launcher has taken over), or failed (blocked) */
   const [state, setState] = useState('idle');
+  /* whether tawk.to's chat window is open */
+  const [chatOpen, setChatOpen] = useState(false);
+  const raised = useBannerInTheWay();
+  /* tawk.to is loaded but its launcher would sit under the banner: hide it and show this button */
+  const standIn = state === 'ready' && raised && !chatOpen;
 
   useEffect(() => {
-    if (!hasChatted()) return;
-    loadTawk().then(
-      () => setState('ready'),
-      () => {}
-    );
+    const onWindow = (e) => setChatOpen(e.detail);
+    window.addEventListener(WINDOW, onWindow);
+    if (hasChatted()) {
+      loadTawk().then(
+        () => setState('ready'),
+        () => {}
+      );
+    }
+    return () => window.removeEventListener(WINDOW, onWindow);
   }, []);
+
+  useEffect(() => {
+    if (state !== 'ready') return;
+    if (standIn) window.Tawk_API.hideWidget();
+    else window.Tawk_API.showWidget();
+  }, [state, standIn]);
 
   const open = () => {
     if (state === 'opening') return;
     trackEvent('chat_open', { from: window.location.pathname });
+    if (state === 'ready') {
+      setChatOpen(true);
+      window.Tawk_API.showWidget();
+      window.Tawk_API.maximize();
+      return;
+    }
     setState('opening');
     /* if the script loads but never renders (rare), offer the other ways after a while */
     const slow = setTimeout(() => setState((s) => (s === 'opening' ? 'failed' : s)), 15000);
     loadTawk().then(
       (api) => {
         clearTimeout(slow);
+        setChatOpen(true); /* before tawk.to says so, so its window isn't hidden as it opens */
         setState('ready');
         api.maximize();
       },
@@ -82,13 +132,17 @@ export default function ChatButton() {
     );
   };
 
-  if (state === 'ready') return null;
+  if (state === 'ready' && !standIn) return null;
   const opening = state === 'opening';
   return (
     <div
       data-chat=""
-      className="fixed right-5 bottom-5 z-[900] flex flex-col items-end gap-3 print:hidden"
-      style={{ marginBottom: 'env(safe-area-inset-bottom)' }}
+      className="fixed right-5 bottom-5 z-[900] flex flex-col items-end gap-3 transition-transform duration-300 ease-out motion-reduce:transition-none print:hidden"
+      style={{
+        marginBottom: 'env(safe-area-inset-bottom)',
+        /* the banner sits 12px from the bottom; this lands the button 12px above its top edge */
+        transform: raised ? 'translateY(calc(-1 * var(--pf-cookie-h, 0px) - 4px))' : undefined,
+      }}
     >
       {state === 'failed' && (
         <div role="alert" className="w-[min(320px,calc(100vw-2rem))] rounded-[20px] border border-ink/10 bg-paper p-4 text-[15px] leading-relaxed text-ink/80 shadow-lg">

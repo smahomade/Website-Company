@@ -41,6 +41,21 @@ export const onAskAgain = (fn) => {
   return () => window.removeEventListener(ASK, fn);
 };
 
+/* Whether the banner is showing, so the chat button can sit above it on phones (ChatButton.jsx).
+   While it's open the banner also keeps its height in the --pf-cookie-h CSS variable on <html>. */
+const BANNER = 'pf-cookie-banner';
+let bannerOpen = false;
+export const isBannerOpen = () => bannerOpen;
+export function setBannerOpen(open) {
+  if (bannerOpen === open) return;
+  bannerOpen = open;
+  window.dispatchEvent(new Event(BANNER));
+}
+export const onBannerChange = (fn) => {
+  window.addEventListener(BANNER, fn);
+  return () => window.removeEventListener(BANNER, fn);
+};
+
 /* Loads gtag.js and sets it up as index.html used to (page views are sent by the router, see
    routeChange.js). `pageView`: also count the page they're on, when they say yes part way in. */
 export function startAnalytics(pageView) {
